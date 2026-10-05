@@ -32,10 +32,12 @@ export async function POST(request: Request) {
 
   const resend = new Resend(apiKey);
   const { error } = await resend.emails.send({
-    from: process.env.CONTACT_FROM_EMAIL ?? "Portfolio <onboarding@resend.dev>",
+    from: process.env.CONTACT_FROM_EMAIL ?? "Joshua Small Portfolio <onboarding@resend.dev>",
     to,
     replyTo: email,
-    subject: `Portfolio message from ${name}`,
+    // The [Portfolio Contact] prefix gives Gmail filters and your email agent something reliable to match.
+    subject: `[Portfolio Contact] ${name}`,
+    headers: { "X-Portfolio-Contact": "true" },
     text: `From: ${name} <${email}>\n\n${message}`,
   });
 

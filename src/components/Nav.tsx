@@ -35,7 +35,8 @@ export function Nav() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-bg/80 backdrop-blur-md">
       <nav aria-label="Primary" className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
         <a href="#top" className="text-lg font-bold tracking-tight">
-          Joshua <span className="text-grad">M.</span> Small
+          <span className="text-accent">J</span>oshua <span className="text-accent-2">M</span>.{" "}
+          <span className="text-accent-3">S</span>mall
         </a>
 
         <ul className="hidden items-center gap-1 md:flex">

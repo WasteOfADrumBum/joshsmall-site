@@ -54,6 +54,16 @@ export function Hero() {
           >
             {profile.title}
           </motion.p>
+          <motion.p
+            {...fade(0.1)}
+            className="mt-3 inline-flex items-center gap-2 rounded-full border border-line bg-surface/70 px-3 py-1 text-sm text-muted"
+          >
+            <span aria-hidden="true" className="relative flex size-2.5">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-ok opacity-60 motion-reduce:animate-none" />
+              <span className="relative inline-flex size-2.5 rounded-full bg-ok" />
+            </span>
+            {profile.availability}
+          </motion.p>
 
           <h1
             id="hero-title"
@@ -128,8 +138,8 @@ export function Hero() {
             <Image
               src={profile.photo}
               alt={profile.photoAlt}
-              width={1086}
-              height={1448}
+              width={profile.photoSize}
+              height={profile.photoSize}
               priority
               sizes="(min-width: 768px) 24rem, 90vw"
               className="h-auto w-full rounded-[1.3rem]"

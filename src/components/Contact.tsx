@@ -2,7 +2,7 @@
 
 import { Loader2, Send } from "lucide-react";
 import { useState, type FormEvent } from "react";
-import { profile } from "@/content/site";
+import { contact, profile } from "@/content/site";
 import { GitHubIcon, LinkedInIcon } from "./Icons";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
@@ -41,9 +41,17 @@ export function Contact() {
     <Section id="contact" eyebrow="Contact" title="Let's talk.">
       <div className="grid gap-12 md:grid-cols-[1fr_1.2fr]">
         <Reveal>
-          <p className="text-lg leading-relaxed text-muted">
-            Have a role, project or question? Send a message and I&apos;ll reply by email.
-          </p>
+          <p className="text-lg leading-relaxed text-muted">{contact.intro}</p>
+          <ul aria-label="Availability" className="mt-5 flex flex-wrap gap-2">
+            {contact.badges.map((b) => (
+              <li
+                key={b}
+                className="rounded-full border border-accent/40 px-3 py-1 font-mono text-xs uppercase tracking-widest text-accent"
+              >
+                {b}
+              </li>
+            ))}
+          </ul>
           <ul className="mt-8 space-y-4">
             <li>
               <a href={`mailto:${profile.email}`} className="text-lg text-accent underline underline-offset-4">

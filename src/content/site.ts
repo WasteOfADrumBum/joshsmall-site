@@ -44,9 +44,11 @@ export const profile = {
   email: "JMSmall89@gmail.com",
   github: "https://github.com/WasteOfADrumBum",
   linkedin: "https://www.linkedin.com/in/joshuamsmall",
-  photo: "/josh.webp",
+  photo: "/joshua-portrait.webp",
   photoAlt:
-    "Portrait of Joshua Small: glasses, a top knot and a long full beard, wearing a black shirt against a warm amber backdrop.",
+    "Portrait of Joshua Small: glasses, a top knot and a long full beard, wearing a black hoodie in front of glowing code editor screens.",
+  photoSize: 1254,
+  availability: "Remote · Eastern Time · Open to opportunities",
 };
 
 export const about = {
@@ -54,12 +56,14 @@ export const about = {
     "I'm a full-stack engineer at Juvare, where I build and modernize software used in emergency-management environments. I turn complex operational requirements into maintainable features, from the UI through APIs, testing and CI/CD.",
     "I architected a shared TypeScript and SCSS component library that unified several front-end libraries for federal implementations, then helped hand it off to a dedicated team to maintain.",
     "Before engineering, I ran teams and operations. That's why I think about how technical choices affect users, teams and business outcomes.",
+    "I work remotely from North Carolina and do my best work in my own environment. I'm on Eastern Time and looking for remote roles only.",
   ],
   facts: [
-    { label: "Experience", value: "5+ years at Juvare" },
+    { label: "Experience", value: "6+ years in software" },
+    { label: "Currently", value: "Juvare · 5 years" },
     { label: "Focus", value: "TypeScript · React · Node.js" },
     { label: "Growing into", value: "Cloud · DevOps · AI" },
-    { label: "Based in", value: "North Carolina" },
+    { label: "Works", value: "Remote · Eastern Time" },
   ],
 };
 
@@ -158,6 +162,12 @@ export const process = {
     { title: "AI drafts, I review", body: "Nothing ships unread." },
     { title: "Automation guards quality", body: "Tests and CI run on every push." },
   ],
+};
+
+export const contact = {
+  intro:
+    "I'm open to remote opportunities and happy to talk about AI, engineering or collaborating on something. Send a message and I'll reply by email.",
+  badges: ["Remote only", "Based in North Carolina", "Eastern Time (ET)"],
 };
 
 export const nav = [

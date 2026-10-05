@@ -71,20 +71,20 @@ function Pinned() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress: p } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
-  const keyOpacity = useTransform(p, [0.1, 0.3], [1, 0]);
-  const keyScale = useTransform(p, [0.1, 0.3], [1, 0.3]);
-  const keyY = useTransform(p, [0.1, 0.3], [0, -180]);
-  const keyRotate = useTransform(p, [0.1, 0.3], [0, -30]);
-  const subOpacity = useTransform(p, [0.05, 0.2], [1, 0]);
-  const titleY = useTransform(p, [0.25, 0.42], ["0vh", "-34vh"]);
-  const titleScale = useTransform(p, [0.25, 0.42], [1, 0.62]);
-  const leftX = useTransform(p, [0.3, 0.55], ["-110%", "0%"]);
-  const leftOpacity = useTransform(p, [0.3, 0.5], [0, 1]);
-  const rightX = useTransform(p, [0.4, 0.65], ["110%", "0%"]);
-  const rightOpacity = useTransform(p, [0.4, 0.6], [0, 1]);
+  const keyOpacity = useTransform(p, [0, 0.25], [1, 0]);
+  const keyScale = useTransform(p, [0, 0.25], [1, 0.3]);
+  const keyY = useTransform(p, [0, 0.25], [0, -180]);
+  const keyRotate = useTransform(p, [0, 0.25], [0, -30]);
+  const subOpacity = useTransform(p, [0, 0.15], [1, 0]);
+  const titleY = useTransform(p, [0.15, 0.4], ["0vh", "-34vh"]);
+  const titleScale = useTransform(p, [0.15, 0.4], [1, 0.62]);
+  const leftX = useTransform(p, [0.2, 0.5], ["-110%", "0%"]);
+  const leftOpacity = useTransform(p, [0.2, 0.45], [0, 1]);
+  const rightX = useTransform(p, [0.3, 0.6], ["110%", "0%"]);
+  const rightOpacity = useTransform(p, [0.3, 0.55], [0, 1]);
 
   return (
-    <div ref={ref} className="relative h-[300vh]">
+    <div ref={ref} className="relative h-[190vh]">
       <div className="sticky top-0 flex h-screen items-center justify-center overflow-hidden px-8">
         <motion.div
           aria-hidden="true"

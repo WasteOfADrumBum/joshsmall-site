@@ -2,7 +2,7 @@
 
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { nav, profile } from "@/content/site";
+import { nav } from "@/content/site";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -35,8 +35,7 @@ export function Nav() {
     <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-bg/80 backdrop-blur-md">
       <nav aria-label="Primary" className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
         <a href="#top" className="text-lg font-bold tracking-tight">
-          {profile.firstName}
-          <span className="text-accent">.</span>
+          Joshua <span className="text-grad">M.</span> Small
         </a>
 
         <ul className="hidden items-center gap-1 md:flex">

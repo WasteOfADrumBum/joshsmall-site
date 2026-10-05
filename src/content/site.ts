@@ -1,6 +1,7 @@
 /**
  * All site copy lives here. To add a project, append one object to `projects`.
- * The Projects section renders every entry with the same card template.
+ * To add a side site (photography, audio), fill in its `url` in `sideProjects`.
+ * Every entry renders with the same template, so new additions stay consistent.
  */
 
 export type Project = {
@@ -8,11 +9,22 @@ export type Project = {
   title: string;
   tagline: string;
   description: string;
+  /** Short "then → now" steps. */
+  journey?: string[];
   highlights: string[];
   stack: string[];
   liveUrl?: string;
   repoUrl?: string;
   status: "Live" | "In progress" | "Planned";
+};
+
+export type SideProject = {
+  slug: string;
+  kind: "photo" | "audio";
+  title: string;
+  blurb: string;
+  /** Leave undefined until the site exists; the card shows "Coming soon". */
+  url?: string;
 };
 
 export type SkillGroup = {
@@ -22,17 +34,16 @@ export type SkillGroup = {
 };
 
 export const profile = {
-  name: "Joshua Small",
-  firstName: "Josh",
+  name: "Joshua M. Small",
+  firstName: "Joshua",
   title: "Full-Stack Software Engineer",
   headline: "I build reliable software for the moments that matter.",
   intro:
-    "TypeScript, React and Node.js engineer working on enterprise software used in emergency management. Growing toward cloud, DevOps and AI-enabled applications.",
+    "TypeScript, React and Node.js engineer working on enterprise software used in emergency management. I build new products and modernize old ones, with AI as my pair programmer.",
   location: "Trinity, North Carolina",
   email: "JMSmall89@gmail.com",
   github: "https://github.com/WasteOfADrumBum",
   linkedin: "https://www.linkedin.com/in/joshuamsmall",
-  photography: "https://www.onesmallphoto.com",
   photo: "/josh.webp",
   photoAlt:
     "Portrait of Joshua Small: glasses, a top knot and a long full beard, wearing a black shirt against a warm amber backdrop.",
@@ -50,9 +61,29 @@ export const about = {
     { label: "Growing into", value: "Cloud · DevOps · AI" },
     { label: "Based in", value: "North Carolina" },
   ],
-  beyond:
-    "Away from the keyboard: photography (I run One Small Photo), drums and live audio production.",
 };
+
+export const beyond = {
+  title: "When I'm away from the keyboard…",
+  intro: "…I'm still making things.",
+};
+
+export const sideProjects: SideProject[] = [
+  {
+    slug: "photography",
+    kind: "photo",
+    title: "Photography",
+    blurb:
+      "Professional photographer and retoucher since 2010. I shoot with Nikon DSLRs and finish every image in Adobe Creative Suite.",
+  },
+  {
+    slug: "audio",
+    kind: "audio",
+    title: "Drums & audio",
+    blurb:
+      "I play drums, record music and run live audio. Engineering sound has taught me a lot about getting details right.",
+  },
+];
 
 export const projects: Project[] = [
   {
@@ -61,6 +92,11 @@ export const projects: Project[] = [
     tagline: "A task manager built to run in production.",
     description:
       "Create an account, sign in and manage your own private tasks with priorities, due dates, status tracking, search and filters. Every day starts from a Command Center that shows what needs attention.",
+    journey: [
+      "Started before AI tools existed",
+      "Modernized with ChatGPT and Codex",
+      "Live in production today",
+    ],
     highlights: [
       "JWT auth with hashed passwords; every query is scoped to its owner",
       "GitHub Actions runs format, lint, test, build and audit on every push",
@@ -103,25 +139,30 @@ export const skillGroups: SkillGroup[] = [
 
 export const process = {
   intro:
-    "I use AI assistants as pair programmers. They speed up the routine parts so my time goes to the decisions that matter.",
-  steps: [
+    "Modern development is two jobs: building new things with new tools, and bringing older software into the present. I do both, with AI as my pair programmer and me accountable for every line.",
+  lanes: [
     {
-      title: "I own the design",
-      body: "Architecture, data models and trade-offs are decided by me, with AI as a sounding board.",
+      icon: "rocket" as const,
+      title: "Build new",
+      body: "This site is an example. I designed and built it with Claude, then reviewed, tested and shipped it myself.",
     },
     {
-      title: "AI drafts, I review",
-      body: "Claude, ChatGPT and Codex help write code, tests and docs. Nothing ships unread.",
+      icon: "refresh" as const,
+      title: "Modernize old",
+      body: "TaskForge started before AI tools existed. I revived it with ChatGPT and Codex and took it to production.",
     },
-    {
-      title: "Automation guards quality",
-      body: "Linting, tests and CI checks run on every push, so mistakes get caught early.",
-    },
+  ],
+  principlesTitle: "My ground rules",
+  principles: [
+    { title: "I own the design", body: "Architecture and trade-offs are my calls." },
+    { title: "AI drafts, I review", body: "Nothing ships unread." },
+    { title: "Automation guards quality", body: "Tests and CI run on every push." },
   ],
 };
 
 export const nav = [
   { href: "#about", label: "About" },
+  { href: "#beyond", label: "Beyond" },
   { href: "#projects", label: "Projects" },
   { href: "#skills", label: "Skills" },
   { href: "#process", label: "Process" },

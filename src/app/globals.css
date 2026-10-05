@@ -1,14 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #0b0a09;
-  --surface: #151311;
-  --fg: #f5f2ee;
-  --muted: #b3aca3;
-  --line: #2a2622;
-  --accent: #f5a524;
+  --bg: #08080b;
+  --surface: #111116;
+  --fg: #f6f3ef;
+  --muted: #b5b0ba;
+  --line: #26262e;
+  --accent: #ffb020;
+  --accent-2: #ff5e62;
+  --accent-3: #a855f7;
   --ok: #6ee7a0;
   --danger: #ff8a80;
+  /* Dark text stays readable on every stop of this one. */
+  --grad-btn: linear-gradient(110deg, #ffb020, #ff6a3d 55%, #ff4d8d);
+  /* For large text on the dark background. */
+  --grad-text: linear-gradient(110deg, #ffb020, #ff5e62 45%, #a855f7);
 }
 
 @theme inline {
@@ -18,6 +24,8 @@
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-3: var(--accent-3);
   --color-ok: var(--ok);
   --color-danger: var(--danger);
   --font-sans: var(--font-atkinson), system-ui, sans-serif;
@@ -34,6 +42,8 @@ body {
   color: var(--fg);
   font-family: var(--font-sans);
   line-height: 1.6;
+  /* Slide-in elements start off to the side; clip (unlike hidden) keeps sticky working. */
+  overflow-x: clip;
 }
 
 /* Strong, always-visible keyboard focus. */
@@ -48,14 +58,153 @@ body {
   color: var(--bg);
 }
 
+/* ---------- Visual effects ---------- */
+
+.text-grad {
+  background: var(--grad-text);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 8s linear infinite;
+}
+
+.btn-grad {
+  background: var(--grad-btn);
+  background-size: 200% auto;
+  color: var(--bg);
+  transition:
+    background-position 0.4s,
+    transform 0.2s,
+    box-shadow 0.3s;
+}
+.btn-grad:enabled:hover,
+a.btn-grad:hover {
+  background-position: 100% center;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -8px rgb(255 94 98 / 0.55);
+}
+
+.grad-border {
+  background: var(--grad-btn);
+}
+
+.aurora {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(110px);
+  opacity: 0.35;
+  pointer-events: none;
+}
+.aurora-a {
+  background: #ffb020;
+  animation: drift-a 16s ease-in-out infinite alternate;
+}
+.aurora-b {
+  background: #ff4d8d;
+  animation: drift-b 20s ease-in-out infinite alternate;
+}
+.aurora-c {
+  background: #7c4dff;
+  animation: drift-a 24s ease-in-out infinite alternate-reverse;
+}
+
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    380px circle at var(--mx, 50%) var(--my, 50%),
+    rgb(255 176 32 / 0.16),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+.spin-slow {
+  animation: spin 14s linear infinite;
+}
+
+.pulse-glow {
+  animation: pulse-glow 5s ease-in-out infinite;
+}
+
+.eq-bar {
+  display: inline-block;
+  width: 8px;
+  height: 56px;
+  border-radius: 4px;
+  background: var(--grad-btn);
+  transform-origin: bottom;
+  animation: eq 1.2s ease-in-out infinite alternate;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+@keyframes drift-a {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(60px, 40px) scale(1.2);
+  }
+}
+@keyframes drift-b {
+  from {
+    transform: translate(0, 0) scale(1.1);
+  }
+  to {
+    transform: translate(-70px, 30px) scale(0.9);
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+@keyframes eq {
+  from {
+    transform: scaleY(0.2);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
+  .text-grad,
+  .aurora,
+  .spin-slow,
+  .pulse-glow,
+  .eq-bar {
+    animation: none;
+  }
+  .eq-bar {
+    transform: scaleY(0.65);
+  }
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
 }

@@ -2,6 +2,7 @@ import { Building2, CheckCircle2, Cloud, Code2, Server } from "lucide-react";
 import { skillGroups, type SkillGroup } from "@/content/site";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
+import { SpotlightCard } from "./SpotlightCard";
 
 const icons: Record<SkillGroup["icon"], typeof Code2> = {
   code: Code2,
@@ -19,9 +20,9 @@ export function Skills() {
           const Icon = icons[group.icon];
           return (
             <li key={group.title}>
-              <Reveal delay={i * 0.06} className="h-full">
-                <div className="h-full rounded-2xl border border-line bg-surface p-6">
-                  <Icon aria-hidden="true" className="size-8 text-accent" />
+              <Reveal delay={(i % 3) * 0.08} direction="scale" className="h-full">
+                <SpotlightCard className="h-full rounded-2xl border border-line bg-surface p-6">
+                  <Icon aria-hidden="true" className="size-9 text-accent" />
                   <h3 className="mt-4 text-xl font-semibold">{group.title}</h3>
                   <ul className="mt-4 flex flex-wrap gap-2">
                     {group.items.map((item) => (
@@ -30,7 +31,7 @@ export function Skills() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </SpotlightCard>
               </Reveal>
             </li>
           );

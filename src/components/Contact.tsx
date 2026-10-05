@@ -103,7 +103,7 @@ export function Contact() {
             <button
               type="submit"
               disabled={status === "sending"}
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-bg transition-transform enabled:hover:-translate-y-0.5 disabled:opacity-70"
+              className="btn-grad mt-6 inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold disabled:opacity-70"
             >
               {status === "sending" ? (
                 <Loader2 aria-hidden="true" className="size-5 animate-spin" />

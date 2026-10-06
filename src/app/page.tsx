@@ -20,7 +20,8 @@ export default function Home() {
       </a>
       <ScrollProgress />
       <Nav />
-      <main id="main">
+      {/* Slide-in animations start off to the side; clipping here stops them widening the page on phones. */}
+      <main id="main" className="overflow-x-clip">
         <Hero />
         <About />
         <Beyond />

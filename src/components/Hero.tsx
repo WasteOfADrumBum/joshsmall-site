@@ -1,24 +1,12 @@
 "use client";
 
-import { ArrowDown, Mail } from "lucide-react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { ArrowDown, Mail, Pause, Play } from "lucide-react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { profile } from "@/content/site";
 import { GitHubIcon, LinkedInIcon } from "./Icons";
-
-// Words flagged `hot` get the animated gradient.
-const words = [
-  { text: "I" },
-  { text: "build" },
-  { text: "reliable", hot: true },
-  { text: "software", hot: true },
-  { text: "for" },
-  { text: "the" },
-  { text: "moments" },
-  { text: "that" },
-  { text: "matter." },
-];
+import { RotatingWord } from "./RotatingWord";
 
 const fade = (delay: number) => ({
   initial: { opacity: 0, y: 24 },
@@ -28,6 +16,10 @@ const fade = (delay: number) => ({
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
+  const reduceMotion = useReducedMotion();
+  const [paused, setPaused] = useState(false);
+  const running = !paused && !reduceMotion;
+
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const photoY = useTransform(scrollYProgress, [0, 1], [0, 140]);
   const textY = useTransform(scrollYProgress, [0, 1], [0, -60]);
@@ -54,33 +46,45 @@ export function Hero() {
           >
             {profile.title}
           </motion.p>
-          <motion.p
-            {...fade(0.1)}
-            className="mt-3 inline-flex items-center gap-2 rounded-full border border-line bg-surface/70 px-3 py-1 text-sm text-muted"
-          >
-            <span aria-hidden="true" className="relative flex size-2.5">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-ok opacity-60 motion-reduce:animate-none" />
-              <span className="relative inline-flex size-2.5 rounded-full bg-ok" />
-            </span>
-            {profile.availability}
-          </motion.p>
 
+          <motion.div {...fade(0.1)} className="mt-3 flex flex-wrap items-center gap-3">
+            <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/70 px-3 py-1 text-sm text-muted">
+              <span aria-hidden="true" className="relative flex size-2.5">
+                <span className="absolute inline-flex size-full animate-ping rounded-full bg-ok opacity-60 motion-reduce:animate-none" />
+                <span className="relative inline-flex size-2.5 rounded-full bg-ok" />
+              </span>
+              {profile.availability}
+            </p>
+            {!reduceMotion && (
+              <button
+                type="button"
+                onClick={() => setPaused((p) => !p)}
+                aria-label={paused ? "Play headline animation" : "Pause headline animation"}
+                className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1 text-sm text-muted transition-colors hover:border-accent hover:text-fg"
+              >
+                {paused ? <Play aria-hidden="true" size={14} /> : <Pause aria-hidden="true" size={14} />}
+                {paused ? "Play" : "Pause"}
+              </button>
+            )}
+          </motion.div>
+
+          {/* Screen readers get the full sentence once; the animated version below is decorative. */}
           <h1
             id="hero-title"
-            className="mt-5 text-5xl font-bold leading-[1.05] tracking-tight text-balance sm:text-6xl lg:text-7xl"
+            className="mt-5 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
           >
-            {words.map((w, i) => (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, y: 50, rotateX: -50 }}
-                animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{ duration: 0.7, delay: 0.15 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-                className={`inline-block ${w.hot ? "text-grad" : ""}`}
-              >
-                {w.text}
-                {" "}
+            <span className="sr-only">{profile.headline}</span>
+            <span aria-hidden="true" className="block">
+              <motion.span {...fade(0.15)} className="block">
+                {profile.headlineLead}
               </motion.span>
-            ))}
+              <motion.span {...fade(0.3)} className="block">
+                <RotatingWord phrases={profile.rotatingPhrases} running={running} />
+              </motion.span>
+              <motion.span {...fade(0.45)} className="block">
+                {profile.headlineTail}
+              </motion.span>
+            </span>
           </h1>
 
           <motion.p {...fade(0.9)} className="mt-7 max-w-xl text-lg leading-relaxed text-muted">

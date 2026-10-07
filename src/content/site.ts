@@ -38,6 +38,16 @@ export const profile = {
   firstName: "Joshua",
   title: "Full-Stack Software Engineer",
   headline: "I build reliable software for the moments that matter.",
+  headlineLead: "I build",
+  headlineTail: "for the moments that matter.",
+  /** Keep these about the same length so the slot stays tidy on phones. */
+  rotatingPhrases: [
+    "reliable software",
+    "accessible apps",
+    "scalable APIs",
+    "modern systems",
+    "AI-assisted tools",
+  ],
   intro:
     "TypeScript, React and Node.js engineer working on enterprise software used in emergency management. I build new products and modernize old ones, with AI as my pair programmer.",
   location: "Trinity, North Carolina",

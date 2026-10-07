@@ -69,6 +69,24 @@ body {
   animation: shimmer 8s linear infinite;
 }
 
+/* Purple to orange sweep across the headline word; the word flips when it ends. */
+.text-sweep {
+  background: linear-gradient(90deg, #a855f7, #ff5e62 55%, #ffb020);
+  background-size: 250% 100%;
+  background-position: 0% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: sweep 2.8s ease-in-out forwards;
+}
+
+.word-in {
+  animation: word-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.word-out {
+  animation: word-out 0.28s ease-in forwards;
+}
+
 .btn-grad {
   background: var(--grad-btn);
   background-size: 200% auto;
@@ -149,6 +167,23 @@ a.btn-grad:hover {
     background-position: 200% center;
   }
 }
+@keyframes word-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.45em);
+  }
+}
+@keyframes word-out {
+  to {
+    opacity: 0;
+    transform: translateY(-0.45em);
+  }
+}
+@keyframes sweep {
+  to {
+    background-position: 100% 0;
+  }
+}
 @keyframes drift-a {
   from {
     transform: translate(0, 0) scale(1);
@@ -193,6 +228,9 @@ a.btn-grad:hover {
     scroll-behavior: auto;
   }
   .text-grad,
+  .text-sweep,
+  .word-in,
+  .word-out,
   .aurora,
   .spin-slow,
   .pulse-glow,
@@ -201,6 +239,9 @@ a.btn-grad:hover {
   }
   .eq-bar {
     transform: scaleY(0.65);
+  }
+  .text-sweep {
+    background-position: 50% 0;
   }
   *,
   *::before,

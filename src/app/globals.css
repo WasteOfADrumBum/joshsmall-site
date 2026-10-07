@@ -152,6 +152,14 @@ a.btn-grad:hover {
   animation: pulse-glow 5s ease-in-out infinite;
 }
 
+.bob {
+  animation: bob 4s ease-in-out infinite;
+}
+
+.heartbeat {
+  animation: heartbeat 1.8s ease-in-out infinite;
+}
+
 .eq-bar {
   display: inline-block;
   width: 8px;
@@ -214,6 +222,28 @@ a.btn-grad:hover {
     opacity: 0.7;
   }
 }
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+@keyframes heartbeat {
+  0%,
+  40%,
+  100% {
+    transform: scale(1);
+  }
+  20% {
+    transform: scale(1.15);
+  }
+  30% {
+    transform: scale(1.05);
+  }
+}
 @keyframes eq {
   from {
     transform: scaleY(0.2);
@@ -234,6 +264,8 @@ a.btn-grad:hover {
   .aurora,
   .spin-slow,
   .pulse-glow,
+  .bob,
+  .heartbeat,
   .eq-bar {
     animation: none;
   }

@@ -20,7 +20,7 @@ export type Project = {
 
 export type SideProject = {
   slug: string;
-  kind: "photo" | "audio";
+  kind: "photo" | "audio" | "water" | "family";
   title: string;
   blurb: string;
   /** Leave undefined until the site exists; the card shows "Coming soon". */
@@ -89,6 +89,7 @@ export const sideProjects: SideProject[] = [
     title: "Photography",
     blurb:
       "Professional photographer and retoucher since 2010. I shoot with Nikon DSLRs and finish every image in Adobe Creative Suite.",
+    url: "https://one-small-photography.vercel.app/",
   },
   {
     slug: "audio",
@@ -96,6 +97,20 @@ export const sideProjects: SideProject[] = [
     title: "Drums & audio",
     blurb:
       "I play drums, record music and run live audio. Engineering sound has taught me a lot about getting details right.",
+  },
+  {
+    slug: "kayak",
+    kind: "water",
+    title: "Kayak fishing",
+    blurb:
+      "I grew up at the ocean, and water is still my life. Give me a kayak, a rod and a quiet morning on the water and I'm exactly where I want to be.",
+  },
+  {
+    slug: "family",
+    kind: "family",
+    title: "Family",
+    blurb:
+      "Husband to my wife, Maggie, and father to our three children. They are the reason behind everything else on this page.",
   },
 ];
 
@@ -168,9 +183,15 @@ export const process = {
   ],
   principlesTitle: "My ground rules",
   principles: [
-    { title: "I own the design", body: "Architecture and trade-offs are my calls." },
+    {
+      title: "I own the design",
+      body: "Architecture and trade-offs are my calls.",
+    },
     { title: "AI drafts, I review", body: "Nothing ships unread." },
-    { title: "Automation guards quality", body: "Tests and CI run on every push." },
+    {
+      title: "Automation guards quality",
+      body: "Tests and CI run on every push.",
+    },
   ],
 };
 

@@ -30,7 +30,7 @@ export function Hero() {
       id="top"
       ref={ref}
       aria-labelledby="hero-title"
-      className="relative overflow-hidden px-5 pb-20 pt-32 sm:px-8 md:pb-32 md:pt-44"
+      className="relative overflow-hidden px-5 pb-20 pt-28 sm:px-8 md:pb-28 md:pt-36"
     >
       <motion.div aria-hidden="true" style={{ y: glowY }} className="pointer-events-none absolute inset-0">
         <div className="aurora aurora-a -right-24 top-0 h-[28rem] w-[28rem]" />
@@ -38,7 +38,7 @@ export function Hero() {
         <div className="aurora aurora-c -left-32 top-10 h-[26rem] w-[26rem]" />
       </motion.div>
 
-      <div className="relative mx-auto grid max-w-6xl items-center gap-14 md:grid-cols-[1.3fr_1fr]">
+      <div className="relative mx-auto max-w-6xl">
         <motion.div style={{ y: textY }}>
           <motion.p
             {...fade(0)}
@@ -68,32 +68,38 @@ export function Hero() {
             )}
           </motion.div>
 
-          {/* Screen readers get the full sentence once; the animated version below is decorative. */}
+          {/*
+            Two lines on desktop: "I build [phrase]" then the tail. The phrase slot is as wide as the
+            longest phrase, so nothing moves when it flips. Screen readers get the full sentence once;
+            the animated version is decorative.
+          */}
           <h1
             id="hero-title"
-            className="mt-5 text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl"
+            className="mt-5 text-4xl font-bold leading-[1.1] tracking-tight md:text-5xl lg:text-7xl xl:text-[5.25rem]"
           >
             <span className="sr-only">{profile.headline}</span>
             <span aria-hidden="true" className="block">
-              <motion.span {...fade(0.15)} className="block">
-                {profile.headlineLead}
-              </motion.span>
-              <motion.span {...fade(0.3)} className="block">
+              <motion.span
+                {...fade(0.15)}
+                className="flex flex-wrap items-baseline gap-x-[0.28em]"
+              >
+                <span className="whitespace-nowrap">{profile.headlineLead}</span>
                 <RotatingWord phrases={profile.rotatingPhrases} running={running} />
               </motion.span>
-              <motion.span {...fade(0.45)} className="block">
+              <motion.span {...fade(0.4)} className="block">
                 {profile.headlineTail}
               </motion.span>
             </span>
           </h1>
+        </motion.div>
 
-          <motion.p {...fade(0.9)} className="mt-7 max-w-xl text-lg leading-relaxed text-muted">
-            <span className="font-semibold text-fg">Hi, I&apos;m {profile.firstName}.</span>{" "}
-            {profile.intro}
-          </motion.p>
-
-          <motion.div {...fade(1.05)}>
-            <div className="mt-10 flex flex-wrap gap-3">
+        <div className="mt-10 grid items-center gap-10 md:mt-14 md:grid-cols-[1.5fr_1fr]">
+          <motion.div {...fade(0.8)}>
+            <p className="max-w-xl text-lg leading-relaxed text-muted">
+              <span className="font-semibold text-fg">Hi, I&apos;m {profile.firstName}.</span>{" "}
+              {profile.intro}
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
               <a
                 href="#projects"
                 className="btn-grad inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold"
@@ -128,28 +134,28 @@ export function Hero() {
               </li>
             </ul>
           </motion.div>
-        </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, rotate: 3 }}
-          animate={{ opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          style={{ y: photoY }}
-          className="relative mx-auto w-full max-w-sm"
-        >
-          <div aria-hidden="true" className="grad-border pulse-glow absolute -inset-3 rounded-[2rem] blur-2xl" />
-          <div className="grad-border relative rounded-3xl p-[3px]">
-            <Image
-              src={profile.photo}
-              alt={profile.photoAlt}
-              width={profile.photoSize}
-              height={profile.photoSize}
-              priority
-              sizes="(min-width: 768px) 24rem, 90vw"
-              className="h-auto w-full rounded-[1.3rem]"
-            />
-          </div>
-        </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, rotate: 3 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 0.9, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            style={{ y: photoY }}
+            className="relative w-full max-w-[17.5rem] justify-self-center md:justify-self-end"
+          >
+            <div aria-hidden="true" className="grad-border pulse-glow absolute -inset-3 rounded-[2rem] blur-2xl" />
+            <div className="grad-border relative rounded-3xl p-[3px]">
+              <Image
+                src={profile.photo}
+                alt={profile.photoAlt}
+                width={profile.photoSize}
+                height={profile.photoSize}
+                priority
+                sizes="280px"
+                className="h-auto w-full rounded-[1.3rem]"
+              />
+            </div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

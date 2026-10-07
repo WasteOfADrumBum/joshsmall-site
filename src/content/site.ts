@@ -20,7 +20,7 @@ export type Project = {
 
 export type SideProject = {
   slug: string;
-  kind: "photo" | "audio";
+  kind: "photo" | "audio" | "fishing" | "family";
   title: string;
   blurb: string;
   /** Leave undefined until the site exists; the card shows "Coming soon". */
@@ -79,7 +79,7 @@ export const about = {
 
 export const beyond = {
   title: "When I'm away from the keyboard…",
-  intro: "…I'm still making things.",
+  intro: "…this is who I am.",
 };
 
 export const sideProjects: SideProject[] = [
@@ -89,6 +89,7 @@ export const sideProjects: SideProject[] = [
     title: "Photography",
     blurb:
       "Professional photographer and retoucher since 2010. I shoot with Nikon DSLRs and finish every image in Adobe Creative Suite.",
+    url: "https://one-small-photography.vercel.app/",
   },
   {
     slug: "audio",
@@ -96,6 +97,18 @@ export const sideProjects: SideProject[] = [
     title: "Drums & audio",
     blurb:
       "I play drums, record music and run live audio. Engineering sound has taught me a lot about getting details right.",
+  },
+  {
+    slug: "fishing",
+    kind: "fishing",
+    title: "Yak fishing",
+    blurb: "Kayak fishing, or yak fishing. I grew up by the ocean, and water is my life.",
+  },
+  {
+    slug: "family",
+    kind: "family",
+    title: "Family",
+    blurb: "I'm the husband to my wife, Maggie, and father to my three children.",
   },
 ];
 

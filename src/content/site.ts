@@ -166,6 +166,21 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/WasteOfADrumBum/one-small-ui",
     status: "In progress",
   },
+  {
+    slug: "one-small-mods-pack",
+    title: "One Small Mods Pack",
+    tagline: "Claude Code mods that hold AI to a project's rules while it works.",
+    description:
+      "Four mods, installable from one plugin marketplace, that check the code Claude writes as it writes it: accessibility, design tokens, quality gates and secret handling. Each failure goes back to Claude with the file, line and rule so it fixes the problem before moving on.",
+    highlights: [
+      "Automated WCAG 2.2 AA checks on every UI file Claude changes",
+      "Blocks hardcoded colors and spacing, naming the design token to use instead",
+      "Keeps Claude working until lint, type check and tests pass, and redacts secrets from what it reads",
+    ],
+    stack: ["TypeScript", "Claude Code", "ESLint", "axe-core"],
+    repoUrl: "https://github.com/WasteOfADrumBum/one-small-mods-pack",
+    status: "In progress",
+  },
 ];
 
 export const skillGroups: SkillGroup[] = [

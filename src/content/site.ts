@@ -153,7 +153,7 @@ export const projects: Project[] = [
   {
     slug: "onesmallui",
     title: "OneSmallUI",
-    tagline: "My own UI framework, built toward Bootstrap 6 feature parity.",
+    tagline: "My own UI framework.",
     description:
       "A React component library with SCSS design tokens and a docs site with live examples and copyable code. Currently at v0.2.0.",
     highlights: [

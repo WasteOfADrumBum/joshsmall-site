@@ -218,12 +218,12 @@ export const process = {
     {
       icon: "rocket" as const,
       title: "Build new",
-      body: "This site is an example. I designed and built it with Claude, then reviewed, tested and shipped it myself.",
+      body: "This site, One Small JARVIS and OneSmallUI all started from a blank page. I design them, build them with Claude, then review, test and ship them myself. One Small Mods Pack goes a step further, with Claude Code mods that hold AI to a project's rules while it writes.",
     },
     {
       icon: "refresh" as const,
       title: "Modernize old",
-      body: "TaskForge started before AI tools existed. I revived it with ChatGPT and Codex and took it to production.",
+      body: "At Juvare I modernize enterprise software used in emergency management. On my own time, TaskForge started before AI tools existed; I revived it with ChatGPT and Codex and took it to production.",
     },
   ],
   principlesTitle: "My ground rules",

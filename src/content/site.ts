@@ -134,6 +134,38 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/WasteOfADrumBum/TaskForge",
     status: "Live",
   },
+  {
+    slug: "one-small-jarvis",
+    title: "One Small JARVIS",
+    tagline: "A personal second-brain dashboard and planner.",
+    description:
+      "Links to my notes in Google Drive, pulls in calendar feeds and weather, and gives an at-a-glance view of the day. A planner view lays out tasks, today hour by hour, the week and the month on one screen.",
+    highlights: [
+      "Read-only Google Drive access, with a reader for notes and Docs",
+      "Calendar events from iCal feeds and tasks from Todoist, behind a private key",
+      "Plain HTML, CSS and JavaScript with no build step, plus two Vercel functions",
+    ],
+    stack: ["JavaScript", "HTML", "CSS", "Google Drive API", "Vercel Functions"],
+    liveUrl: "https://cortex-brain-nu.vercel.app",
+    repoUrl: "https://github.com/WasteOfADrumBum/cortex-brain-task",
+    status: "Live",
+  },
+  {
+    slug: "onesmallui",
+    title: "OneSmallUI",
+    tagline: "My own UI framework, built toward Bootstrap 6 feature parity.",
+    description:
+      "A React component library with SCSS design tokens and a docs site with live examples and copyable code. Currently at v0.2.0.",
+    highlights: [
+      "Design tokens generate the SCSS maps and TypeScript theme in one build",
+      "Every token pair is checked against WCAG AAA contrast",
+      "Vitest and axe audits cover components and every docs page, light and dark",
+    ],
+    stack: ["React", "TypeScript", "SCSS", "Vitest", "axe-core", "Vercel"],
+    liveUrl: "https://one-small-ui.vercel.app",
+    repoUrl: "https://github.com/WasteOfADrumBum/one-small-ui",
+    status: "In progress",
+  },
 ];
 
 export const skillGroups: SkillGroup[] = [

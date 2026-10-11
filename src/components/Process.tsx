@@ -35,7 +35,7 @@ export function Process() {
           {process.principlesTitle}
         </h3>
       </Reveal>
-      <ol className="mt-5 grid gap-5 md:grid-cols-3">
+      <ol className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {process.principles.map((step, i) => (
           <li key={step.title}>
             <Reveal delay={i * 0.1} direction="scale" className="h-full">

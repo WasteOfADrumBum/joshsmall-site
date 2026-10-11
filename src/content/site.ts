@@ -65,6 +65,7 @@ export const about = {
   paragraphs: [
     "I'm a full-stack engineer at Juvare, where I build and modernize software used in emergency-management environments. I turn complex operational requirements into maintainable features, from the UI through APIs, testing and CI/CD.",
     "I architected a shared TypeScript and SCSS component library that unified several front-end libraries for federal implementations, then helped hand it off to a dedicated team to maintain.",
+    "AI has made code cheap to write. It hasn't made it cheap to know whether that code is right. I spend my effort there: validating what AI produces, understanding how the whole system fits together, and deciding which work is worth automating and which needs a person.",
     "Before engineering, I ran teams and operations. That's why I think about how technical choices affect users, teams and business outcomes.",
     "I work remotely from North Carolina and do my best work in my own environment. I'm on Eastern Time and looking for remote roles only.",
   ],
@@ -75,6 +76,21 @@ export const about = {
     { label: "Growing into", value: "Cloud · DevOps · AI" },
     { label: "Works", value: "Remote · Eastern Time" },
   ],
+};
+
+export const stance = {
+  eyebrow: "Why it matters",
+  lead: "My advantage as a senior engineer isn't generating the most code.",
+  highlight: "It's validating what gets generated, understanding the system it lands in, and deciding what should be automated at all.",
+  stats: [
+    { value: "~2/3", label: "of developers now use coding assistants or agents" },
+    { value: "31%", label: "of daily users spend four or more hours a day with them" },
+    { value: "<10%", label: "would trust AI with important decisions" },
+  ],
+  source: "Stack Overflow developer survey of 30,903 developers, as reported by",
+  sourceOutlet: "Business Insider",
+  sourceUrl:
+    "https://www.businessinsider.com/developers-are-burned-out-as-ai-coding-reshapes-work-survey-2026-10",
 };
 
 export const beyond = {
@@ -275,6 +291,7 @@ export const process = {
     { title: "I own the design", body: "Architecture and trade-offs are my calls." },
     { title: "AI drafts, I review", body: "Nothing ships unread." },
     { title: "Automation guards quality", body: "Tests and CI run on every push." },
+    { title: "I decide what to automate", body: "Judgment calls stay with a person." },
   ],
 };
 

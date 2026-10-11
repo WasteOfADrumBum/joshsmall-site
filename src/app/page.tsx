@@ -8,6 +8,7 @@ import { Process } from "@/components/Process";
 import { Projects } from "@/components/Projects";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { Skills } from "@/components/Skills";
+import { Stance } from "@/components/Stance";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
       {/* Slide-in animations start off to the side; clipping here stops them widening the page on phones. */}
       <main id="main" className="overflow-x-clip">
         <Hero />
+        <Stance />
         <About />
         <Beyond />
         <Projects />

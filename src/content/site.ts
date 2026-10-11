@@ -105,7 +105,7 @@ export const sideProjects: SideProject[] = [
     title: "Photography",
     blurb:
       "Professional photographer and retoucher since 2010. I shoot with Nikon DSLRs and finish every image in Adobe Creative Suite.",
-    url: "https://one-small-photography.vercel.app/",
+    url: "https://photo.onesmall.company",
   },
   {
     slug: "audio",
@@ -113,7 +113,7 @@ export const sideProjects: SideProject[] = [
     title: "Drums & audio",
     blurb:
       "I play drums, record music and run live audio. Engineering sound has taught me a lot about getting details right.",
-    url: "https://one-small-studio.vercel.app/",
+    url: "https://studio.onesmall.company",
   },
   {
     slug: "fishing",
@@ -147,7 +147,7 @@ export const projects: Project[] = [
       "Runs on free tiers: Vercel, Render and MongoDB Atlas",
     ],
     stack: ["React", "TypeScript", "Node.js", "Express", "MongoDB", "Vercel"],
-    liveUrl: "https://taskforge-alpha-six.vercel.app/",
+    liveUrl: "https://task.onesmall.company",
     repoUrl: "https://github.com/WasteOfADrumBum/TaskForge",
     status: "Live",
   },
@@ -163,7 +163,7 @@ export const projects: Project[] = [
       "Plain HTML, CSS and JavaScript with no build step, plus two Vercel functions",
     ],
     stack: ["JavaScript", "HTML", "CSS", "Google Drive API", "Vercel Functions"],
-    liveUrl: "https://cortex-brain-nu.vercel.app",
+    liveUrl: "https://cortex.onesmall.company",
     repoUrl: "https://github.com/WasteOfADrumBum/cortex-brain-task",
     status: "Live",
   },
@@ -179,7 +179,7 @@ export const projects: Project[] = [
       "Vitest and axe audits cover components and every docs page, light and dark",
     ],
     stack: ["React", "TypeScript", "SCSS", "Vitest", "axe-core", "Vercel"],
-    liveUrl: "https://one-small-ui.vercel.app",
+    liveUrl: "https://ui.onesmall.company",
     repoUrl: "https://github.com/WasteOfADrumBum/one-small-ui",
     status: "In progress",
   },

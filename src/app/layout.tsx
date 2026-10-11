@@ -19,12 +19,15 @@ const geistMono = Geist_Mono({
 const description = `${profile.name} is a full-stack software engineer building reliable TypeScript, React and Node.js applications.`;
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://onesmall.company"),
+  alternates: { canonical: "/" },
   title: `${profile.name} | ${profile.title}`,
   description,
   openGraph: {
     title: `${profile.name} | ${profile.title}`,
     description,
     type: "website",
+    url: "/",
     images: [{ url: profile.photo, alt: profile.photoAlt }],
   },
 };

@@ -29,8 +29,8 @@ export type SideProject = {
 
 export type SkillGroup = {
   title: string;
-  icon: "code" | "server" | "cloud" | "test" | "building";
-  items: string[];
+  icon: "code" | "server" | "cloud" | "test" | "building" | "ai";
+  items: { name: string; href: string }[];
 };
 
 export const profile = {
@@ -187,27 +187,70 @@ export const skillGroups: SkillGroup[] = [
   {
     title: "Frontend",
     icon: "code",
-    items: ["TypeScript", "JavaScript", "React", "HTML", "CSS / SCSS"],
+    items: [
+      { name: "TypeScript", href: "https://www.typescriptlang.org" },
+      { name: "JavaScript", href: "https://developer.mozilla.org/en-US/docs/Web/JavaScript" },
+      { name: "React", href: "https://react.dev" },
+      { name: "HTML", href: "https://developer.mozilla.org/en-US/docs/Web/HTML" },
+      { name: "CSS / SCSS", href: "https://sass-lang.com" },
+    ],
   },
   {
     title: "Backend",
     icon: "server",
-    items: ["Node.js", "Express", "REST APIs", "MongoDB", "SQL / PostgreSQL"],
+    items: [
+      { name: "Node.js", href: "https://nodejs.org" },
+      { name: "Express", href: "https://expressjs.com" },
+      { name: "REST APIs", href: "https://developer.mozilla.org/en-US/docs/Glossary/REST" },
+      { name: "MongoDB", href: "https://www.mongodb.com" },
+      { name: "SQL / PostgreSQL", href: "https://www.postgresql.org" },
+    ],
   },
   {
     title: "DevOps & Cloud",
     icon: "cloud",
-    items: ["Git", "GitHub Actions", "CI/CD", "Docker", "Vercel", "AWS"],
+    items: [
+      { name: "Git", href: "https://git-scm.com" },
+      { name: "GitHub Actions", href: "https://github.com/features/actions" },
+      { name: "CI/CD", href: "https://about.gitlab.com/topics/ci-cd/" },
+      { name: "Docker", href: "https://www.docker.com" },
+      { name: "Vercel", href: "https://vercel.com" },
+      { name: "AWS", href: "https://aws.amazon.com" },
+    ],
   },
   {
     title: "Quality",
     icon: "test",
-    items: ["Jest", "Vitest", "Code review", "Debugging", "Secure development"],
+    items: [
+      { name: "Jest", href: "https://jestjs.io" },
+      { name: "Vitest", href: "https://vitest.dev" },
+      { name: "Code review", href: "https://google.github.io/eng-practices/review/" },
+      { name: "Debugging", href: "https://developer.chrome.com/docs/devtools" },
+      { name: "Secure development", href: "https://owasp.org/www-project-top-ten/" },
+    ],
   },
   {
     title: "Enterprise",
     icon: "building",
-    items: ["WebEOC", "Component libraries", "Legacy modernization", "Agile"],
+    items: [
+      { name: "WebEOC", href: "https://www.juvare.com/webeoc/" },
+      { name: "Component libraries", href: "https://storybook.js.org" },
+      { name: "Legacy modernization", href: "https://martinfowler.com/books/refactoring.html" },
+      { name: "Agile", href: "https://agilemanifesto.org" },
+    ],
+  },
+  {
+    title: "AI",
+    icon: "ai",
+    items: [
+      { name: "Claude", href: "https://claude.ai" },
+      { name: "Claude Code", href: "https://claude.com/product/claude-code" },
+      { name: "Gemini", href: "https://gemini.google.com" },
+      { name: "ChatGPT", href: "https://chatgpt.com" },
+      { name: "Codex", href: "https://openai.com/codex/" },
+      { name: "Muse", href: "https://www.meta.ai" },
+      { name: "Fieldy AI", href: "https://fieldy.ai" },
+    ],
   },
 ];
 

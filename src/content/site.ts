@@ -87,7 +87,10 @@ export const stance = {
     { value: "31%", label: "of daily users spend four or more hours a day with them" },
     { value: "<10%", label: "would trust AI with important decisions" },
   ],
-  source: "Stack Overflow developer survey of 30,903 developers, as reported by Business Insider.",
+  source: "Stack Overflow developer survey of 30,903 developers, as reported by",
+  sourceOutlet: "Business Insider",
+  sourceUrl:
+    "https://www.businessinsider.com/developers-are-burned-out-as-ai-coding-reshapes-work-survey-2026-10",
 };
 
 export const beyond = {

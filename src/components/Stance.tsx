@@ -26,7 +26,16 @@ export function Stance() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-sm text-muted">Source: {stance.source}</p>
+              <p className="mt-6 text-sm text-muted">
+                Source: {stance.source}{" "}
+                <a
+                  href={stance.sourceUrl}
+                  className="underline underline-offset-4 transition-colors hover:text-fg"
+                >
+                  {stance.sourceOutlet}
+                </a>
+                .
+              </p>
             </SpotlightCard>
           </div>
         </Reveal>

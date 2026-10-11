@@ -70,7 +70,11 @@ function SideCard({ item }: { item: SideProject }) {
       {item.kind === "photo" || item.kind === "audio" ? (
         <div className="mt-6">
           {item.url ? (
-            <a href={item.url} className="btn-grad inline-flex rounded-full px-5 py-2.5 font-semibold">
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-grad inline-flex rounded-full px-5 py-2.5 font-semibold">
               Visit site<span className="sr-only"> for {item.title}</span>
             </a>
           ) : (

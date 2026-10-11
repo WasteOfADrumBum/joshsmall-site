@@ -97,6 +97,7 @@ export const sideProjects: SideProject[] = [
     title: "Drums & audio",
     blurb:
       "I play drums, record music and run live audio. Engineering sound has taught me a lot about getting details right.",
+    url: "https://one-small-studio.vercel.app/",
   },
   {
     slug: "fishing",

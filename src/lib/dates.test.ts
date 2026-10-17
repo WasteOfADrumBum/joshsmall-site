@@ -107,3 +107,20 @@ describe("formatYearsPlus", () => {
     assert.equal(formatYearsPlus(5), "5+ years");
   });
 });
+
+describe("career config", () => {
+  it("shows 37+ life experience now and doesn't tick up before the latest possible birthday", async () => {
+    const { lifeStart } = await import("../content/site.ts");
+    assert.equal(completeYearsSince(lifeStart, on("2026-10-17")), 37);
+    assert.equal(completeYearsSince(lifeStart, on("2027-10-16")), 37);
+    assert.equal(completeYearsSince(lifeStart, on("2027-10-17")), 38);
+  });
+
+  it("matches the counts on the page today", async () => {
+    const { career } = await import("../content/site.ts");
+    const today = on("2026-10-17");
+    assert.equal(approximateYearsSince(career.professionalStartYear, today), 20);
+    assert.equal(completeYearsSince(career.softwareEngineeringStart, today), 5);
+    assert.equal(completeYearsSince(career.employerStart, today), 4);
+  });
+});

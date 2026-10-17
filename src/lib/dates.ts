@@ -41,7 +41,7 @@ export function completeYearsSince(start: CareerDate, now: Date = new Date()): n
 /**
  * Nearest whole number of years since a year that is itself only approximate ("around 2006").
  * Assuming the middle of that year, the nearest whole number works out to the year difference.
- * Show it with a qualifier such as "About", because it is an estimate, not a completed count.
+ * It is an estimate, not a completed count.
  */
 export function approximateYearsSince(startYear: number, now: Date = new Date()): number {
   return Math.max(0, now.getUTCFullYear() - startYear);

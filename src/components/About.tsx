@@ -1,4 +1,4 @@
-import { about, career } from "@/content/site";
+import { about, career, lifeStart } from "@/content/site";
 import { approximateYearsSince, completeYearsSince, formatYearsPlus } from "@/lib/dates";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
@@ -11,17 +11,19 @@ import { SpotlightCard } from "./SpotlightCard";
  */
 export function About() {
   const now = new Date();
-  const metrics = [
+  const facts = [
+    {
+      label: about.lifeLabel,
+      value: formatYearsPlus(completeYearsSince(lifeStart, now)),
+    },
     {
       label: about.professionalLabel,
-      value: `About ${approximateYearsSince(career.professionalStartYear, now)} years`,
+      value: formatYearsPlus(approximateYearsSince(career.professionalStartYear, now)),
     },
     {
       label: about.softwareLabel,
       value: formatYearsPlus(completeYearsSince(career.softwareEngineeringStart, now)),
     },
-  ];
-  const facts = [
     {
       label: about.currentLabel,
       value: `${career.employer} · ${formatYearsPlus(completeYearsSince(career.employerStart, now))}`,
@@ -40,19 +42,9 @@ export function About() {
           ))}
         </div>
         <Reveal direction="right">
-          {/* The two experience counts sit side by side wherever the panel is wide enough for them. */}
-          <dl className="grid divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2">
-            {metrics.map((f, i) => (
-              <SpotlightCard
-                key={f.label}
-                className={`px-6 py-5 ${i === 0 ? "sm:border-r md:border-r-0 xl:border-r" : ""} border-line`}
-              >
-                <dt className="font-mono text-xs uppercase tracking-widest text-muted">{f.label}</dt>
-                <dd className="mt-1 text-xl font-semibold">{f.value}</dd>
-              </SpotlightCard>
-            ))}
+          <dl className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
             {facts.map((f) => (
-              <SpotlightCard key={f.label} className="px-6 py-5 sm:col-span-2 md:col-span-1 xl:col-span-2">
+              <SpotlightCard key={f.label} className="px-6 py-5">
                 <dt className="font-mono text-xs uppercase tracking-widest text-muted">{f.label}</dt>
                 <dd className="mt-1 text-xl font-semibold">{f.value}</dd>
               </SpotlightCard>

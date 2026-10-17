@@ -69,12 +69,26 @@ export const profile = {
  * these into year counts with src/lib/dates.ts, so they stay current without edits.
  */
 export const career = {
-  /** Approximate: I started working around 2006. Shown as "About N years". */
+  birthYear: 1989,
+  /** UNKNOWN: set to 1–12 once confirmed. */
+  birthMonth: undefined as number | undefined,
+  /**
+   * Fallback while `birthMonth` is unknown: I was already 37 on Oct 17, 2026, so my birthday falls
+   * on or before Oct 17. Counting from that latest possible date never shows more than my real age.
+   */
+  birthdayOnOrBefore: { month: 10, day: 17 },
+  /** Approximate: I started working around 2006. */
   professionalStartYear: 2006,
   softwareEngineeringStart: { year: 2021, month: 1 } satisfies CareerDate,
   employer: "Juvare",
   employerStart: { year: 2021, month: 11 } satisfies CareerDate,
 };
+
+/** Start of "Life experience": the birth month when known, otherwise the fallback above. */
+export const lifeStart: CareerDate =
+  career.birthMonth === undefined
+    ? { year: career.birthYear, ...career.birthdayOnOrBefore }
+    : { year: career.birthYear, month: career.birthMonth };
 
 export const about = {
   paragraphs: [
@@ -85,6 +99,7 @@ export const about = {
     "I work remotely from North Carolina and do my best work in my own environment. I'm on Eastern Time and looking for remote roles only.",
   ],
   /** Experience counts and the current role are calculated from `career` in the About component. */
+  lifeLabel: "Life experience",
   professionalLabel: "Professional experience",
   softwareLabel: "Software engineering",
   currentLabel: "Currently",

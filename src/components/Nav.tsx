@@ -45,7 +45,7 @@ export function Nav() {
               <a
                 href={item.href}
                 aria-current={active === item.href ? "location" : undefined}
-                className="rounded-full px-4 py-2 text-sm text-muted transition-colors hover:text-fg aria-[current=location]:bg-surface aria-[current=location]:text-fg"
+                className="whitespace-nowrap rounded-full px-3 py-2 text-sm text-muted transition-colors lg:px-4 hover:text-fg aria-[current=location]:bg-surface aria-[current=location]:text-fg"
               >
                 {item.label}
               </a>

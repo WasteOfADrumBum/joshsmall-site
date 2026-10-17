@@ -11,6 +11,7 @@ export function Process() {
     <Section id="process" eyebrow="How I build" title="Building new. Modernizing old.">
       <Reveal>
         <p className="max-w-2xl text-xl leading-relaxed text-muted">{process.intro}</p>
+        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-muted">{process.practices}</p>
       </Reveal>
 
       <ul className="mt-10 grid gap-6 md:grid-cols-2">

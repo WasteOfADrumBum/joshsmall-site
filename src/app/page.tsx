@@ -26,10 +26,10 @@ export default function Home() {
         <Hero />
         <Stance />
         <About />
-        <Beyond />
         <Projects />
         <Skills />
         <Process />
+        <Beyond />
         <Contact />
       </main>
       <Footer />

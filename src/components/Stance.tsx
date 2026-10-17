@@ -5,7 +5,7 @@ import { SpotlightCard } from "./SpotlightCard";
 /** A short statement of how I work with AI, placed right under the hero so it's seen early. */
 export function Stance() {
   return (
-    <section aria-labelledby="stance-title" className="px-5 pb-8 sm:px-8">
+    <section id="why-it-matters" aria-labelledby="stance-title" className="scroll-mt-16 px-5 pb-8 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <Reveal direction="scale">
           <div className="grad-border rounded-3xl p-[2px]">

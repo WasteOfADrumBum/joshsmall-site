@@ -39,13 +39,13 @@ export function Nav() {
           <span className="text-accent-3">S</span>mall
         </a>
 
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-1 lg:flex">
           {nav.map((item) => (
             <li key={item.href}>
               <a
                 href={item.href}
                 aria-current={active === item.href ? "location" : undefined}
-                className="rounded-full px-4 py-2 text-sm text-muted transition-colors hover:text-fg aria-[current=location]:bg-surface aria-[current=location]:text-fg"
+                className="whitespace-nowrap rounded-full px-3 py-2 text-sm text-muted transition-colors lg:px-4 hover:text-fg aria-[current=location]:bg-surface aria-[current=location]:text-fg"
               >
                 {item.label}
               </a>
@@ -55,7 +55,7 @@ export function Nav() {
 
         <button
           type="button"
-          className="rounded-lg p-2 md:hidden"
+          className="rounded-lg p-2 lg:hidden"
           aria-expanded={open}
           aria-controls="mobile-menu"
           onClick={() => setOpen((o) => !o)}
@@ -66,7 +66,7 @@ export function Nav() {
       </nav>
 
       {open && (
-        <ul id="mobile-menu" className="border-t border-line bg-bg px-5 py-4 md:hidden">
+        <ul id="mobile-menu" className="border-t border-line bg-bg px-5 py-4 lg:hidden">
           {nav.map((item) => (
             <li key={item.href}>
               <a

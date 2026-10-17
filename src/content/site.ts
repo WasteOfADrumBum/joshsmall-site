@@ -93,6 +93,65 @@ export const stance = {
     "https://www.businessinsider.com/developers-are-burned-out-as-ai-coding-reshapes-work-survey-2026-10",
 };
 
+/**
+ * Findings from Elon's survey sit apart from my responses. Numbers match Elon's own summary graphic
+ * (x.com/elonuniversity/status/2110098285956301023) and the published report linked below.
+ */
+export const humanSide = {
+  eyebrow: "The human side of AI",
+  title: "The future of work is changing. I'm building the skills to help shape it.",
+  intro:
+    "AI is changing more than how we write code. It's changing how people work, what organizations need, and how individuals think about their professional futures. I take those changes seriously. Rather than waiting to see where technology takes my career, I'm actively developing the skills to help shape how it's used.",
+  cards: [
+    {
+      title: "Work Should Mean Something",
+      stat: "81%",
+      finding: "of workers say paid work is extremely or very important to their family role.",
+      response:
+        "I build software with a purpose beyond delivering features. I care about solving real problems, supporting the people who depend on those systems, and creating something that provides lasting value.",
+      value: "Human-centered engineering, ownership, and meaningful business outcomes.",
+    },
+    {
+      title: "Change Demands Adaptability",
+      stat: "83%",
+      finding: "of U.S. adults expect AI to eliminate more jobs than it creates.",
+      response:
+        "I don't assume yesterday's skills will be enough tomorrow. I'm actively expanding my capabilities in AI, automation, application development, and system architecture so I can continue contributing as technology and engineering roles evolve.",
+      value: "Adaptability, continuous learning, and practical modernization.",
+    },
+    {
+      title: "Technology Should Empower People",
+      stat: "65%",
+      finding: "of U.S. adults believe less meaningful work would erode human purpose and dignity.",
+      response:
+        "I believe the best automation removes unnecessary friction without removing human judgment. My goal is to create systems that make people more capable and help them focus on the work that matters.",
+      value: "Responsible automation, accessibility, UX, and thoughtful technical decisions.",
+    },
+    {
+      title: "Adoption Needs Ownership",
+      stat: "66%",
+      finding:
+        "of workers are comfortable with workplace AI or open to it with training. However, 49% believe most workers will have little control over their professional futures.",
+      response:
+        "I don't want to depend on AI systems I can't evaluate or understand. I'm developing the skills to design, integrate, test, and oversee these technologies while keeping people accountable for their outcomes.",
+      value: "Engineering judgment, AI integration, risk awareness, and technical accountability.",
+    },
+  ],
+  source:
+    "Survey findings: Elon University Imagining the Digital Future Center, national survey of 1,158 U.S. adults conducted Aug. 20–24, 2026, published October 2026 as",
+  sourceTitle: "The Meaning of Work in the AI Age",
+  sourceUrl:
+    "https://imaginingthedigitalfuture.org/reports-and-publications/the-meaning-of-work-in-the-ai-age/",
+  sourceNote: "Responses and values are my own.",
+  findingLabel: "The data",
+  responseLabel: "My move",
+  valueLabel: "What you get:",
+  closingLead: "I don't just adapt to new technology.",
+  closingHighlight: "I help turn it into lasting value.",
+  closingBody:
+    "I bring full-stack engineering experience, end-to-end ownership, and a practical approach to AI adoption. Building something quickly isn't the same as building something well. My focus is delivering reliable systems, making sound technical decisions, and helping teams use emerging technology with confidence.",
+};
+
 export const beyond = {
   title: "When I'm away from the keyboard…",
   intro: "…this is who I am.",
@@ -275,6 +334,8 @@ export const skillGroups: SkillGroup[] = [
 export const process = {
   intro:
     "Modern development is two jobs: building new things with new tools, and bringing older software into the present. I do both, with AI as my pair programmer and me accountable for every line.",
+  practices:
+    "Either way, the practices are the same: I own the architecture, test and validate what gets written, build accessibility in from the start, and automate the checks so reliability doesn't depend on anyone remembering.",
   lanes: [
     {
       icon: "rocket" as const,
@@ -302,11 +363,14 @@ export const contact = {
   badges: ["Remote only", "Based in North Carolina", "Eastern Time (ET)"],
 };
 
+/** Same order as the sections on the page. */
 export const nav = [
+  { href: "#why-it-matters", label: "Why it matters" },
   { href: "#about", label: "About" },
-  { href: "#beyond", label: "Beyond" },
   { href: "#projects", label: "Projects" },
   { href: "#skills", label: "Skills" },
+  { href: "#human-side", label: "Human side" },
   { href: "#process", label: "Process" },
+  { href: "#beyond", label: "Beyond" },
   { href: "#contact", label: "Contact" },
 ];

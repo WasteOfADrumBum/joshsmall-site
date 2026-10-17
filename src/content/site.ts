@@ -20,7 +20,7 @@ export type Project = {
 
 export type SideProject = {
   slug: string;
-  kind: "photo" | "audio" | "fishing" | "family";
+  kind: "photo" | "audio" | "fishing" | "family" | "moto" | "gaming";
   title: string;
   blurb: string;
   /** Leave undefined until the site exists; the card shows "Coming soon". */
@@ -185,6 +185,20 @@ export const sideProjects: SideProject[] = [
     kind: "family",
     title: "Family",
     blurb: "I'm the husband to my wife, Maggie, and father to my three children.",
+  },
+  {
+    slug: "motorcycles",
+    kind: "moto",
+    title: "Motorcycles",
+    blurb:
+      "I ride an Indian Scout Bobber. Nothing beats the open road and the sense of freedom that comes with it.",
+  },
+  {
+    slug: "gaming",
+    kind: "gaming",
+    title: "Gaming",
+    blurb:
+      "Achievement hunter on Xbox and PC. 100% is just the start; I push every game to its limits. Once I've beaten it fair and square, I mod it way past anything the devs intended.",
   },
 ];
 

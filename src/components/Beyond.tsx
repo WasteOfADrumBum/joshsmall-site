@@ -1,15 +1,27 @@
 "use client";
 
-import { Aperture, Camera, Drum, Fish, Heart, Keyboard, Waves } from "lucide-react";
+import {
+  Aperture,
+  Camera,
+  Drum,
+  Fish,
+  Gamepad2,
+  Heart,
+  Keyboard,
+  Motorbike,
+  Trophy,
+  Waves,
+  Wind,
+} from "lucide-react";
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { useRef, useSyncExternalStore } from "react";
 import { beyond, sideProjects, type SideProject } from "@/content/site";
 import { Reveal } from "./Reveal";
 import { SpotlightCard } from "./SpotlightCard";
 
-// Four cards need room, so the pinned scroll effect only runs on big screens.
+// Two rows of three cards need room, so the pinned scroll effect only runs on big screens.
 const PINNED_QUERY =
-  "(min-width: 1100px) and (min-height: 700px) and (prefers-reduced-motion: no-preference)";
+  "(min-width: 1100px) and (min-height: 860px) and (prefers-reduced-motion: no-preference)";
 
 function usePinned() {
   return useSyncExternalStore(
@@ -58,17 +70,41 @@ function Visual({ kind }: { kind: SideProject["kind"] }) {
           <Heart className="heartbeat size-16 fill-accent-2/20 text-accent-2" strokeWidth={1.5} />
         </div>
       );
+    case "moto":
+      return (
+        <div aria-hidden="true" className="relative flex h-28 w-28 items-center">
+          <Wind className="gust absolute left-0 size-8 text-accent-3" strokeWidth={1.5} />
+          <Motorbike className="ride ml-6 size-[4.5rem] text-accent-2" strokeWidth={1.5} />
+        </div>
+      );
+    case "gaming":
+      return (
+        <div aria-hidden="true" className="relative grid h-28 w-28 place-items-center">
+          <Gamepad2 className="size-16 text-accent-2" strokeWidth={1.5} />
+          <Trophy className="bob absolute right-1 top-3 size-7 text-accent" strokeWidth={1.75} />
+        </div>
+      );
   }
 }
 
-function SideCard({ item }: { item: SideProject }) {
+function SideCard({ item, compact = false }: { item: SideProject; compact?: boolean }) {
   return (
-    <SpotlightCard className="h-full rounded-3xl border border-line bg-surface p-7">
-      <Visual kind={item.kind} />
-      <h3 className="mt-6 text-2xl font-bold tracking-tight">{item.title}</h3>
-      <p className="mt-3 leading-relaxed text-muted">{item.blurb}</p>
+    <SpotlightCard
+      className={`h-full rounded-3xl border border-line bg-surface ${compact ? "p-6" : "p-7"}`}
+    >
+      {compact ? (
+        <div className="h-[4.2rem] origin-top-left scale-[0.6]">
+          <Visual kind={item.kind} />
+        </div>
+      ) : (
+        <Visual kind={item.kind} />
+      )}
+      <h3 className={`${compact ? "mt-4" : "mt-6"} font-bold tracking-tight ${compact ? "text-xl" : "text-2xl"}`}>
+        {item.title}
+      </h3>
+      <p className={`leading-relaxed text-muted ${compact ? "mt-2" : "mt-3"}`}>{item.blurb}</p>
       {item.kind === "photo" || item.kind === "audio" ? (
-        <div className="mt-6">
+        <div className={compact ? "mt-4" : "mt-6"}>
           {item.url ? (
             <a
               href={item.url}
@@ -103,7 +139,7 @@ function PinnedCard({
   const opacity = useTransform(p, [start, start + 0.25], [0, 1]);
   return (
     <motion.div style={{ x, opacity }} className="h-full">
-      <SideCard item={item} />
+      <SideCard item={item} compact />
     </motion.div>
   );
 }
@@ -121,12 +157,15 @@ function Pinned() {
   const titleY = useTransform(p, [0.15, 0.4], ["0vh", "-36vh"]);
   const titleScale = useTransform(p, [0.15, 0.4], [1, 0.55]);
 
-  // Left two cards fly in from the left, right two from the right, one after another.
+  // Two rows of three: left cards fly in from the left, middle ones fade in, right ones
+  // come from the right, top row first.
   const slots = [
     { start: 0.2, from: "-110%" },
-    { start: 0.27, from: "-110%" },
-    { start: 0.34, from: "110%" },
-    { start: 0.41, from: "110%" },
+    { start: 0.25, from: "0%" },
+    { start: 0.3, from: "110%" },
+    { start: 0.35, from: "-110%" },
+    { start: 0.4, from: "0%" },
+    { start: 0.45, from: "110%" },
   ];
 
   return (
@@ -152,7 +191,7 @@ function Pinned() {
           </motion.p>
         </motion.div>
 
-        <ul className="relative mt-28 grid w-full max-w-6xl grid-cols-4 gap-5">
+        <ul className="relative mt-28 grid w-full max-w-6xl grid-cols-3 gap-4">
           {sideProjects.map((item, i) => (
             <li key={item.slug}>
               <PinnedCard item={item} p={p} start={slots[i].start} from={slots[i].from} />
@@ -178,7 +217,7 @@ function Static() {
         </h2>
         <p className="mt-3 text-xl text-muted">{beyond.intro}</p>
       </Reveal>
-      <ul className="mt-10 grid gap-6 md:grid-cols-2">
+      <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {sideProjects.map((item, i) => (
           <li key={item.slug}>
             <Reveal direction={i % 2 === 0 ? "left" : "right"} className="h-full">

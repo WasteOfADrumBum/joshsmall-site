@@ -152,8 +152,25 @@ export const projects: Project[] = [
     status: "Live",
   },
   {
-    slug: "one-small-jarvis",
-    title: "One Small JARVIS",
+    slug: "onesmallui",
+    title: "OneSmallUI",
+    tagline: "An interface for the next generation.",
+    description:
+      "A space-themed React component library that looks like it shipped on a starship, built on React, TypeScript and SCSS design tokens. The docs site has live examples and copyable code, and it's on npm today: npm install @onesmall/ui.",
+    highlights: [
+      "Passes WCAG AAA while looking like this, with light and dark themes driven by SCSS tokens",
+      "Utility classes, smooth motion and drag and drop built in, all driven by classes and data attributes",
+      "Tailwind-style responsive utilities with Bootstrap-friendly names",
+      "Machine-readable docs for AI agents, generated from the same data as the docs pages, plus an agent skill in the npm package so coding assistants use it correctly",
+    ],
+    stack: ["React", "TypeScript", "SCSS", "Vitest", "axe-core", "npm"],
+    liveUrl: "https://ui.onesmall.company",
+    repoUrl: "https://github.com/WasteOfADrumBum/one-small-ui",
+    status: "Live",
+  },
+  {
+    slug: "cortex",
+    title: "Cortex",
     tagline: "A personal second-brain dashboard and planner.",
     description:
       "Links to my notes in Google Drive, pulls in calendar feeds and weather, and gives an at-a-glance view of the day. A planner view lays out tasks, today hour by hour, the week and the month on one screen.",
@@ -166,22 +183,6 @@ export const projects: Project[] = [
     liveUrl: "https://cortex.onesmall.company",
     repoUrl: "https://github.com/WasteOfADrumBum/cortex-brain-task",
     status: "Live",
-  },
-  {
-    slug: "onesmallui",
-    title: "OneSmallUI",
-    tagline: "My own UI framework.",
-    description:
-      "A React component library with SCSS design tokens and a docs site with live examples and copyable code. Currently at v0.2.0.",
-    highlights: [
-      "Design tokens generate the SCSS maps and TypeScript theme in one build",
-      "Every token pair is checked against WCAG AAA contrast",
-      "Vitest and axe audits cover components and every docs page, light and dark",
-    ],
-    stack: ["React", "TypeScript", "SCSS", "Vitest", "axe-core", "Vercel"],
-    liveUrl: "https://ui.onesmall.company",
-    repoUrl: "https://github.com/WasteOfADrumBum/one-small-ui",
-    status: "In progress",
   },
   {
     slug: "one-small-mods-pack",
@@ -278,7 +279,7 @@ export const process = {
     {
       icon: "rocket" as const,
       title: "Build new",
-      body: "This site, One Small JARVIS and OneSmallUI all started from a blank page. I design them, build them with Claude, then review, test and ship them myself. One Small Mods Pack goes a step further, with Claude Code mods that hold AI to a project's rules while it writes.",
+      body: "This site, Cortex and OneSmallUI all started from a blank page. I design them, build them with Claude, then review, test and ship them myself. One Small Mods Pack goes a step further, with Claude Code mods that hold AI to a project's rules while it writes.",
     },
     {
       icon: "refresh" as const,

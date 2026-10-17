@@ -1,6 +1,7 @@
 import { About } from "@/components/About";
 import { Beyond } from "@/components/Beyond";
 import { Contact } from "@/components/Contact";
+import { Experience } from "@/components/Experience";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { HumanSide } from "@/components/HumanSide";
@@ -10,6 +11,9 @@ import { Projects } from "@/components/Projects";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { Skills } from "@/components/Skills";
 import { Stance } from "@/components/Stance";
+
+// Experience counts in About are calculated at render; regenerate daily so they stay current.
+export const revalidate = 86400;
 
 export default function Home() {
   return (
@@ -30,6 +34,7 @@ export default function Home() {
         <Projects />
         <Skills />
         <HumanSide />
+        <Experience />
         <Process />
         <Beyond />
         <Contact />

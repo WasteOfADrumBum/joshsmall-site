@@ -109,11 +109,13 @@ describe("formatYearsPlus", () => {
 });
 
 describe("career config", () => {
-  it("shows 37+ life experience now and doesn't tick up before the latest possible birthday", async () => {
-    const { lifeStart } = await import("../content/site.ts");
-    assert.equal(completeYearsSince(lifeStart, on("2026-10-17")), 37);
-    assert.equal(completeYearsSince(lifeStart, on("2027-10-16")), 37);
-    assert.equal(completeYearsSince(lifeStart, on("2027-10-17")), 38);
+  it("rolls life experience over on the birthday, not before", async () => {
+    const { career } = await import("../content/site.ts");
+    assert.equal(completeYearsSince(career.lifeStart, on("2026-10-17")), 37);
+    assert.equal(completeYearsSince(career.lifeStart, on("2027-01-11")), 37);
+    assert.equal(completeYearsSince(career.lifeStart, on("2027-01-12")), 38);
+    assert.equal(completeYearsSince(career.lifeStart, new Date("2027-01-11T23:59:59Z")), 37);
+    assert.equal(completeYearsSince(career.lifeStart, new Date("2027-01-12T00:00:00Z")), 38);
   });
 
   it("matches the counts on the page today", async () => {

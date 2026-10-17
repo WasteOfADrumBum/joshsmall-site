@@ -1,4 +1,4 @@
-import { about, career, lifeStart } from "@/content/site";
+import { about, career } from "@/content/site";
 import { approximateYearsSince, completeYearsSince, formatYearsPlus } from "@/lib/dates";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
@@ -14,7 +14,7 @@ export function About() {
   const facts = [
     {
       label: about.lifeLabel,
-      value: formatYearsPlus(completeYearsSince(lifeStart, now)),
+      value: formatYearsPlus(completeYearsSince(career.lifeStart, now)),
     },
     {
       label: about.professionalLabel,

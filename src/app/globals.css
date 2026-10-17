@@ -160,6 +160,14 @@ a.btn-grad:hover {
   animation: heartbeat 1.8s ease-in-out infinite;
 }
 
+.ride {
+  animation: ride 0.6s ease-in-out infinite;
+}
+
+.gust {
+  animation: gust 1.6s ease-in-out infinite;
+}
+
 .eq-bar {
   display: inline-block;
   width: 8px;
@@ -244,6 +252,28 @@ a.btn-grad:hover {
     transform: scale(1.05);
   }
 }
+@keyframes ride {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+@keyframes gust {
+  0% {
+    transform: translateX(8px);
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-12px);
+    opacity: 0;
+  }
+}
 @keyframes eq {
   from {
     transform: scaleY(0.2);
@@ -266,6 +296,8 @@ a.btn-grad:hover {
   .pulse-glow,
   .bob,
   .heartbeat,
+  .ride,
+  .gust,
   .eq-bar {
     animation: none;
   }

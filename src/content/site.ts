@@ -143,6 +143,9 @@ export const humanSide = {
   sourceUrl:
     "https://imaginingthedigitalfuture.org/reports-and-publications/the-meaning-of-work-in-the-ai-age/",
   sourceNote: "Responses and values are my own.",
+  findingLabel: "The data",
+  responseLabel: "My move",
+  valueLabel: "What you get:",
   closingLead: "I don't just adapt to new technology.",
   closingHighlight: "I help turn it into lasting value.",
   closingBody:
@@ -366,6 +369,7 @@ export const nav = [
   { href: "#about", label: "About" },
   { href: "#projects", label: "Projects" },
   { href: "#skills", label: "Skills" },
+  { href: "#human-side", label: "Human side" },
   { href: "#process", label: "Process" },
   { href: "#beyond", label: "Beyond" },
   { href: "#contact", label: "Contact" },

@@ -3,6 +3,7 @@ import { Beyond } from "@/components/Beyond";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
+import { HumanSide } from "@/components/HumanSide";
 import { Nav } from "@/components/Nav";
 import { Process } from "@/components/Process";
 import { Projects } from "@/components/Projects";
@@ -28,6 +29,7 @@ export default function Home() {
         <About />
         <Projects />
         <Skills />
+        <HumanSide />
         <Process />
         <Beyond />
         <Contact />

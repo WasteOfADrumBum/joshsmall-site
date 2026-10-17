@@ -1,15 +1,27 @@
 "use client";
 
-import { Aperture, Camera, Drum, Fish, Heart, Keyboard, Motorbike, Waves, Wind } from "lucide-react";
+import {
+  Aperture,
+  Camera,
+  Drum,
+  Fish,
+  Gamepad2,
+  Heart,
+  Keyboard,
+  Motorbike,
+  Trophy,
+  Waves,
+  Wind,
+} from "lucide-react";
 import { motion, useScroll, useTransform, type MotionValue } from "motion/react";
 import { useRef, useSyncExternalStore } from "react";
 import { beyond, sideProjects, type SideProject } from "@/content/site";
 import { Reveal } from "./Reveal";
 import { SpotlightCard } from "./SpotlightCard";
 
-// Five cards in one row need room, so the pinned scroll effect only runs on big screens.
+// Two rows of three cards need room, so the pinned scroll effect only runs on big screens.
 const PINNED_QUERY =
-  "(min-width: 1280px) and (min-height: 760px) and (prefers-reduced-motion: no-preference)";
+  "(min-width: 1100px) and (min-height: 860px) and (prefers-reduced-motion: no-preference)";
 
 function usePinned() {
   return useSyncExternalStore(
@@ -65,6 +77,13 @@ function Visual({ kind }: { kind: SideProject["kind"] }) {
           <Motorbike className="ride ml-6 size-[4.5rem] text-accent-2" strokeWidth={1.5} />
         </div>
       );
+    case "gaming":
+      return (
+        <div aria-hidden="true" className="relative grid h-28 w-28 place-items-center">
+          <Gamepad2 className="size-16 text-accent-2" strokeWidth={1.5} />
+          <Trophy className="bob absolute right-1 top-3 size-7 text-accent" strokeWidth={1.75} />
+        </div>
+      );
   }
 }
 
@@ -73,13 +92,19 @@ function SideCard({ item, compact = false }: { item: SideProject; compact?: bool
     <SpotlightCard
       className={`h-full rounded-3xl border border-line bg-surface ${compact ? "p-6" : "p-7"}`}
     >
-      <Visual kind={item.kind} />
-      <h3 className={`mt-6 font-bold tracking-tight ${compact ? "text-xl" : "text-2xl"}`}>
+      {compact ? (
+        <div className="h-[4.2rem] origin-top-left scale-[0.6]">
+          <Visual kind={item.kind} />
+        </div>
+      ) : (
+        <Visual kind={item.kind} />
+      )}
+      <h3 className={`${compact ? "mt-4" : "mt-6"} font-bold tracking-tight ${compact ? "text-xl" : "text-2xl"}`}>
         {item.title}
       </h3>
-      <p className="mt-3 leading-relaxed text-muted">{item.blurb}</p>
+      <p className={`leading-relaxed text-muted ${compact ? "mt-2" : "mt-3"}`}>{item.blurb}</p>
       {item.kind === "photo" || item.kind === "audio" ? (
-        <div className="mt-6">
+        <div className={compact ? "mt-4" : "mt-6"}>
           {item.url ? (
             <a
               href={item.url}
@@ -132,13 +157,15 @@ function Pinned() {
   const titleY = useTransform(p, [0.15, 0.4], ["0vh", "-36vh"]);
   const titleScale = useTransform(p, [0.15, 0.4], [1, 0.55]);
 
-  // Left two cards fly in from the left, the middle one rises, right two come from the right.
+  // Two rows of three: left cards fly in from the left, middle ones fade in, right ones
+  // come from the right, top row first.
   const slots = [
     { start: 0.2, from: "-110%" },
-    { start: 0.26, from: "-110%" },
-    { start: 0.32, from: "0%" },
-    { start: 0.38, from: "110%" },
-    { start: 0.44, from: "110%" },
+    { start: 0.25, from: "0%" },
+    { start: 0.3, from: "110%" },
+    { start: 0.35, from: "-110%" },
+    { start: 0.4, from: "0%" },
+    { start: 0.45, from: "110%" },
   ];
 
   return (
@@ -164,7 +191,7 @@ function Pinned() {
           </motion.p>
         </motion.div>
 
-        <ul className="relative mt-28 grid w-full max-w-7xl grid-cols-5 gap-4">
+        <ul className="relative mt-28 grid w-full max-w-6xl grid-cols-3 gap-4">
           {sideProjects.map((item, i) => (
             <li key={item.slug}>
               <PinnedCard item={item} p={p} start={slots[i].start} from={slots[i].from} />
@@ -174,20 +201,6 @@ function Pinned() {
       </div>
     </div>
   );
-}
-
-/** Grid placement for card i of n so a short last row stays centered. */
-function staticSlot(i: number, n: number) {
-  const classes = ["lg:col-span-2"];
-  // Tablet (2 columns): a lone last card spans both columns at half width.
-  if (n % 2 === 1 && i === n - 1) {
-    classes.push("md:col-span-2 md:mx-auto md:w-[calc(50%-0.75rem)] lg:mx-0 lg:w-auto");
-  }
-  // Laptop (3 columns of span 2): shift the short last row in by a column or half the grid.
-  const rest = n % 3;
-  if (rest === 2 && i === n - 2) classes.push("lg:col-start-2");
-  if (rest === 1 && i === n - 1) classes.push("lg:col-start-3");
-  return classes.join(" ");
 }
 
 /** Smaller screens and reduced motion: no pinning, simple reveals instead. */
@@ -204,10 +217,9 @@ function Static() {
         </h2>
         <p className="mt-3 text-xl text-muted">{beyond.intro}</p>
       </Reveal>
-      {/* Two columns on tablets, three on laptops; the odd cards out sit centered on the last row. */}
-      <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-6">
+      <ul className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {sideProjects.map((item, i) => (
-          <li key={item.slug} className={staticSlot(i, sideProjects.length)}>
+          <li key={item.slug}>
             <Reveal direction={i % 2 === 0 ? "left" : "right"} className="h-full">
               <SideCard item={item} />
             </Reveal>

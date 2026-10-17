@@ -4,6 +4,8 @@
  * Every entry renders with the same template, so new additions stay consistent.
  */
 
+import type { CareerDate } from "@/lib/dates";
+
 export type Project = {
   slug: string;
   title: string;
@@ -61,17 +63,32 @@ export const profile = {
   availability: "Remote · Eastern Time · Open to opportunities",
 };
 
+/**
+ * Career start dates, the only place they live. Record only the precision that's known: leave out
+ * `day` when only the month is known, and `month` when only the year is. The About panel turns
+ * these into year counts with src/lib/dates.ts, so they stay current without edits.
+ */
+export const career = {
+  /** Approximate: I started working around 2006. Shown as "About N years". */
+  professionalStartYear: 2006,
+  softwareEngineeringStart: { year: 2021, month: 1 } satisfies CareerDate,
+  employer: "Juvare",
+  employerStart: { year: 2021, month: 11 } satisfies CareerDate,
+};
+
 export const about = {
   paragraphs: [
-    "I'm a full-stack engineer at Juvare, where I build and modernize software used in emergency-management environments. I turn complex operational requirements into maintainable features, from the UI through APIs, testing and CI/CD.",
+    "I'm a full-stack engineer at Juvare, working directly within federal emergency-management environments to modernize mission-critical software. I bridge operational requirements, stakeholder needs, and production engineering, from UX and APIs through testing, automation, and delivery.",
     "I architected a shared TypeScript and SCSS component library that unified several front-end libraries for federal implementations, then helped hand it off to a dedicated team to maintain.",
     "AI has made code cheap to write. It hasn't made it cheap to know whether that code is right. I spend my effort there: validating what AI produces, understanding how the whole system fits together, and deciding which work is worth automating and which needs a person.",
     "Before engineering, I ran teams and operations. That's why I think about how technical choices affect users, teams and business outcomes.",
     "I work remotely from North Carolina and do my best work in my own environment. I'm on Eastern Time and looking for remote roles only.",
   ],
+  /** Experience counts and the current role are calculated from `career` in the About component. */
+  professionalLabel: "Professional experience",
+  softwareLabel: "Software engineering",
+  currentLabel: "Currently",
   facts: [
-    { label: "Experience", value: "6+ years in software" },
-    { label: "Currently", value: "Juvare · 5 years" },
     { label: "Focus", value: "TypeScript · React · Node.js" },
     { label: "Growing into", value: "Cloud · DevOps · AI" },
     { label: "Works", value: "Remote · Eastern Time" },
@@ -150,6 +167,38 @@ export const humanSide = {
   closingHighlight: "I help turn it into lasting value.",
   closingBody:
     "I bring full-stack engineering experience, end-to-end ownership, and a practical approach to AI adoption. Building something quickly isn't the same as building something well. My focus is delivering reliable systems, making sound technical decisions, and helping teams use emerging technology with confidence.",
+};
+
+export const experience = {
+  eyebrow: "Experience that connects",
+  title: "I didn't start in software. I built toward it.",
+  intro:
+    "Nearly two decades of customer relationships, business operations, creative production, and technology taught me to solve problems from more than one perspective. Engineering gave me the tools to build the solutions myself.",
+  cards: [
+    {
+      icon: "handshake" as const,
+      title: "Business & Customers",
+      body: "B2B/B2C strategy, consultative sales, marketing campaigns, client relationships, and translating needs into value.",
+    },
+    {
+      icon: "users" as const,
+      title: "Leadership & Operations",
+      body: "Team development, operational turnarounds, performance improvement, cross-functional coordination, and ownership.",
+    },
+    {
+      icon: "palette" as const,
+      title: "Design & Experience",
+      body: "Photography, visual design, audio engineering, brand identity, UX thinking, and user-centered communication.",
+    },
+    {
+      icon: "code" as const,
+      title: "Engineering & Delivery",
+      body: "Production software, federal implementations, full-stack architecture, automated QA, CI/CD, and AI-assisted workflows.",
+    },
+  ],
+  closingLabel: "Where it all comes together",
+  closingBody:
+    "I can work directly with stakeholders, understand the business, navigate complex environments, and own the solution from discovery through production. That's the foundation of forward-deployed engineering, and it's work I'm already doing.",
 };
 
 export const beyond = {
@@ -384,6 +433,7 @@ export const nav = [
   { href: "#projects", label: "Projects" },
   { href: "#skills", label: "Skills" },
   { href: "#human-side", label: "Human side" },
+  { href: "#experience", label: "Experience" },
   { href: "#process", label: "Process" },
   { href: "#beyond", label: "Beyond" },
   { href: "#contact", label: "Contact" },

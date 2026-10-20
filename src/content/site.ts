@@ -69,8 +69,8 @@ export const profile = {
  * these into year counts with src/lib/dates.ts, so they stay current without edits.
  */
 export const career = {
-  /** Start of "Life experience". Used only for the count; the date itself is never displayed. */
-  lifeStart: { year: 1989, month: 1, day: 12 } satisfies CareerDate,
+  /** Start of "Life experience": month and year only, never the full date. Not displayed. */
+  lifeStart: { year: 1989, month: 1 } satisfies CareerDate,
   /** Approximate: I started working around 2006. */
   professionalStartYear: 2006,
   softwareEngineeringStart: { year: 2021, month: 1 } satisfies CareerDate,

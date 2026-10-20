@@ -109,13 +109,13 @@ describe("formatYearsPlus", () => {
 });
 
 describe("career config", () => {
-  it("rolls life experience over on the birthday, not before", async () => {
+  it("rolls life experience over once the birth month has finished", async () => {
     const { career } = await import("../content/site.ts");
-    assert.equal(completeYearsSince(career.lifeStart, on("2026-10-17")), 37);
-    assert.equal(completeYearsSince(career.lifeStart, on("2027-01-11")), 37);
-    assert.equal(completeYearsSince(career.lifeStart, on("2027-01-12")), 38);
-    assert.equal(completeYearsSince(career.lifeStart, new Date("2027-01-11T23:59:59Z")), 37);
-    assert.equal(completeYearsSince(career.lifeStart, new Date("2027-01-12T00:00:00Z")), 38);
+    assert.equal(completeYearsSince(career.lifeStart, on("2026-10-20")), 37);
+    assert.equal(completeYearsSince(career.lifeStart, on("2027-01-31")), 37);
+    assert.equal(completeYearsSince(career.lifeStart, on("2027-02-01")), 38);
+    assert.equal(completeYearsSince(career.lifeStart, new Date("2027-01-31T23:59:59Z")), 37);
+    assert.equal(completeYearsSince(career.lifeStart, new Date("2027-02-01T00:00:00Z")), 38);
   });
 
   it("matches the counts on the page today", async () => {

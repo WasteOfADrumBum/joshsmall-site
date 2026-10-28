@@ -13,10 +13,6 @@ export function About() {
   const now = new Date();
   const facts = [
     {
-      label: about.lifeLabel,
-      value: formatYearsPlus(completeYearsSince(career.lifeStart, now)),
-    },
-    {
       label: about.professionalLabel,
       value: formatYearsPlus(approximateYearsSince(career.professionalStartYear, now)),
     },

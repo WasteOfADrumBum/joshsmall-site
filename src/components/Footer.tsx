@@ -7,7 +7,7 @@ export function Footer() {
         <p>
           © {new Date().getFullYear()} {profile.name}
         </p>
-        <p>Built with Next.js, TypeScript and Tailwind, with help from Claude.</p>
+        <p>Built with Next.js, TypeScript and Tailwind, with help from Claude, ChatGPT & Grok.</p>
       </div>
     </footer>
   );

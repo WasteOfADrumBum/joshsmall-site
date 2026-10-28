@@ -60,7 +60,7 @@ export const profile = {
   photoAlt:
     "Portrait of Joshua Small: glasses, a top knot and a long full beard, wearing a black hoodie in front of glowing code editor screens.",
   photoSize: 1254,
-  availability: "Remote · Eastern Time · Open to opportunities",
+  availability: "Full-stack & AI engineering · Remote · Eastern Time",
 };
 
 /**
@@ -69,8 +69,6 @@ export const profile = {
  * these into year counts with src/lib/dates.ts, so they stay current without edits.
  */
 export const career = {
-  /** Start of "Life experience": month and year only, never the full date. Not displayed. */
-  lifeStart: { year: 1989, month: 1 } satisfies CareerDate,
   /** Approximate: I started working around 2006. */
   professionalStartYear: 2006,
   softwareEngineeringStart: { year: 2021, month: 1 } satisfies CareerDate,
@@ -84,16 +82,15 @@ export const about = {
     "I architected a shared TypeScript and SCSS component library that unified several front-end libraries for federal implementations, then helped hand it off to a dedicated team to maintain.",
     "AI has made code cheap to write. It hasn't made it cheap to know whether that code is right. I spend my effort there: validating what AI produces, understanding how the whole system fits together, and deciding which work is worth automating and which needs a person.",
     "Before engineering, I ran teams and operations. That's why I think about how technical choices affect users, teams and business outcomes.",
-    "I work remotely from North Carolina and do my best work in my own environment. I'm on Eastern Time and looking for remote roles only.",
+    "I work remotely from North Carolina on Eastern Time, and I do my best work in my own environment.",
   ],
   /** Experience counts and the current role are calculated from `career` in the About component. */
-  lifeLabel: "Life experience",
   professionalLabel: "Professional experience",
-  softwareLabel: "Software engineering",
+  softwareLabel: "Full-stack engineering",
   currentLabel: "Currently",
   facts: [
     { label: "Focus", value: "TypeScript · React · Node.js" },
-    { label: "Growing into", value: "Cloud · DevOps · AI" },
+    { label: "AI practice", value: "AI-assisted delivery · Claude Code · Codex · Grok · Output validation" },
     { label: "Works", value: "Remote · Eastern Time" },
   ],
 };
@@ -425,8 +422,8 @@ export const process = {
 
 export const contact = {
   intro:
-    "I'm open to remote opportunities and happy to talk about AI, engineering or collaborating on something. Send a message and I'll reply by email.",
-  badges: ["Remote only", "Based in North Carolina", "Eastern Time (ET)"],
+    "Happy to talk about AI-assisted engineering, component libraries, or modernizing legacy systems. Send a message and I'll reply by email.",
+  badges: ["Based in North Carolina", "Eastern Time (ET)"],
 };
 
 /** Same order as the sections on the page. */

@@ -49,10 +49,7 @@ export function Hero() {
 
           <motion.div {...fade(0.1)} className="mt-3 flex flex-wrap items-center gap-3">
             <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/70 px-3 py-1 text-sm text-muted">
-              <span aria-hidden="true" className="relative flex size-2.5">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-ok opacity-60 motion-reduce:animate-none" />
-                <span className="relative inline-flex size-2.5 rounded-full bg-ok" />
-              </span>
+              <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full bg-muted" />
               {profile.availability}
             </p>
             {!reduceMotion && (

@@ -13,10 +13,6 @@ export function About() {
   const now = new Date();
   const facts = [
     {
-      label: about.lifeLabel,
-      value: formatYearsPlus(completeYearsSince(career.lifeStart, now)),
-    },
-    {
       label: about.professionalLabel,
       value: formatYearsPlus(approximateYearsSince(career.professionalStartYear, now)),
     },
@@ -46,7 +42,18 @@ export function About() {
             {facts.map((f) => (
               <SpotlightCard key={f.label} className="px-6 py-5">
                 <dt className="font-mono text-xs uppercase tracking-widest text-muted">{f.label}</dt>
-                <dd className="mt-1 text-xl font-semibold">{f.value}</dd>
+                <dd className="mt-1 text-xl font-semibold">
+                  {/* Break after a separator so a phrase like "Claude Code" stays on one line. */}
+                  {f.value.split(" · ").map((part, i, parts) => (
+                    <span key={`${f.label}-${part}`}>
+                      {i > 0 ? " " : null}
+                      <span className="whitespace-nowrap">
+                        {part}
+                        {i < parts.length - 1 ? " ·" : ""}
+                      </span>
+                    </span>
+                  ))}
+                </dd>
               </SpotlightCard>
             ))}
           </dl>

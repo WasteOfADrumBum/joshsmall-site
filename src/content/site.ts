@@ -90,7 +90,7 @@ export const about = {
   currentLabel: "Currently",
   facts: [
     { label: "Focus", value: "TypeScript · React · Node.js" },
-    { label: "AI practice", value: "AI-assisted delivery · Claude Code tooling · Output validation" },
+    { label: "AI practice", value: "AI-assisted delivery · Claude Code · Codex · Grok · Output validation" },
     { label: "Works", value: "Remote · Eastern Time" },
   ],
 };

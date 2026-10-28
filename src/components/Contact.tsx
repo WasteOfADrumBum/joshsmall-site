@@ -54,11 +54,6 @@ export function Contact() {
           </ul>
           <ul className="mt-8 space-y-4">
             <li>
-              <a href={`mailto:${profile.email}`} className="text-lg text-accent underline underline-offset-4">
-                {profile.email}
-              </a>
-            </li>
-            <li>
               <a href={profile.linkedin} className="flex items-center gap-3 hover:text-accent">
                 <LinkedInIcon className="size-6" /> LinkedIn
               </a>
@@ -125,15 +120,7 @@ export function Contact() {
               {status === "success" && (
                 <p className="text-ok">Thanks! Your message was sent. I&apos;ll be in touch soon.</p>
               )}
-              {status === "error" && (
-                <p className="text-danger">
-                  {error} You can also email me at{" "}
-                  <a href={`mailto:${profile.email}`} className="underline">
-                    {profile.email}
-                  </a>
-                  .
-                </p>
-              )}
+              {status === "error" && <p className="text-danger">{error}</p>}
             </div>
           </form>
         </Reveal>

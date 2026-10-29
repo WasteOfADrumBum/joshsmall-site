@@ -59,6 +59,8 @@ export const profile = {
   photoAlt:
     "Portrait of Joshua Small: glasses, a top knot and a long full beard, wearing a black hoodie in front of glowing code editor screens.",
   photoSize: 1254,
+  avatarAlt:
+    "Cartoon stand-in for Joshua Small: glasses, a top knot and a long beard, wearing a black hoodie, turning to look toward your cursor.",
   availability: "Full-stack & AI engineering · Remote · Eastern Time",
 };
 

@@ -283,6 +283,56 @@ a.btn-grad:hover {
   }
 }
 
+/* ---------- Hero "3D me" portrait ---------- */
+
+/* --lx / --ly run from -1 to 1 and are written by the stage every frame. */
+.portrait-stage {
+  --lx: 0;
+  --ly: 0;
+}
+.av-head {
+  transform-origin: 50% 55%;
+  transform: perspective(600px) translate(calc(var(--lx) * 6%), calc(var(--ly) * 4%))
+    rotateY(calc(var(--lx) * 22deg)) rotateX(calc(var(--ly) * -14deg)) rotate(calc(var(--lx) * 3deg));
+}
+.av-body {
+  transform-origin: 50% 100%;
+  transform: translateX(calc(var(--lx) * 1.5%)) rotate(calc(var(--lx) * 1deg));
+}
+/* Features slide further than the head outline and the bun/ears slide the other way: depth. */
+.av-front {
+  transform: translate(calc(var(--lx) * 7px), calc(var(--ly) * 5px));
+}
+.av-back {
+  transform: translate(calc(var(--lx) * -5px), calc(var(--ly) * -3px));
+}
+.av-pupils {
+  transform: translate(calc(var(--lx) * 3px), calc(var(--ly) * 2.5px));
+}
+.av-blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: blink 5.5s infinite;
+}
+.av-breathe {
+  animation: breathe 4s ease-in-out infinite alternate;
+}
+@keyframes blink {
+  0%,
+  94%,
+  100% {
+    transform: scaleY(1);
+  }
+  97% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes breathe {
+  to {
+    transform: translateY(-1.5%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -298,7 +348,9 @@ a.btn-grad:hover {
   .heartbeat,
   .ride,
   .gust,
-  .eq-bar {
+  .eq-bar,
+  .av-blink,
+  .av-breathe {
     animation: none;
   }
   .eq-bar {

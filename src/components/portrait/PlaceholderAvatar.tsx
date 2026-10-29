@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type { AvatarModelProps } from "./avatar";
 
 const hair = "#5a3f2e";
@@ -9,11 +10,13 @@ const hoodieEdge = "#2a2a34";
 const frames = "#0b0b0f";
 
 /**
- * Stand-in for the real 3D model: a flat cartoon built from layers. The head turns in CSS 3D and
+ * The fallback for the 3D model (shown while it loads, or without WebGL): a flat cartoon built from layers. The head turns in CSS 3D and
  * its features slide further than its outline, which reads as depth. Pose comes from the --lx and
  * --ly variables the stage sets each frame, so following the cursor never re-renders React.
  */
-export function PlaceholderAvatar({ className = "" }: AvatarModelProps) {
+export function PlaceholderAvatar({ onReady, className = "" }: AvatarModelProps) {
+  useEffect(() => onReady?.(), [onReady]);
+
   return (
     <div className={`av-breathe absolute inset-0 ${className}`}>
       <svg

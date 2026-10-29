@@ -3,7 +3,7 @@
 import { Box, Camera } from "lucide-react";
 import { motion, useInView, useReducedMotion } from "motion/react";
 import Image from "next/image";
-import { type ReactNode, type RefObject, useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { type ReactNode, type RefObject, useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { profile } from "@/content/site";
 import { type Look, approach, idleLook, lookToward, tiltToLook } from "@/lib/look";
 import { AvatarModel } from "./avatar";
@@ -12,6 +12,8 @@ type View = "photo" | "avatar";
 
 /** Wait for the hero's own entrance to finish so visitors see the photo before it gets shoved. */
 const POP_DELAY_MS = 1700;
+/** How much longer the pop waits for the 3D model before showing the cartoon instead. */
+const MAX_MODEL_WAIT_MS = 4000;
 /** After this long with no pointer or tilt, the character looks around on its own. */
 const IDLE_AFTER_MS = 4000;
 
@@ -27,7 +29,7 @@ const avatarAt = {
 const noop = () => () => {};
 
 /**
- * The hero portrait. It starts as the photo; the first time it is on screen a cartoon "3D me" pops
+ * The hero portrait. It starts as the photo; the first time it is on screen a 3D "me" pops
  * up from the bottom, knocks the photo into the corner, and follows the cursor (or a finger, or
  * phone tilt). A toggle underneath switches between the two. With reduced motion there's no pop
  * and no tracking; the toggle just swaps them.
@@ -40,16 +42,30 @@ export function PortraitStage() {
   const hydrated = useSyncExternalStore(noop, () => true, () => false);
   const inView = useInView(stageRef, { once: true, amount: 0.6 });
   const [view, setView] = useState<View>("photo");
+  const [modelReady, setModelReady] = useState(false);
+  const [delayDone, setDelayDone] = useState(false);
 
   useEffect(() => {
-    if (!inView || reduceMotion !== false || chosen.current) return;
-    const id = setTimeout(() => {
-      if (!chosen.current) setView("avatar");
-    }, POP_DELAY_MS);
+    if (!inView || reduceMotion !== false) return;
+    const id = setTimeout(() => setDelayDone(true), POP_DELAY_MS);
     return () => clearTimeout(id);
   }, [inView, reduceMotion]);
 
+  // Pop once the delay is over and the model is ready, or give up waiting on a slow connection.
+  useEffect(() => {
+    if (!delayDone || chosen.current) return;
+    const id = setTimeout(
+      () => {
+        if (!chosen.current) setView("avatar");
+      },
+      modelReady ? 0 : MAX_MODEL_WAIT_MS,
+    );
+    return () => clearTimeout(id);
+  }, [delayDone, modelReady]);
+
   useLookTracking(stageRef, look, view === "avatar" && reduceMotion === false);
+
+  const onModelReady = useCallback(() => setModelReady(true), []);
 
   const choose = (next: View) => {
     chosen.current = true;
@@ -93,7 +109,7 @@ export function PortraitStage() {
             aria-hidden={!showingAvatar}
             className="absolute inset-0"
           >
-            <AvatarModel look={look} />
+            <AvatarModel look={look} onReady={onModelReady} />
           </motion.div>
         </div>
       </div>

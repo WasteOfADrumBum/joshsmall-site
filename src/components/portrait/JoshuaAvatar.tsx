@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 import type { AvatarModelProps } from "./avatar";
 import { PlaceholderAvatar } from "./PlaceholderAvatar";
 
+const SCAN_URL = "/models/joshua.glb";
+
 const canUseWebGL = () => {
   try {
     const c = document.createElement("canvas");
@@ -31,8 +33,9 @@ const whenIdle = (fn: () => void) => {
 };
 
 /**
- * The real 3D bust, rendered with three.js. Until it's ready, and on devices without WebGL, the
- * cartoon stands in. Rendering pauses when the portrait is off screen or the tab is hidden.
+ * Joshua in 3D, rendered with three.js: his phone scan, or a bust built from primitives if the scan
+ * can't load. Until it's ready, and on devices without WebGL, the cartoon stands in. Rendering
+ * pauses when the portrait is off screen or the tab is hidden.
  */
 export function JoshuaAvatar({ look, onReady, className = "" }: AvatarModelProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -57,10 +60,15 @@ export function JoshuaAvatar({ look, onReady, className = "" }: AvatarModelProps
     let cancelled = false;
     let dispose = () => {};
     const cancelIdle = whenIdle(() => {
-      import("./three/joshuaScene")
-        .then(({ createJoshuaScene }) => {
-          if (cancelled) return;
-          const scene = createJoshuaScene(canvas);
+      // The scan first; if it can't load, the bust built from primitives.
+      import("./three/scanScene")
+        .then(({ loadScanScene }) => loadScanScene(canvas, SCAN_URL))
+        .catch(() => import("./three/joshuaScene").then(({ createJoshuaScene }) => createJoshuaScene(canvas)))
+        .then((scene) => {
+          if (cancelled) {
+            scene.dispose();
+            return;
+          }
           let frame = 0;
           let onScreen = true;
 

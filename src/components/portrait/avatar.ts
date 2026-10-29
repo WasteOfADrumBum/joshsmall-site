@@ -11,8 +11,8 @@ export type AvatarModelProps = {
 };
 
 /**
- * The model slot. `JoshuaAvatar` draws a 3D bust with three.js, loaded only after the page is idle,
- * and falls back to `PlaceholderAvatar` (the flat cartoon) without WebGL. A model can also skip
+ * The model slot. `JoshuaAvatar` draws Joshua's 3D scan with three.js, loaded only after the page is
+ * idle, and falls back to `PlaceholderAvatar` (the flat cartoon) without WebGL. A model can also skip
  * `look` and read the --lx / --ly CSS variables, like the cartoon does.
  */
 export const AvatarModel: ComponentType<AvatarModelProps> = JoshuaAvatar;

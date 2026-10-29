@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import type { AvatarModelProps } from "./avatar";
 import { PlaceholderAvatar } from "./PlaceholderAvatar";
 
-const SCAN_URL = "/models/joshua.glb";
+const MODEL_URL = "/models/chibi.glb";
 
 const canUseWebGL = () => {
   try {
@@ -33,8 +33,8 @@ const whenIdle = (fn: () => void) => {
 };
 
 /**
- * Joshua in 3D, rendered with three.js: his phone scan, or a bust built from primitives if the scan
- * can't load. Until it's ready, and on devices without WebGL, the cartoon stands in. Rendering
+ * Chibi Joshua in 3D, rendered with three.js. Until it's ready, and on devices without WebGL or if
+ * the model can't load, the cartoon stands in. Rendering
  * pauses when the portrait is off screen or the tab is hidden.
  */
 export function JoshuaAvatar({ look, onReady, className = "" }: AvatarModelProps) {
@@ -60,10 +60,8 @@ export function JoshuaAvatar({ look, onReady, className = "" }: AvatarModelProps
     let cancelled = false;
     let dispose = () => {};
     const cancelIdle = whenIdle(() => {
-      // The scan first; if it can't load, the bust built from primitives.
-      import("./three/scanScene")
-        .then(({ loadScanScene }) => loadScanScene(canvas, SCAN_URL))
-        .catch(() => import("./three/joshuaScene").then(({ createJoshuaScene }) => createJoshuaScene(canvas)))
+      import("./three/chibiScene")
+        .then(({ loadChibiScene }) => loadChibiScene(canvas, MODEL_URL))
         .then((scene) => {
           if (cancelled) {
             scene.dispose();

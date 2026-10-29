@@ -5,12 +5,12 @@ import { useEffect, useRef, useState } from "react";
 import { clamp } from "@/lib/look";
 import {
   type ClipName,
-  NECK,
+  EYES,
   SHEET,
   clips,
   flourishes,
   frameAt,
-  headPose,
+  eyeLook,
   parts,
   sheetPosition,
   stepToward,
@@ -47,7 +47,7 @@ const frameStyle = (frame: number) => {
 
 /**
  * Chibi Joshua, animated from a sprite sheet. He jumps in when he pops up, and while he stands his
- * head turns to follow the cursor. If the cursor goes well off to one side he runs over, he waves
+ * eyes follow the cursor. If the cursor goes well off to one side he runs over, he waves
  * when you point at him, and now and then he checks his tablet, plays the drums or takes a photo.
  * The cartoon stands in until the sheet has loaded, or if it can't.
  */
@@ -55,7 +55,7 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
   const layerRef = useRef<HTMLDivElement>(null);
   const spriteRef = useRef<HTMLDivElement>(null);
   const standingRef = useRef<HTMLDivElement>(null);
-  const headRef = useRef<HTMLDivElement>(null);
+  const irisRefs = useRef<(HTMLDivElement | null)[]>([]);
   const reduceMotion = useReducedMotion();
   const readyRef = useRef(onReady);
   const wave = useRef<() => void>(() => {});
@@ -87,14 +87,14 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
     const layer = layerRef.current;
     const sprite = spriteRef.current;
     const standing = standingRef.current;
-    const head = headRef.current;
-    if (!ready || !layer || !sprite || !standing || !head) return;
+    const irises = irisRefs.current;
+    if (!ready || !layer || !sprite || !standing) return;
 
     const show = (frame: number) => {
       const { x, y } = sheetPosition(frame);
       sprite.style.backgroundPosition = `${x}% ${y}%`;
     };
-    // Standing still he's drawn as body + head, so the head can turn; otherwise as whole frames.
+    // Standing still he's drawn as the standing pose + irises, so his eyes can move; otherwise as whole frames.
     let split = false;
     const showSplit = (on: boolean) => {
       if (on === split) return;
@@ -124,8 +124,7 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
     let onScreen = true;
     let wantsWave = false;
     let target = 0;
-    let nextWink = clipStart + 3000 + Math.random() * 3000;
-    let winking = false;
+    let nextBlink = clipStart + 2500 + Math.random() * 2500;
 
     // He runs to sit under the cursor (or a finger), measured across the box he lives in.
     const box = layer.parentElement ?? layer;
@@ -171,23 +170,20 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
         play("idle", now);
         stillSince = now;
       }
-      if (clip === "idle") {
-        const p = headPose(look.current, pos, RANGE);
-        const breathe = Math.sin(now / 650) * 0.35;
-        head.style.transform =
-          `translate(${p.shiftX.toFixed(2)}%, ${(p.shiftY + breathe).toFixed(2)}%) ` +
-          `perspective(700px) rotateY(${p.turn.toFixed(1)}deg) rotateX(${p.nod.toFixed(1)}deg) rotate(${p.tilt.toFixed(1)}deg)`;
-        const wink = now > nextWink;
-        if (wink !== winking) {
-          winking = wink;
-          Object.assign(head.style, frameStyle(wink ? parts.wink : parts.head));
-        }
-        if (now > nextWink + 220) nextWink = now + 3500 + Math.random() * 4000;
+      const blinking = clip === "idle" && now > nextBlink;
+      if (blinking && now > nextBlink + 160) nextBlink = now + 3000 + Math.random() * 4000;
+      if (clip === "idle" && !blinking) {
+        const eyes = eyeLook(look.current, pos, RANGE);
+        EYES.forEach(({ reach }, i) => {
+          const iris = irises[i];
+          if (iris) iris.style.transform = `translate(${(eyes.x * reach[0]).toFixed(2)}%, ${(eyes.y * reach[1]).toFixed(2)}%)`;
+        });
         showSplit(true);
       } else {
-        if (at.frame !== shown) {
-          show(at.frame);
-          shown = at.frame;
+        const want = blinking ? parts.blink : at.frame;
+        if (want !== shown) {
+          show(want);
+          shown = want;
         }
         showSplit(false);
       }
@@ -245,12 +241,18 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
           >
             <div ref={spriteRef} className="absolute inset-0" style={sheet(ready)} />
             <div ref={standingRef} className="invisible absolute inset-0">
-              <div className="absolute inset-0" style={{ ...sheet(ready), ...frameStyle(parts.body) }} />
-              <div
-                ref={headRef}
-                className="absolute inset-0 will-change-transform"
-                style={{ ...sheet(ready), ...frameStyle(parts.head), transformOrigin: `${NECK.x}% ${NECK.y}%` }}
-              />
+              <div className="absolute inset-0" style={{ ...sheet(ready), ...frameStyle(parts.standing) }} />
+              {EYES.map(({ white: [x, y, rx, ry] }, i) => (
+                <div key={i} className="absolute inset-0" style={{ clipPath: `ellipse(${rx}% ${ry}% at ${x}% ${y}%)` }}>
+                  <div
+                    ref={(el) => {
+                      irisRefs.current[i] = el;
+                    }}
+                    className="absolute inset-0"
+                    style={{ ...sheet(ready), ...frameStyle(parts.irises) }}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>

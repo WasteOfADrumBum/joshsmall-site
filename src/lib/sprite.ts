@@ -3,7 +3,7 @@
  * Frames are numbered in the order they sit in the sprite sheet, left to right, top to bottom.
  */
 
-export const SHEET = { columns: 8, rows: 8, frameWidth: 247, frameHeight: 394 };
+export const SHEET = { columns: 8, rows: 8, frameWidth: 246, frameHeight: 395 };
 
 export type Clip = { start: number; count: number; fps: number; loop: boolean };
 
@@ -22,12 +22,18 @@ export const clips = {
 export type ClipName = keyof typeof clips;
 
 /**
- * Standing still, he's drawn in two pieces from idle frame 0 so his head can turn toward the cursor:
- * the body, the head (with the whole beard), and the same head with his eyes shut, for a wink now and then.
+ * Standing still, he's idle frame 0 with his irises painted out, plus the irises on their own,
+ * so his eyes can follow the cursor. Frame 3 of the idle clip has his eyes shut, for blinking.
  */
-export const parts = { body: 57, head: 58, wink: 59 };
-/** Where the head turns from (his neck), as a share of the frame. */
-export const NECK = { x: 49.4, y: 49 };
+export const parts = { standing: 57, irises: 58, blink: 3 };
+/**
+ * Each eye white as an ellipse, in % of the frame (centre x, centre y, radius x, radius y), and how
+ * far its iris can move in % of the frame.
+ */
+export const EYES = [
+  { white: [53.46, 35.57, 5.08, 2.15], reach: [1.3, 0.45] },
+  { white: [68.9, 36.96, 2.64, 2.03], reach: [0.9, 0.4] },
+] as const;
 
 /** Little things he does on his own after standing still for a while. */
 export const flourishes: ClipName[] = ["waiting", "drums", "camera"];
@@ -68,11 +74,12 @@ export function stepToward(
 }
 
 /**
- * How far to turn the head for a look, given where he's standing (-1 to 1 across his running range,
- * which is `range` of the box width). Turns are in degrees, shifts in % of the frame.
+ * Where his eyes point for a look, given where he's standing (-1 to 1 across his running range,
+ * which is `range` of the box width). Each is -1 to 1; multiply by an eye's reach.
  */
-export function headPose(look: { x: number; y: number }, pos: number, range: number) {
-  const x = Math.min(1, Math.max(-1, look.x * 1.3 - pos * range));
-  const y = Math.min(1, Math.max(-1, look.y));
-  return { turn: x * 28, nod: -y * 16, tilt: x * 7, shiftX: x * 4.5, shiftY: y * 2.5 };
+export function eyeLook(look: { x: number; y: number }, pos: number, range: number) {
+  return {
+    x: Math.min(1, Math.max(-1, look.x * 1.6 - pos * range)),
+    y: Math.min(1, Math.max(-1, look.y * 1.6)),
+  };
 }

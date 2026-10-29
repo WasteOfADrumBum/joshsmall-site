@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { ARRIVED, SET_OFF, SHEET, clips, frameAt, headPose, parts, sheetPosition, stepToward } from "./sprite.ts";
+import { ARRIVED, SET_OFF, SHEET, clips, frameAt, eyeLook, parts, sheetPosition, stepToward } from "./sprite.ts";
 
 describe("clips", () => {
   it("cover the 57 frames of the sheet once each, in order", () => {
@@ -14,28 +14,25 @@ describe("clips", () => {
     assert.ok(next <= SHEET.columns * SHEET.rows);
   });
 
-  it("leave the head and body pieces after the animation frames", () => {
-    const pieces = Object.values(parts);
-    assert.ok(Math.min(...pieces) >= 57);
-    assert.ok(Math.max(...pieces) < SHEET.columns * SHEET.rows);
+  it("leave the standing pose and irises after the animation frames", () => {
+    assert.ok(Math.min(parts.standing, parts.irises) >= 57);
+    assert.ok(Math.max(parts.standing, parts.irises) < SHEET.columns * SHEET.rows);
   });
 });
 
-describe("headPose", () => {
-  it("faces forward for a look straight ahead", () => {
-    const p = headPose({ x: 0, y: 0 }, 0, 0.22);
-    assert.equal(p.turn, 0);
-    assert.equal(p.shiftX, 0);
+describe("eyeLook", () => {
+  it("looks straight ahead for a centred look", () => {
+    assert.deepEqual(eyeLook({ x: 0, y: 0 }, 0, 0.22), { x: 0, y: 0 });
   });
 
-  it("turns toward the cursor, up and down too", () => {
-    assert.ok(headPose({ x: 0.5, y: 0 }, 0, 0.22).turn > 0);
-    assert.ok(headPose({ x: -0.5, y: 0 }, 0, 0.22).turn < 0);
-    assert.ok(headPose({ x: 0, y: -0.5 }, 0, 0.22).nod > 0);
+  it("follows the cursor and stays in range", () => {
+    assert.ok(eyeLook({ x: 0.3, y: 0 }, 0, 0.22).x > 0);
+    assert.ok(eyeLook({ x: 0, y: -0.3 }, 0, 0.22).y < 0);
+    assert.equal(eyeLook({ x: 1, y: 1 }, 0, 0.22).x, 1);
   });
 
   it("looks back toward the middle when he's standing off to one side", () => {
-    assert.ok(headPose({ x: 0, y: 0 }, 1, 0.22).turn < 0);
+    assert.ok(eyeLook({ x: 0, y: 0 }, 1, 0.22).x < 0);
   });
 });
 

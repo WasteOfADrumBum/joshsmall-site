@@ -3,17 +3,26 @@
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { clamp } from "@/lib/look";
-import { type ClipName, SHEET, clips, flourishes, frameAt, sheetPosition, stepToward } from "@/lib/sprite";
+import {
+  type ClipName,
+  NECK,
+  SHEET,
+  clips,
+  flourishes,
+  frameAt,
+  headPose,
+  parts,
+  sheetPosition,
+  stepToward,
+} from "@/lib/sprite";
 import type { AvatarModelProps } from "./avatar";
 import { PlaceholderAvatar } from "./PlaceholderAvatar";
 
 const SHEET_URL = "/avatar/joshua-sprites.webp";
 /** How far he can run from the middle, as a share of the box width. */
 const RANGE = 0.22;
-/** With no pointer for this long, he wanders on his own now and then. */
-const WANDER_AFTER_MS = 6000;
 /** After standing still this long he does one of his little routines. */
-const FLOURISH_AFTER_MS = 9000;
+const FLOURISH_AFTER_MS = 12000;
 
 /** Run after the page has loaded and the browser is idle, so the sprite sheet never competes with first paint. */
 const whenIdle = (fn: () => void) => {
@@ -31,14 +40,22 @@ const whenIdle = (fn: () => void) => {
   };
 };
 
+const frameStyle = (frame: number) => {
+  const { x, y } = sheetPosition(frame);
+  return { backgroundPosition: `${x}% ${y}%` };
+};
+
 /**
- * Chibi Joshua, animated from a sprite sheet. He jumps in when he pops up, runs after the cursor
- * inside the box, waves when you point at him, and now and then checks his tablet, plays the
- * drums or takes a photo. The cartoon stands in until the sheet has loaded, or if it can't.
+ * Chibi Joshua, animated from a sprite sheet. He jumps in when he pops up, and while he stands his
+ * head turns to follow the cursor. If the cursor goes well off to one side he runs over, he waves
+ * when you point at him, and now and then he checks his tablet, plays the drums or takes a photo.
+ * The cartoon stands in until the sheet has loaded, or if it can't.
  */
 export function SpriteAvatar({ look, onReady, active = false, className = "" }: AvatarModelProps) {
   const layerRef = useRef<HTMLDivElement>(null);
   const spriteRef = useRef<HTMLDivElement>(null);
+  const standingRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
   const readyRef = useRef(onReady);
   const wave = useRef<() => void>(() => {});
@@ -69,11 +86,21 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
   useEffect(() => {
     const layer = layerRef.current;
     const sprite = spriteRef.current;
-    if (!ready || !layer || !sprite) return;
+    const standing = standingRef.current;
+    const head = headRef.current;
+    if (!ready || !layer || !sprite || !standing || !head) return;
 
     const show = (frame: number) => {
       const { x, y } = sheetPosition(frame);
       sprite.style.backgroundPosition = `${x}% ${y}%`;
+    };
+    // Standing still he's drawn as body + head, so the head can turn; otherwise as whole frames.
+    let split = false;
+    const showSplit = (on: boolean) => {
+      if (on === split) return;
+      split = on;
+      standing.style.visibility = on ? "visible" : "hidden";
+      sprite.style.visibility = on ? "hidden" : "visible";
     };
     const place = (pos: number) => {
       layer.style.transform = `translateX(${(pos * RANGE * 100).toFixed(2)}%)`;
@@ -81,6 +108,7 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
 
     if (reduceMotion || !active) {
       show(clips.idle.start);
+      showSplit(false);
       place(0);
       wave.current = () => {};
       return;
@@ -96,15 +124,14 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
     let onScreen = true;
     let wantsWave = false;
     let target = 0;
-    let lastInput = -Infinity;
-    let nextWander = 0;
+    let nextWink = clipStart + 3000 + Math.random() * 3000;
+    let winking = false;
 
     // He runs to sit under the cursor (or a finger), measured across the box he lives in.
     const box = layer.parentElement ?? layer;
     const onPointer = (e: PointerEvent) => {
       const r = box.getBoundingClientRect();
       target = clamp((e.clientX - (r.left + r.width / 2)) / (r.width * RANGE));
-      lastInput = performance.now();
     };
     window.addEventListener("pointermove", onPointer, { passive: true });
     window.addEventListener("pointerdown", onPointer, { passive: true });
@@ -124,10 +151,6 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
       const { loop } = clips[clip];
 
       if (loop) {
-        if (now - lastInput > WANDER_AFTER_MS && now > nextWander) {
-          target = Math.random() * 1.4 - 0.7;
-          nextWander = now + 7000 + Math.random() * 5000;
-        }
         const step = stepToward(pos, target, dt, clip === "runLeft" || clip === "runRight");
         pos = step.pos;
         const next: ClipName = step.running > 0 ? "runRight" : step.running < 0 ? "runLeft" : "idle";
@@ -148,9 +171,25 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
         play("idle", now);
         stillSince = now;
       }
-      if (at.frame !== shown) {
-        show(at.frame);
-        shown = at.frame;
+      if (clip === "idle") {
+        const p = headPose(look.current, pos, RANGE);
+        const breathe = Math.sin(now / 650) * 0.35;
+        head.style.transform =
+          `translate(${p.shiftX.toFixed(2)}%, ${(p.shiftY + breathe).toFixed(2)}%) ` +
+          `perspective(700px) rotateY(${p.turn.toFixed(1)}deg) rotateX(${p.nod.toFixed(1)}deg) rotate(${p.tilt.toFixed(1)}deg)`;
+        const wink = now > nextWink;
+        if (wink !== winking) {
+          winking = wink;
+          Object.assign(head.style, frameStyle(wink ? parts.wink : parts.head));
+        }
+        if (now > nextWink + 220) nextWink = now + 3500 + Math.random() * 4000;
+        showSplit(true);
+      } else {
+        if (at.frame !== shown) {
+          show(at.frame);
+          shown = at.frame;
+        }
+        showSplit(false);
       }
       place(pos);
       frame = requestAnimationFrame(tick);
@@ -183,7 +222,7 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
       window.removeEventListener("pointerdown", onPointer);
       wave.current = () => {};
     };
-  }, [ready, active, reduceMotion]);
+  }, [ready, active, reduceMotion, look]);
 
   return (
     <div className={`absolute inset-0 ${className}`}>
@@ -198,19 +237,30 @@ export function SpriteAvatar({ look, onReady, active = false, className = "" }: 
             className="absolute bottom-[3%] left-1/2 h-[5%] w-[34%] -translate-x-1/2 rounded-[50%] bg-black/45 blur-[3px]"
           />
           <div
-            ref={spriteRef}
             aria-hidden="true"
             onPointerEnter={() => wave.current()}
             onPointerDown={() => wave.current()}
-            className="absolute bottom-[4%] left-1/2 h-[88%] -translate-x-1/2 bg-no-repeat"
-            style={{
-              aspectRatio: `${SHEET.frameWidth} / ${SHEET.frameHeight}`,
-              backgroundImage: ready ? `url(${SHEET_URL})` : undefined,
-              backgroundSize: `${SHEET.columns * 100}% ${SHEET.rows * 100}%`,
-            }}
-          />
+            className="absolute bottom-[4%] left-1/2 h-[88%] -translate-x-1/2"
+            style={{ aspectRatio: `${SHEET.frameWidth} / ${SHEET.frameHeight}` }}
+          >
+            <div ref={spriteRef} className="absolute inset-0" style={sheet(ready)} />
+            <div ref={standingRef} className="invisible absolute inset-0">
+              <div className="absolute inset-0" style={{ ...sheet(ready), ...frameStyle(parts.body) }} />
+              <div
+                ref={headRef}
+                className="absolute inset-0 will-change-transform"
+                style={{ ...sheet(ready), ...frameStyle(parts.head), transformOrigin: `${NECK.x}% ${NECK.y}%` }}
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>
   );
 }
+
+const sheet = (ready: boolean) => ({
+  backgroundImage: ready ? `url(${SHEET_URL})` : undefined,
+  backgroundRepeat: "no-repeat",
+  backgroundSize: `${SHEET.columns * 100}% ${SHEET.rows * 100}%`,
+});

@@ -3,7 +3,7 @@
  * Frames are numbered in the order they sit in the sprite sheet, left to right, top to bottom.
  */
 
-export const SHEET = { columns: 8, rows: 8, frameWidth: 250, frameHeight: 398 };
+export const SHEET = { columns: 8, rows: 8, frameWidth: 247, frameHeight: 394 };
 
 export type Clip = { start: number; count: number; fps: number; loop: boolean };
 
@@ -20,6 +20,14 @@ export const clips = {
 } satisfies Record<string, Clip>;
 
 export type ClipName = keyof typeof clips;
+
+/**
+ * Standing still, he's drawn in two pieces from idle frame 0 so his head can turn toward the cursor:
+ * the body, the head (with the whole beard), and the same head with his eyes shut, for a wink now and then.
+ */
+export const parts = { body: 57, head: 58, wink: 59 };
+/** Where the head turns from (his neck), as a share of the frame. */
+export const NECK = { x: 49.4, y: 49 };
 
 /** Little things he does on his own after standing still for a while. */
 export const flourishes: ClipName[] = ["waiting", "drums", "camera"];
@@ -41,7 +49,7 @@ export function sheetPosition(frame: number) {
 /** He stops running once this close to where he's headed, in units of his running range. */
 export const ARRIVED = 0.04;
 /** And only sets off again once the target is this far away, so small cursor moves don't make him twitch. */
-export const SET_OFF = 0.18;
+export const SET_OFF = 0.3;
 /** Running speed, in units of his running range per second (the range is -1 to 1). */
 export const SPEED = 1.6;
 
@@ -57,4 +65,14 @@ export function stepToward(
   const dir = gap > 0 ? 1 : -1;
   const next = pos + dir * Math.min(Math.abs(gap), SPEED * dt);
   return { pos: next, running: dir };
+}
+
+/**
+ * How far to turn the head for a look, given where he's standing (-1 to 1 across his running range,
+ * which is `range` of the box width). Turns are in degrees, shifts in % of the frame.
+ */
+export function headPose(look: { x: number; y: number }, pos: number, range: number) {
+  const x = Math.min(1, Math.max(-1, look.x * 1.3 - pos * range));
+  const y = Math.min(1, Math.max(-1, look.y));
+  return { turn: x * 28, nod: -y * 16, tilt: x * 7, shiftX: x * 4.5, shiftY: y * 2.5 };
 }

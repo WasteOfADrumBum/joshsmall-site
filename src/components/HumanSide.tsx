@@ -1,4 +1,5 @@
 import { humanSide } from "@/content/site";
+import { ChibiCameo } from "./portrait/ChibiCameo";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 import { SpotlightCard } from "./SpotlightCard";
@@ -56,11 +57,14 @@ export function HumanSide() {
 
       <Reveal direction="scale">
         <div className="grad-border mt-14 rounded-3xl p-[2px]">
-          <SpotlightCard className="rounded-[calc(1.5rem-2px)] bg-surface p-8 md:p-12">
-            <h3 className="max-w-4xl text-2xl font-bold leading-tight tracking-tight text-balance md:text-4xl">
-              {humanSide.closingLead} <span className="text-grad">{humanSide.closingHighlight}</span>
-            </h3>
-            <p className="mt-5 max-w-3xl text-lg leading-relaxed text-muted">{humanSide.closingBody}</p>
+          <SpotlightCard className="grid items-center gap-8 rounded-[calc(1.5rem-2px)] bg-surface p-8 md:grid-cols-[1fr_auto] md:p-12">
+            <div>
+              <h3 className="max-w-4xl text-2xl font-bold leading-tight tracking-tight text-balance md:text-4xl">
+                {humanSide.closingLead} <span className="text-grad">{humanSide.closingHighlight}</span>
+              </h3>
+              <p className="mt-5 max-w-3xl text-lg leading-relaxed text-muted">{humanSide.closingBody}</p>
+            </div>
+            <ChibiCameo className="mx-auto -mb-8 w-48 md:-mb-12 md:w-56 lg:w-64" />
           </SpotlightCard>
         </div>
       </Reveal>

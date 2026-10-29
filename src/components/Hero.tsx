@@ -2,10 +2,10 @@
 
 import { ArrowDown, Mail, Pause, Play } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import Image from "next/image";
 import { useRef, useState } from "react";
 import { profile } from "@/content/site";
 import { GitHubIcon, LinkedInIcon } from "./Icons";
+import { PortraitStage } from "./portrait/PortraitStage";
 import { RotatingWord } from "./RotatingWord";
 
 const fade = (delay: number) => ({
@@ -98,18 +98,8 @@ export function Hero() {
             style={{ y: photoY }}
             className="relative w-full max-w-[17.5rem] justify-self-center md:order-first md:justify-self-start"
           >
-            <div aria-hidden="true" className="grad-border pulse-glow absolute -inset-3 rounded-[2rem] blur-2xl" />
-            <div className="grad-border relative rounded-3xl p-[3px]">
-              <Image
-                src={profile.photo}
-                alt={profile.photoAlt}
-                width={profile.photoSize}
-                height={profile.photoSize}
-                priority
-                sizes="280px"
-                className="h-auto w-full rounded-[1.3rem]"
-              />
-            </div>
+            <div aria-hidden="true" className="grad-border pulse-glow absolute -inset-3 bottom-11 rounded-[2rem] blur-2xl" />
+            <PortraitStage />
           </motion.div>
 
           <motion.div {...fade(0.8)}>

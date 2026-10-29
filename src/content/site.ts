@@ -60,7 +60,7 @@ export const profile = {
     "Portrait of Joshua Small: glasses, a top knot and a long full beard, wearing a black hoodie in front of glowing code editor screens.",
   photoSize: 1254,
   avatarAlt:
-    "Chibi 3D figure of Joshua Small: a top knot, rectangular glasses and a long auburn beard, in a leather jacket and boots, turning to look toward your cursor.",
+    "Cartoon chibi of Joshua Small: an auburn top knot, black glasses and a big auburn beard, in a leather jacket with a camera and drumsticks, running after your cursor.",
   availability: "Full-stack & AI engineering · Remote · Eastern Time",
 };
 

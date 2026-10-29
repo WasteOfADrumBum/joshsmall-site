@@ -31,8 +31,8 @@ export const parts = { standing: 57, irises: 58, blink: 3 };
  * far its iris can move in % of the frame.
  */
 export const EYES = [
-  { white: [53.46, 35.57, 5.08, 2.15], reach: [1.3, 0.45] },
-  { white: [68.9, 36.96, 2.64, 2.03], reach: [0.9, 0.4] },
+  { white: [53.46, 35.57, 5.08, 2.15], reach: [1.1, 0.4] },
+  { white: [68.9, 36.96, 2.64, 2.03], reach: [0.6, 0.35] },
 ] as const;
 
 /** Little things he does on his own after standing still for a while. */

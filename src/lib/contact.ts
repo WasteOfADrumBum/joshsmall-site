@@ -17,6 +17,9 @@ export function validateContact(input: Record<string, unknown>) {
     values[f] = String(input[f] ?? "").trim().slice(0, CONTACT_LIMITS[f]);
     if (!values[f]) errors[f] = `${LABELS[f]} is required.`;
   }
+  // The name goes into the email subject, so line breaks and other control characters become spaces.
+  values.name = values.name.replace(/[\u0000-\u001f\u007f]+/g, " ").trim();
+  if (!values.name) errors.name ??= `${LABELS.name} is required.`;
   if (values.email && !EMAIL_RE.test(values.email)) errors.email = "Enter a valid email address.";
   return { values, errors };
 }

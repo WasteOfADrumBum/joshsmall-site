@@ -21,4 +21,9 @@ describe("validateContact", () => {
   it("rejects a malformed email", () => {
     assert.equal(validateContact({ name: "a", email: "nope@", message: "b" }).errors.email, "Enter a valid email address.");
   });
+
+  it("keeps line breaks out of the name, which becomes the email subject", () => {
+    const { values } = validateContact({ name: "Ada\r\nBcc: x@example.com", email: "ada@example.com", message: "Hi" });
+    assert.equal(values.name, "Ada Bcc: x@example.com");
+  });
 });

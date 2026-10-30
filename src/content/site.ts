@@ -391,6 +391,8 @@ export const skillGroups: SkillGroup[] = [
       { name: "Codex", href: "https://openai.com/codex/" },
       { name: "Muse", href: "https://www.meta.ai" },
       { name: "Fieldy AI", href: "https://fieldy.ai" },
+      { name: "Grok", href: "https://grok.com" },
+      { name: "Grok bots", href: "https://x.ai/grok" },
     ],
   },
 ];

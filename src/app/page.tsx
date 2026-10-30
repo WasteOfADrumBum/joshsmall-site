@@ -11,13 +11,26 @@ import { Projects } from "@/components/Projects";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { Skills } from "@/components/Skills";
 import { Stance } from "@/components/Stance";
+import { career, profile } from "@/content/site";
+import { homeJsonLd, serializeJsonLd } from "@/lib/structured-data";
 
 // Experience counts in About are calculated at render; regenerate daily so they stay current.
 export const revalidate = 86400;
 
+const jsonLd = homeJsonLd({
+  name: profile.name,
+  title: profile.title,
+  description: profile.intro,
+  photo: profile.photo,
+  location: profile.location,
+  employer: career.employer,
+  profiles: [profile.github, profile.linkedin],
+});
+
 export default function Home() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }} />
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[80] focus:rounded-lg focus:bg-accent focus:px-4 focus:py-2 focus:font-semibold focus:text-bg"

@@ -1,25 +1,25 @@
-<!-- generated from .engineering/state.json (revision 2) -->
+<!-- generated from .engineering/state.json (revision 3) -->
 
 # Handoff: personal-portfolio
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 2, `release-1.0-consolidated-pr29`, 2026-11-02T18:10:00Z by Claude Code (project thread: Close portfolio release)
+- Checkpoint: revision 3, `release-1.0-post-deploy-owner-checks`, 2026-11-02T19:10:00Z by Claude Code (project thread: Close portfolio release)
 - Written by: the agent (committed to git)
 - Uncommitted work outside this checkpoint: **none**
 - Roadmap: [ROADMAP.md](../ROADMAP.md). Release: [record](../docs/release/2026-11-portfolio-release.md), [acceptance](../docs/release/ACCEPTANCE.md)
 
 ## Continue with
 
-Read docs/release/2026-11-portfolio-release.md and ACCEPTANCE.md. After merge of #28, record the production commit and deployment ID in ACCEPTANCE.md. Optional work is in ROADMAP.md.
+Nothing for an agent to do on the release. Optional work is in ROADMAP.md. Do not record approval on the owner's behalf.
 
 ## Unfinished
 
-- Owner gates in docs/release/ACCEPTANCE.md section 2
+- Owner approval items in docs/release/ACCEPTANCE.md (privacy wording, known limits, section 5 signature)
 
 ## Blockers
 
-- Owner review/merge, post-deploy real contact send, provider billing confirmations, owner approval
+- Owner release approval (belongs to Joshua Small)
 
 ## Decisions
 
@@ -38,4 +38,5 @@ Read docs/release/2026-11-portfolio-release.md and ACCEPTANCE.md. After merge of
 ## Unresolved decisions
 
 - Owner approval of privacy note wording
-- DMARC record (recommended, needs owner approval)
+- Owner acceptance of known limits (per-instance rate limit, personal data in git history, dev-only minimatch advisory)
+- Release approval (ACCEPTANCE.md section 5)

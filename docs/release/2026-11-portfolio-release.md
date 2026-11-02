@@ -38,10 +38,9 @@ Release-closure changes (release PR):
 | Item | Value |
 | --- | --- |
 | Repository | `WasteOfADrumBum/joshsmall-site`, branch `main` |
-| Production commit at the time of writing | `827f659` (merge of PR #29), deployed as `dpl_ugrywgJJR6jxZds1tcNP7mGFyJzQ`, READY |
+| Release production commit | `1435e75` (merge of PR #28), deployed as `dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee`, READY (agent-read 2026-11-02) |
 | Vercel team / project | `task-forge3` / `joshsmall-portfolio` (`prj_VRXHTwxWZYMV0yNdhikFluAl34hg`), Node 24.x |
-| Rollback target now | `dpl_2oMid2nGeu1LXQjSG9Cv1KwvAK3Y`, built from `5f0a849` (PR #27) |
-| Rollback target after #28 merges | `dpl_ugrywgJJR6jxZds1tcNP7mGFyJzQ` (PR #29) |
+| Rollback target | `dpl_ugrywgJJR6jxZds1tcNP7mGFyJzQ`, built from `827f659` (PR #29) |
 | Domains | `onesmall.company` (verified, production); `joshsmall-portfolio.vercel.app` → 308 to `https://onesmall.company` |
 | DNS | Vercel DNS. CAA allows `letsencrypt.org`, `sectigo.com`, `pki.goog` |
 | Deployment protection | Vercel Authentication on all deployments except custom domains (previews are private) |
@@ -142,7 +141,11 @@ The release commit and deployment ID are filled in on [ACCEPTANCE.md](./ACCEPTAN
 
 ## 4. Release blockers
 
-None confirmed in code. The release is **not complete** until the owner gates in [ACCEPTANCE.md](./ACCEPTANCE.md) are done: CI green on the release PR, merge, production deploy of the merge, one real contact send after deploy, the manual contrast check, provider-setting confirmations, and the owner's approval.
+None in code. Post-deployment checks were reported complete by Joshua Small on 2026-11-02 (recorded in [ACCEPTANCE.md](./ACCEPTANCE.md)). What remains is the owner's decision only:
+
+1. Approve the privacy note wording next to the contact form.
+2. Accept or reject the three known limits in ACCEPTANCE.md section 4.
+3. Sign the approval in ACCEPTANCE.md section 5.
 
 ## 5. Not in this release
 

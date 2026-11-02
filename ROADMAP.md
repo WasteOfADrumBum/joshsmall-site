@@ -4,6 +4,32 @@ Future work for onesmall.company after release 1.0. **Nothing here blocks the re
 
 Priority: **P1** do next, **P2** worthwhile, **P3** nice to have. No item may add tracking, a paid service or a billing change without the owner's decision.
 
+## Owner settings
+
+### O1. Require CI before merging to `main` (P2)
+- **Purpose:** CI runs on every PR, but nothing stops a merge while it is red.
+- **Scope:** branch protection or a ruleset on `main` requiring "Lint, typecheck, test and build" (https://github.com/WasteOfADrumBum/joshsmall-site/settings/branches).
+- **Acceptance:** a PR with a failing check cannot be merged without an explicit bypass.
+- **Dependencies:** none.
+
+### O2. Refresh share previews (P3)
+- **Purpose:** LinkedIn and Facebook may still cache the old share card from before PR #25.
+- **Scope:** run https://onesmall.company through LinkedIn Post Inspector and the Facebook Sharing Debugger.
+- **Acceptance:** both show the 1200×630 card with the current title.
+- **Dependencies:** none.
+
+### O3. Decide on `www.onesmall.company` (P3)
+- **Purpose:** the wildcard DNS record points `www` at Vercel, but it is not a domain on the project, so it most likely shows a Vercel 404.
+- **Scope:** add `www.onesmall.company` to the project as a 308 redirect to the apex, or record that it is intentionally unserved.
+- **Acceptance:** `https://www.onesmall.company/` redirects to `https://onesmall.company/`, or the decision is written in the release record.
+- **Dependencies:** owner approval for a production domain change.
+
+### O4. Confirm Resend key scope (P3)
+- **Purpose:** the API does not show whether the "Joshua Small Portfolio" key is limited.
+- **Scope:** in Resend, confirm or set the key to "Sending access" for `onesmall.company` only; rotate it in Vercel if it is changed.
+- **Acceptance:** key shows sending-only for one domain; one contact send still arrives.
+- **Dependencies:** none.
+
 ## Reliability and operations
 
 ### R1. Global rate limit for the contact form (P2)

@@ -1,41 +1,41 @@
-<!-- generated from .engineering/state.json (revision 1) -->
+<!-- generated from .engineering/state.json (revision 2) -->
 
 # Handoff: personal-portfolio
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 1, `r1-closeout-5f0a849`, 2026-11-02T17:20:00Z by Claude Code (project thread: Close portfolio site release)
-- Written by: the agent, committed with the closeout branch (local file)
+- Checkpoint: revision 2, `release-1.0-consolidated-pr29`, 2026-11-02T18:10:00Z by Claude Code (project thread: Close portfolio release)
+- Written by: the agent (committed to git)
 - Uncommitted work outside this checkpoint: **none**
+- Roadmap: [ROADMAP.md](../ROADMAP.md). Release: [record](../docs/release/2026-11-portfolio-release.md), [acceptance](../docs/release/ACCEPTANCE.md)
 
 ## Continue with
 
-Check the closeout PR's CI, then the production deployment after merge; record its id in docs/RELEASE.md if needed.
+Read docs/release/2026-11-portfolio-release.md and ACCEPTANCE.md. After merge of #28, record the production commit and deployment ID in ACCEPTANCE.md. Optional work is in ROADMAP.md.
 
 ## Unfinished
 
-- Merge closeout PR (owner)
-- Owner manual checks listed in docs/RELEASE.md
+- Owner gates in docs/release/ACCEPTANCE.md section 2
 
 ## Blockers
 
-_none recorded_
+- Owner review/merge, post-deploy real contact send, provider billing confirmations, owner approval
 
 ## Decisions
 
-- No real contact send repeated: the server send path is unchanged
-- Privacy disclosure is a one-line note under the form, not a policy page (no cookies or tracking)
-- Optional improvements recorded in ROADMAP.md, not implemented
+- Rate limiting is in-memory per function instance (no paid or new service); global limit tracked as ROADMAP R1
+- Git history is not rewritten to remove the personal email from old .env.example commits
+- Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md
+- PR #29 was merged to main by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 was brought up to date by merging main and carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md
 
 ## Constraints
 
 - No redesign or new product features in this release
-- Never record owner approvals as agent facts
+- No paid services, billing changes, tracking, or history rewrites
+- Production DNS changes (DMARC) need owner approval
+- Release approval belongs to Joshua Small
 
 ## Unresolved decisions
 
-- Contact API rate limiting (Vercel Firewall rule or accept honeypot + Resend 100/day cap)
-- Failure notifications (Hobby keeps runtime logs 1 hour)
-- DMARC record
-- www.onesmall.company not attached to the project
-- Personal email and birth date remain in public git history
+- Owner approval of privacy note wording
+- DMARC record (recommended, needs owner approval)

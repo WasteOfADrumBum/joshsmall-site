@@ -1,91 +1,111 @@
 {
   "stateVersion": 1,
-  "revision": 1,
-  "checkpointId": "r1-closeout-5f0a849",
+  "revision": 2,
+  "checkpointId": "release-1.0-consolidated-pr29",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
-    "branch": "claude/release-closeout",
-    "commit": "5f0a84971343fd6dc85bde2e162c90594dc8b492",
-    "recordedAt": "2026-11-02T17:20:00Z"
+    "branch": "claude/project-thread-mr3geq",
+    "commit": "dfa1206",
+    "recordedAt": "2026-11-02T18:10:00Z"
   },
   "development": {
-    "milestone": "Portfolio release closeout (November 2026)",
-    "activeTask": "Release closeout PR: CI, fixes, release record, roadmap",
-    "workingBranch": "claude/release-closeout",
-    "activePr": null,
+    "milestone": "Portfolio release 1.0 (November 2026)",
+    "activeTask": "Release closure: awaiting owner review of the release PR and acceptance gates",
+    "workingBranch": "claude/project-thread-mr3geq",
+    "activePr": 28,
     "lastCompleted": [
-      "Added CI (lint, typecheck, test, build) and a typecheck script",
-      "Fixed reduced-motion hydration error (React #418) on the hero Pause button",
-      "Contact API returns 400 for non-object JSON bodies; form handles network errors and a 20 s timeout",
-      "Added contact privacy note; replaced personal email in .env.example",
-      "Wrote docs/RELEASE.md (scope, production identity, evidence, manual checks) and ROADMAP.md"
+      "CI workflow (lint, typecheck, test, build, prod-dependency audit)",
+      "Scheduled production smoke check workflow",
+      "Contact API hardening: origin, content type, 16 KB cap, per-instance rate limit, send exception handling",
+      "Contact form network-error message and privacy note",
+      "poweredByHeader off; .env.example placeholder recipient",
+      "Release record, acceptance record, ROADMAP.md, README links",
+      "Merged main (with PR #29) into #28; #29's fixes and findings reconciled into #28's code and records"
     ],
     "inProgress": [],
-    "nextAction": "Owner reviews and merges the closeout PR once CI is green, then works through the manual checks in docs/RELEASE.md"
+    "nextAction": "Owner: review and merge PR #28 once CI is green, then work through docs/release/ACCEPTANCE.md section 2."
   },
   "decisions": {
     "made": [
-      "No real contact send repeated: the server send path is unchanged",
-      "Privacy disclosure is a one-line note under the form, not a policy page (no cookies or tracking)",
-      "Optional improvements recorded in ROADMAP.md, not implemented"
+      "Rate limiting is in-memory per function instance (no paid or new service); global limit tracked as ROADMAP R1",
+      "Git history is not rewritten to remove the personal email from old .env.example commits",
+      "Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md",
+      "PR #29 was merged to main by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 was brought up to date by merging main and carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md"
     ],
     "constraints": [
       "No redesign or new product features in this release",
-      "Never record owner approvals as agent facts"
+      "No paid services, billing changes, tracking, or history rewrites",
+      "Production DNS changes (DMARC) need owner approval",
+      "Release approval belongs to Joshua Small"
     ],
     "unresolved": [
-      "Contact API rate limiting (Vercel Firewall rule or accept honeypot + Resend 100/day cap)",
-      "Failure notifications (Hobby keeps runtime logs 1 hour)",
-      "DMARC record",
-      "www.onesmall.company not attached to the project",
-      "Personal email and birth date remain in public git history"
+      "Owner approval of privacy note wording",
+      "DMARC record (recommended, needs owner approval)"
     ]
   },
   "verification": {
     "testsRun": [
       {
+        "command": "npm test (combined branch, clean checkout)",
+        "result": "60 pass, 0 fail",
+        "at": "2026-11-02T18:10:00Z"
+      },
+      {
         "command": "npm run lint",
-        "result": "pass"
+        "result": "clean",
+        "at": "2026-11-02T18:10:00Z"
       },
       {
-        "command": "npm run typecheck",
-        "result": "pass"
-      },
-      {
-        "command": "npm test",
-        "result": "pass (52/52)"
+        "command": "npm run typecheck (clean checkout)",
+        "result": "clean",
+        "at": "2026-11-02T18:10:00Z"
       },
       {
         "command": "npm run build",
-        "result": "pass"
-      },
-      {
-        "command": "Playwright against next start: hydration, contact form states, API inputs",
-        "result": "pass"
+        "result": "success",
+        "at": "2026-11-02T18:10:00Z"
       },
       {
         "command": "npm audit --omit=dev",
-        "result": "0 vulnerabilities"
+        "result": "0 vulnerabilities",
+        "at": "2026-11-02T18:10:00Z"
+      },
+      {
+        "command": "axe-core 4.10.3 WCAG A/AA via Playwright, 3 viewport/theme combos (combined build)",
+        "result": "0 violations; color-contrast incomplete on 15-20 elements",
+        "at": "2026-11-02T18:10:00Z"
+      },
+      {
+        "command": "Playwright: reduced motion on/off console errors; contact form mocked network/timeout/500/502/success",
+        "result": "no errors; expected messages",
+        "at": "2026-11-02T18:10:00Z"
+      },
+      {
+        "command": "curl against local next start for /api/contact",
+        "result": "400 non-object JSON, 403/415/413/405/429/503 as designed",
+        "at": "2026-11-02T18:10:00Z"
       }
     ],
     "unverifiedChanges": [
-      "CI workflow has not run on GitHub yet",
-      "Closeout changes not yet deployed to production"
+      "CI on the consolidated head not yet run at checkpoint time",
+      "Contact route changes not yet deployed; no real send made by the agent",
+      "Manual contrast check of gradient text not done"
     ]
   },
   "handoff": {
-    "lastAgent": "Claude Code (project thread: Close portfolio site release)",
-    "checkpointedAt": "2026-11-02T17:20:00Z",
+    "lastAgent": "Claude Code (project thread: Close portfolio release)",
+    "checkpointedAt": "2026-11-02T18:10:00Z",
     "unfinished": [
-      "Merge closeout PR (owner)",
-      "Owner manual checks listed in docs/RELEASE.md"
+      "Owner gates in docs/release/ACCEPTANCE.md section 2"
     ],
-    "blockers": [],
-    "continuation": "Check the closeout PR's CI, then the production deployment after merge; record its id in docs/RELEASE.md if needed.",
+    "blockers": [
+      "Owner review/merge, post-deploy real contact send, provider billing confirmations, owner approval"
+    ],
+    "continuation": "Read docs/release/2026-11-portfolio-release.md and ACCEPTANCE.md. After merge of #28, record the production commit and deployment ID in ACCEPTANCE.md. Optional work is in ROADMAP.md.",
     "uncommittedWorkOutsideCheckpoint": "none",
-    "persistedBy": "local-file"
+    "persistedBy": "git-commit"
   },
   "provenance": {
     "claims": "agent_reported",

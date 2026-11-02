@@ -9,6 +9,8 @@ import { securityHeaders } from "./src/lib/security-headers.ts";
 const VERCEL_PRODUCTION_HOST = String.raw`joshsmall-portfolio\.vercel\.app`;
 
 const nextConfig: NextConfig = {
+  // Don't advertise the framework in every response.
+  poweredByHeader: false,
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders(process.env.NODE_ENV === "development") }];
   },

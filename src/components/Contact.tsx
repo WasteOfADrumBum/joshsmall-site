@@ -13,8 +13,6 @@ type Status = "idle" | "sending" | "success" | "error";
 /** Long enough for a slow connection, short enough that the button doesn't spin forever. */
 const SEND_TIMEOUT_MS = 20_000;
 
-class ServerError extends Error {}
-
 const field =
   "mt-2 w-full rounded-xl border bg-bg px-4 py-3 text-fg placeholder:text-muted/70 transition-colors";
 
@@ -98,33 +96,40 @@ export function Contact() {
 
     setStatus("sending");
     setError("");
+    let res: Response;
+    let data: { error?: string; fields?: ContactErrors };
     try {
-      const res = await fetch("/api/contact", {
+      res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
         signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
       });
-      const data = (await res.json().catch(() => ({}))) as { error?: string; fields?: ContactErrors };
-      if (data.fields) {
-        setFieldErrors(data.fields);
-        focusFirstInvalid(form, data.fields);
-      }
-      if (!res.ok) throw new ServerError(data.error ?? "Something went wrong. Please try again later.");
-      form.reset();
-      setStatus("success");
+      data = (await res.json().catch(() => ({}))) as typeof data;
     } catch (err) {
-      // Only the API's own messages are shown as-is; the browser's ("Failed to fetch", abort reasons) are not.
+      // The request never completed (offline, dropped connection, timeout). The browser's own text
+      // ("Failed to fetch", abort reasons) means nothing to a visitor, so say what happened instead.
       const timedOut = err instanceof DOMException && err.name === "TimeoutError";
       setError(
-        err instanceof ServerError
-          ? err.message
-          : timedOut
-            ? "Sending is taking too long. Check your connection and try again."
-            : "Couldn't reach the server. Check your connection and try again.",
+        timedOut
+          ? "Sending is taking too long. Check your connection and try again."
+          : "Couldn't reach the server. Check your connection and try again.",
       );
       setStatus("error");
+      return;
     }
+    if (data.fields) {
+      setFieldErrors(data.fields);
+      focusFirstInvalid(form, data.fields);
+    }
+    if (!res.ok) {
+      // Only the API's own messages are shown as-is.
+      setError(data.error ?? "Something went wrong. Please try again later.");
+      setStatus("error");
+      return;
+    }
+    form.reset();
+    setStatus("success");
   }
 
   return (
@@ -185,13 +190,16 @@ export function Contact() {
             </div>
 
             <p className="mt-5 text-sm text-muted">
+              {contact.privacyNote}
+            </p>
+
+            <p className="mt-3 text-sm text-muted">
               All fields marked with{" "}
               <span aria-hidden="true" className="text-grad font-bold">
                 *
               </span>
               <span className="sr-only">an asterisk</span> are required.
             </p>
-            <p className="mt-2 text-sm text-muted">{contact.privacy}</p>
 
             <button
               type="submit"

@@ -4,8 +4,7 @@ Full-stack & AI engineer building production TypeScript/React/Node.js software w
 
 **Live:** [onesmall.company](https://onesmall.company)
 
-![Portfolio screenshot](./docs/screenshot.png)
-<!-- TODO: add docs/screenshot.png -->
+[![CI](https://github.com/WasteOfADrumBum/joshsmall-site/actions/workflows/ci.yml/badge.svg)](https://github.com/WasteOfADrumBum/joshsmall-site/actions/workflows/ci.yml)
 
 ## Tech stack
 
@@ -15,7 +14,7 @@ Full-stack & AI engineer building production TypeScript/React/Node.js software w
 - **Motion & icons:** Motion, Lucide
 - **Email:** Resend (contact form)
 - **Hosting:** Vercel
-- **Quality:** ESLint, TypeScript, Node's built-in test runner, GitHub Actions CI
+- **Quality:** ESLint, TypeScript, Node's built-in test runner, GitHub Actions CI and a scheduled production smoke check
 
 ## Highlights
 
@@ -34,7 +33,8 @@ npm install
 # Contact form reads these from .env.local:
 #   RESEND_API_KEY     required
 #   CONTACT_TO_EMAIL   required (where messages are delivered)
-#   CONTACT_FROM_EMAIL optional (defaults to Resend's onboarding sender)
+#   CONTACT_FROM_EMAIL optional (defaults to Resend's onboarding sender,
+#                      which can only deliver to your own Resend account address)
 cat > .env.local <<'EOF'
 RESEND_API_KEY=your_key
 CONTACT_TO_EMAIL=you@example.com
@@ -50,8 +50,16 @@ Then open http://localhost:3000.
 | `npm run build` | Production build |
 | `npm start` | Serve the production build |
 | `npm run lint` | Lint |
-| `npm run typecheck` | Generate Next route types and run `tsc` |
+| `npm run typecheck` | Generate route types and type-check |
 | `npm test` | Run unit tests |
+
+CI runs lint, typecheck, tests, the production build and a production-dependency audit on every pull request.
+
+## Project docs
+
+- [Roadmap](./ROADMAP.md): future enhancements, kept separate from release blockers
+- [Release record](./docs/release/2026-11-portfolio-release.md) and [acceptance record](./docs/release/ACCEPTANCE.md) for release 1.0
+- [Project checkpoint](./.engineering/HANDOFF.md): current state for the next contributor
 
 ## Contact
 

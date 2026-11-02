@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { validateContact } from "./contact.ts";
+import { asContactBody, validateContact } from "./contact.ts";
+
+describe("asContactBody", () => {
+  it("keeps plain objects and rejects other JSON values", () => {
+    assert.deepEqual(asContactBody({ name: "Ada" }), { name: "Ada" });
+    for (const v of [null, [], ["x"], "text", 1, true]) assert.equal(asContactBody(v), null);
+  });
+});
 
 describe("validateContact", () => {
   it("accepts a complete submission and trims it", () => {

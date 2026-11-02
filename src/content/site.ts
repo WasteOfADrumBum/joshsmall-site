@@ -427,6 +427,8 @@ export const contact = {
   intro:
     "Happy to talk about AI-assisted engineering, component libraries, or modernizing legacy systems. Send a message and I'll reply by email.",
   badges: ["Based in North Carolina", "Eastern Time (ET)"],
+  privacy:
+    "Your name, email and message are emailed to me through Resend and used only to reply. This site sets no cookies and runs no analytics or tracking.",
 };
 
 /** Same order as the sections on the page. */

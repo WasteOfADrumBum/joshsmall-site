@@ -1,34 +1,36 @@
 {
   "stateVersion": 1,
-  "revision": 3,
-  "checkpointId": "release-1.0-post-deploy-owner-checks",
+  "revision": 4,
+  "checkpointId": "release-1.0-approved-maintenance",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
     "branch": "main",
     "commit": "1435e75",
-    "recordedAt": "2026-11-02T19:10:00Z"
+    "recordedAt": "2026-11-02T19:15:00Z"
   },
   "development": {
-    "milestone": "Portfolio release 1.0 (November 2026)",
-    "activeTask": "Release 1.0: owner-reported post-deployment checks recorded; awaiting owner approval",
+    "milestone": "Portfolio release 1.0 (November 2026): complete; project in maintenance",
+    "activeTask": null,
     "workingBranch": "claude/project-thread-mr3geq",
     "activePr": null,
     "lastCompleted": [
       "PR #29 merged (827f659) and PR #28 merged (1435e75); production dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee READY",
       "Owner-reported post-deployment checks recorded in docs/release/ACCEPTANCE.md (Joshua Small, 2026-11-02)",
-      "Optional owner settings moved to ROADMAP.md (O1-O4)"
+      "Optional owner settings moved to ROADMAP.md (O1-O4)",
+      "Release 1.0 approved by Joshua Small on 2026-11-02 (privacy note approved, known limits accepted); recorded in ACCEPTANCE.md section 5 at his direction"
     ],
     "inProgress": [],
-    "nextAction": "Owner: approve the privacy note wording, accept or reject the known limits, and sign docs/release/ACCEPTANCE.md section 5."
+    "nextAction": "Maintenance. Pick optional work from ROADMAP.md only when the owner asks."
   },
   "decisions": {
     "made": [
       "Rate limiting is in-memory per function instance (no paid or new service); global limit tracked as ROADMAP R1",
       "Git history is not rewritten to remove the personal email from old .env.example commits",
       "Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md",
-      "PR #29 was merged to main by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 was brought up to date by merging main and carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md"
+      "PR #29 was merged to main by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 was brought up to date by merging main and carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md",
+      "Release 1.0 approved and known limits accepted by Joshua Small, 2026-11-02 (owner's own message, recorded at his direction)"
     ],
     "constraints": [
       "No redesign or new product features in this release",
@@ -36,11 +38,7 @@
       "Production DNS changes (DMARC) need owner approval",
       "Release approval belongs to Joshua Small"
     ],
-    "unresolved": [
-      "Owner approval of privacy note wording",
-      "Owner acceptance of known limits (per-instance rate limit, personal data in git history, dev-only minimatch advisory)",
-      "Release approval (ACCEPTANCE.md section 5)"
-    ]
+    "unresolved": []
   },
   "verification": {
     "testsRun": [
@@ -75,19 +73,24 @@
           "Vercel deployment-failure and GitHub Actions failure emails are enabled",
           "Production smoke run 41499238148 passed"
         ]
+      },
+      {
+        "by": "Joshua Small",
+        "at": "2026-11-02",
+        "claims": [
+          "Approves the contact form privacy note",
+          "Accepts per-instance rate limiting, personal data remaining in git history, and the dev-only minimatch advisory",
+          "Approves release 1.0"
+        ]
       }
     ]
   },
   "handoff": {
     "lastAgent": "Claude Code (project thread: Close portfolio release)",
-    "checkpointedAt": "2026-11-02T19:10:00Z",
-    "unfinished": [
-      "Owner approval items in docs/release/ACCEPTANCE.md (privacy wording, known limits, section 5 signature)"
-    ],
-    "blockers": [
-      "Owner release approval (belongs to Joshua Small)"
-    ],
-    "continuation": "Nothing for an agent to do on the release. Optional work is in ROADMAP.md. Do not record approval on the owner's behalf.",
+    "checkpointedAt": "2026-11-02T19:15:00Z",
+    "unfinished": [],
+    "blockers": [],
+    "continuation": "Release 1.0 is complete and the project is in maintenance. Optional improvements are tracked in ROADMAP.md; start one only when the owner asks.",
     "uncommittedWorkOutsideCheckpoint": "none",
     "persistedBy": "git-commit"
   },

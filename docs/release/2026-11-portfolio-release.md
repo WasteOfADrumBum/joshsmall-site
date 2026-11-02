@@ -1,6 +1,6 @@
 # Release record: portfolio release 1.0 (November 2026)
 
-Status: **ready for owner acceptance, not yet approved.** Release approval belongs to Joshua Small and is recorded only in [ACCEPTANCE.md](./ACCEPTANCE.md).
+Status: **released and approved by Joshua Small on 2026-11-02** (see [ACCEPTANCE.md](./ACCEPTANCE.md) section 5). The project is in maintenance; optional work is in [ROADMAP.md](../../ROADMAP.md).
 
 Prepared 2026-11-02 by an AI agent (Claude Code). Everything below marked *agent-verified* was run or read by the agent on that date. Nothing here is independent or human verification unless it says *owner-reported*.
 
@@ -141,11 +141,7 @@ The release commit and deployment ID are filled in on [ACCEPTANCE.md](./ACCEPTAN
 
 ## 4. Release blockers
 
-None in code. Post-deployment checks were reported complete by Joshua Small on 2026-11-02 (recorded in [ACCEPTANCE.md](./ACCEPTANCE.md)). What remains is the owner's decision only:
-
-1. Approve the privacy note wording next to the contact form.
-2. Accept or reject the three known limits in ACCEPTANCE.md section 4.
-3. Sign the approval in ACCEPTANCE.md section 5.
+None. All mandatory gates are met and the owner approved the release on 2026-11-02.
 
 ## 5. Not in this release
 

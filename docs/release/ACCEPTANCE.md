@@ -26,7 +26,7 @@ Owner-reported evidence:
 - [x] Production deployment of the merge commit is READY on Vercel. Commit: `1435e75` Deployment: `dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee`. Live security headers present, no `X-Powered-By` (agent-read)
 - [x] One real message sent from https://onesmall.company/#contact after that deploy arrives in the inbox (*owner-reported, Joshua Small, 2026-11-02*: "Contact email arrives.")
 - [x] Home page checked with reduced motion on (*owner-reported, Joshua Small, 2026-11-02*: "Reduced-motion behavior passes.")
-- [ ] Privacy note wording next to the contact form approved (not yet reported)
+- [x] Privacy note wording next to the contact form approved (*owner decision, Joshua Small, 2026-11-02*: "I approve the contact form privacy note and accept the three documented limits")
 - [x] Manual contrast check of gradient text passes in light and dark mode (*owner-reported, Joshua Small, 2026-11-02*: "Gradient text passes in light and dark mode.")
 - [x] Vercel plan confirmed free (Hobby) (*owner-reported, Joshua Small, 2026-11-02*: "Vercel and Resend use free plans.")
 - [x] Resend plan confirmed free (*owner-reported, Joshua Small, 2026-11-02*, same statement)
@@ -37,16 +37,18 @@ Owner-reported evidence:
 
 Moved to [ROADMAP.md](../../ROADMAP.md): DMARC (S1), required CI check on `main` (O1), share-preview refresh (O2), `www` redirect (O3) and Resend key scope (O4). None blocks this release.
 
-## 4. Known limits to accept (owner decision, part of approval)
+## 4. Known limits accepted (*owner decision, Joshua Small, 2026-11-02*: "I approve the contact form privacy note and accept the three documented limits")
 
-- [ ] Accepted: rate limiting is per function instance (best effort), not global
-- [ ] Accepted: the owner's personal email (old `.env.example`) and a full birth date (commits before PR #16) remain in git history; history is not rewritten
-- [ ] Accepted: dev-only `minimatch` advisory in the ESLint toolchain until ESLint ships a fix
+- [x] Accepted: rate limiting is per function instance (best effort), not global
+- [x] Accepted: the owner's personal email (old `.env.example`) and a full birth date (commits before PR #16) remain in git history; history is not rewritten
+- [x] Accepted: dev-only `minimatch` advisory in the ESLint toolchain until ESLint ships a fix
 
 ## 5. Approval
 
-Decision: ☐ Approved for release ☐ Not approved
+Decision: ☒ Approved for release ☐ Not approved
 
-Name: Joshua Small  Date: __________
+Name: Joshua Small  Date: 2026-11-02
 
-Notes:
+Recorded at the owner's direction from his message of 2026-11-02 19:06 UTC: "I approve the contact form privacy note and accept the three documented limits: per-instance rate limiting, personal data remaining in git history, and the dev-only minimatch advisory. Record this as my approval in ACCEPTANCE.md section 5."
+
+All mandatory gates in section 2 are met. Optional work continues in [ROADMAP.md](../../ROADMAP.md).

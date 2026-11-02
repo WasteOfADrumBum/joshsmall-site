@@ -1,6 +1,6 @@
 # Release record: portfolio release 1.0 (November 2026)
 
-Status: **ready for owner acceptance, not yet approved.** Release approval belongs to Joshua Small and is recorded only in [ACCEPTANCE.md](./ACCEPTANCE.md).
+Status: **released and approved by Joshua Small on 2026-11-02** (see [ACCEPTANCE.md](./ACCEPTANCE.md) section 5). The project is in maintenance; optional work is in [ROADMAP.md](../../ROADMAP.md).
 
 Prepared 2026-11-02 by an AI agent (Claude Code). Everything below marked *agent-verified* was run or read by the agent on that date. Nothing here is independent or human verification unless it says *owner-reported*.
 
@@ -38,10 +38,9 @@ Release-closure changes (release PR):
 | Item | Value |
 | --- | --- |
 | Repository | `WasteOfADrumBum/joshsmall-site`, branch `main` |
-| Production commit at the time of writing | `827f659` (merge of PR #29), deployed as `dpl_ugrywgJJR6jxZds1tcNP7mGFyJzQ`, READY |
+| Release production commit | `1435e75` (merge of PR #28), deployed as `dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee`, READY (agent-read 2026-11-02) |
 | Vercel team / project | `task-forge3` / `joshsmall-portfolio` (`prj_VRXHTwxWZYMV0yNdhikFluAl34hg`), Node 24.x |
-| Rollback target now | `dpl_2oMid2nGeu1LXQjSG9Cv1KwvAK3Y`, built from `5f0a849` (PR #27) |
-| Rollback target after #28 merges | `dpl_ugrywgJJR6jxZds1tcNP7mGFyJzQ` (PR #29) |
+| Rollback target | `dpl_ugrywgJJR6jxZds1tcNP7mGFyJzQ`, built from `827f659` (PR #29) |
 | Domains | `onesmall.company` (verified, production); `joshsmall-portfolio.vercel.app` → 308 to `https://onesmall.company` |
 | DNS | Vercel DNS. CAA allows `letsencrypt.org`, `sectigo.com`, `pki.goog` |
 | Deployment protection | Vercel Authentication on all deployments except custom domains (previews are private) |
@@ -142,7 +141,7 @@ The release commit and deployment ID are filled in on [ACCEPTANCE.md](./ACCEPTAN
 
 ## 4. Release blockers
 
-None confirmed in code. The release is **not complete** until the owner gates in [ACCEPTANCE.md](./ACCEPTANCE.md) are done: CI green on the release PR, merge, production deploy of the merge, one real contact send after deploy, the manual contrast check, provider-setting confirmations, and the owner's approval.
+None. All mandatory gates are met and the owner approved the release on 2026-11-02.
 
 ## 5. Not in this release
 

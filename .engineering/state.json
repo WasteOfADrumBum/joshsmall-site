@@ -1,38 +1,36 @@
 {
   "stateVersion": 1,
-  "revision": 2,
-  "checkpointId": "release-1.0-consolidated-pr29",
+  "revision": 4,
+  "checkpointId": "release-1.0-approved-maintenance",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
-    "branch": "claude/project-thread-mr3geq",
-    "commit": "dfa1206",
-    "recordedAt": "2026-11-02T18:10:00Z"
+    "branch": "main",
+    "commit": "1435e75",
+    "recordedAt": "2026-11-02T19:15:00Z"
   },
   "development": {
-    "milestone": "Portfolio release 1.0 (November 2026)",
-    "activeTask": "Release closure: awaiting owner review of the release PR and acceptance gates",
+    "milestone": "Portfolio release 1.0 (November 2026): complete; project in maintenance",
+    "activeTask": null,
     "workingBranch": "claude/project-thread-mr3geq",
-    "activePr": 28,
+    "activePr": null,
     "lastCompleted": [
-      "CI workflow (lint, typecheck, test, build, prod-dependency audit)",
-      "Scheduled production smoke check workflow",
-      "Contact API hardening: origin, content type, 16 KB cap, per-instance rate limit, send exception handling",
-      "Contact form network-error message and privacy note",
-      "poweredByHeader off; .env.example placeholder recipient",
-      "Release record, acceptance record, ROADMAP.md, README links",
-      "Merged main (with PR #29) into #28; #29's fixes and findings reconciled into #28's code and records"
+      "PR #29 merged (827f659) and PR #28 merged (1435e75); production dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee READY",
+      "Owner-reported post-deployment checks recorded in docs/release/ACCEPTANCE.md (Joshua Small, 2026-11-02)",
+      "Optional owner settings moved to ROADMAP.md (O1-O4)",
+      "Release 1.0 approved by Joshua Small on 2026-11-02 (privacy note approved, known limits accepted); recorded in ACCEPTANCE.md section 5 at his direction"
     ],
     "inProgress": [],
-    "nextAction": "Owner: review and merge PR #28 once CI is green, then work through docs/release/ACCEPTANCE.md section 2."
+    "nextAction": "Maintenance. Pick optional work from ROADMAP.md only when the owner asks."
   },
   "decisions": {
     "made": [
       "Rate limiting is in-memory per function instance (no paid or new service); global limit tracked as ROADMAP R1",
       "Git history is not rewritten to remove the personal email from old .env.example commits",
       "Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md",
-      "PR #29 was merged to main by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 was brought up to date by merging main and carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md"
+      "PR #29 was merged to main by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 was brought up to date by merging main and carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md",
+      "Release 1.0 approved and known limits accepted by Joshua Small, 2026-11-02 (owner's own message, recorded at his direction)"
     ],
     "constraints": [
       "No redesign or new product features in this release",
@@ -40,70 +38,59 @@
       "Production DNS changes (DMARC) need owner approval",
       "Release approval belongs to Joshua Small"
     ],
-    "unresolved": [
-      "Owner approval of privacy note wording",
-      "DMARC record (recommended, needs owner approval)"
-    ]
+    "unresolved": []
   },
   "verification": {
     "testsRun": [
       {
-        "command": "npm test (combined branch, clean checkout)",
-        "result": "60 pass, 0 fail",
-        "at": "2026-11-02T18:10:00Z"
+        "command": "GitHub CI on main 1435e75 (run 41499128342)",
+        "result": "success (agent-read)",
+        "at": "2026-11-02T19:10:00Z"
       },
       {
-        "command": "npm run lint",
-        "result": "clean",
-        "at": "2026-11-02T18:10:00Z"
+        "command": "Production smoke check run 41499238148 on 1435e75",
+        "result": "success (owner-run; agent-read)",
+        "at": "2026-11-02T19:10:00Z"
       },
       {
-        "command": "npm run typecheck (clean checkout)",
-        "result": "clean",
-        "at": "2026-11-02T18:10:00Z"
-      },
-      {
-        "command": "npm run build",
-        "result": "success",
-        "at": "2026-11-02T18:10:00Z"
-      },
-      {
-        "command": "npm audit --omit=dev",
-        "result": "0 vulnerabilities",
-        "at": "2026-11-02T18:10:00Z"
-      },
-      {
-        "command": "axe-core 4.10.3 WCAG A/AA via Playwright, 3 viewport/theme combos (combined build)",
-        "result": "0 violations; color-contrast incomplete on 15-20 elements",
-        "at": "2026-11-02T18:10:00Z"
-      },
-      {
-        "command": "Playwright: reduced motion on/off console errors; contact form mocked network/timeout/500/502/success",
-        "result": "no errors; expected messages",
-        "at": "2026-11-02T18:10:00Z"
-      },
-      {
-        "command": "curl against local next start for /api/contact",
-        "result": "400 non-object JSON, 403/415/413/405/429/503 as designed",
-        "at": "2026-11-02T18:10:00Z"
+        "command": "Live production headers via Vercel connector",
+        "result": "security headers present, no X-Powered-By",
+        "at": "2026-11-02T19:10:00Z"
       }
     ],
     "unverifiedChanges": [
-      "CI on the consolidated head not yet run at checkpoint time",
-      "Contact route changes not yet deployed; no real send made by the agent",
-      "Manual contrast check of gradient text not done"
+      "Owner-reported checks are recorded as reported; the agent did not verify them"
+    ],
+    "ownerReported": [
+      {
+        "by": "Joshua Small",
+        "at": "2026-11-02",
+        "claims": [
+          "Contact email arrives",
+          "Reduced-motion behavior passes",
+          "Gradient text passes in light and dark mode",
+          "Vercel and Resend use free plans",
+          "Vercel deployment-failure and GitHub Actions failure emails are enabled",
+          "Production smoke run 41499238148 passed"
+        ]
+      },
+      {
+        "by": "Joshua Small",
+        "at": "2026-11-02",
+        "claims": [
+          "Approves the contact form privacy note",
+          "Accepts per-instance rate limiting, personal data remaining in git history, and the dev-only minimatch advisory",
+          "Approves release 1.0"
+        ]
+      }
     ]
   },
   "handoff": {
     "lastAgent": "Claude Code (project thread: Close portfolio release)",
-    "checkpointedAt": "2026-11-02T18:10:00Z",
-    "unfinished": [
-      "Owner gates in docs/release/ACCEPTANCE.md section 2"
-    ],
-    "blockers": [
-      "Owner review/merge, post-deploy real contact send, provider billing confirmations, owner approval"
-    ],
-    "continuation": "Read docs/release/2026-11-portfolio-release.md and ACCEPTANCE.md. After merge of #28, record the production commit and deployment ID in ACCEPTANCE.md. Optional work is in ROADMAP.md.",
+    "checkpointedAt": "2026-11-02T19:15:00Z",
+    "unfinished": [],
+    "blockers": [],
+    "continuation": "Release 1.0 is complete and the project is in maintenance. Optional improvements are tracked in ROADMAP.md; start one only when the owner asks.",
     "uncommittedWorkOutsideCheckpoint": "none",
     "persistedBy": "git-commit"
   },

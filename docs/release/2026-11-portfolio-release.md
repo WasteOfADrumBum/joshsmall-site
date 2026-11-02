@@ -1,6 +1,6 @@
 # Release record: portfolio release 1.0 (November 2026)
 
-Status: **released and approved by Joshua Small on 2026-11-02** (see [ACCEPTANCE.md](./ACCEPTANCE.md) section 5). The project is in maintenance; optional work is in [ROADMAP.md](../../ROADMAP.md).
+Status: **released and approved by Joshua Small on 2026-11-02** (see [ACCEPTANCE.md](./ACCEPTANCE.md) section 5). The project is in maintenance; optional work is in [ROADMAP.md](../../ROADMAP.md). The Engineering Hub registry still lists its ten gates as unverified until the verifier records them; see ACCEPTANCE.md section 6.
 
 Prepared 2026-11-02 by an AI agent (Claude Code). Everything below marked *agent-verified* was run or read by the agent on that date. Nothing here is independent or human verification unless it says *owner-reported*.
 
@@ -104,6 +104,7 @@ The release commit and deployment ID are filled in on [ACCEPTANCE.md](./ACCEPTAN
 - axe-core 4.10.3, WCAG 2.0/2.1/2.2 A and AA rules, reduced motion, after scrolling the whole page: **0 violations** at 1440×900 dark, 390×844 dark and 1440×900 light. No horizontal scroll at either width.
 - axe could not decide colour contrast for 15 to 20 elements (gradient text and translucent backgrounds). That is missing evidence, not a confirmed defect, and is a manual check on the acceptance record.
 - Keyboard: 68 tab stops from "Skip to content" to "Send message", every one with a visible focus indicator.
+- Owner-reported (Joshua Small, 2026-11-02): screen-reader and 200% zoom checks "are tested and confirmed". The screen reader, browser and operating system were not stated. Gradient-text contrast in light and dark mode and reduced motion also pass (owner-reported).
 - Earlier report (Experience section, PR #15) noted that no axe or contrast audit had been run; the axe part is now done.
 
 ### Dependencies (reported in PR #29, not re-run here)

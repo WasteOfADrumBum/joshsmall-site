@@ -427,6 +427,9 @@ export const contact = {
   intro:
     "Happy to talk about AI-assisted engineering, component libraries, or modernizing legacy systems. Send a message and I'll reply by email.",
   badges: ["Based in North Carolina", "Eastern Time (ET)"],
+  /** Matches what the code does: no cookies, analytics or trackers; the form goes out by email through Resend. */
+  privacyNote:
+    "Privacy: your name, email and message are emailed to me through Resend and used only to reply. This site sets no cookies and uses no analytics or tracking. Its host, Vercel, keeps short-lived request logs.",
 };
 
 /** Same order as the sections on the page. */

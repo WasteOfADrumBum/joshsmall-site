@@ -1,0 +1,49 @@
+name: Production smoke check
+
+# Free uptime and header check for https://onesmall.company. If a run fails, GitHub emails the
+# person who last changed this schedule (repository Actions notifications), which is the failure alert.
+# It never sends an email through the contact form: the contact check posts an empty body that the
+# API rejects before reaching Resend.
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITE: https://onesmall.company
+    steps:
+      - name: Home page responds with security headers
+        run: |
+          set -euo pipefail
+          headers=$(curl -sS -D - -o /dev/null --max-time 20 --retry 2 "$SITE/")
+          echo "$headers"
+          echo "$headers" | head -1 | grep -E ' 200' 
+          for h in content-security-policy strict-transport-security x-content-type-options x-frame-options referrer-policy permissions-policy; do
+            echo "$headers" | grep -qi "^$h:" || { echo "::error::Missing header $h"; exit 1; }
+          done
+      - name: Page content, robots and sitemap
+        run: |
+          set -euo pipefail
+          curl -sS --fail --max-time 20 --retry 2 "$SITE/" | grep -q "Joshua M. Small"
+          curl -sS --fail --max-time 20 "$SITE/robots.txt" | grep -q "Sitemap: $SITE/sitemap.xml"
+          curl -sS --fail --max-time 20 "$SITE/sitemap.xml" | grep -q "<loc>$SITE/</loc>"
+      - name: Vercel alias redirects to the custom domain
+        run: |
+          set -euo pipefail
+          loc=$(curl -sS -o /dev/null -w '%{redirect_url}' --max-time 20 https://joshsmall-portfolio.vercel.app/)
+          echo "redirect: $loc"
+          [ "$loc" = "$SITE/" ]
+      - name: Contact API is up (validation only, sends nothing)
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 -X POST -H 'Content-Type: application/json' -d '{}' "$SITE/api/contact")
+          echo "status: $code"
+          [ "$code" = "400" ]

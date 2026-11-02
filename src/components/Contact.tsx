@@ -93,12 +93,21 @@ export function Contact() {
 
     setStatus("sending");
     setError("");
+    let res: Response;
     try {
-      const res = await fetch("/api/contact", {
+      res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+    } catch {
+      // The request never reached the server (offline, dropped connection). The browser's own
+      // message ("Failed to fetch") means nothing to a visitor, so say what happened instead.
+      setError("Couldn't reach the server. Check your connection and try again.");
+      setStatus("error");
+      return;
+    }
+    try {
       const data = (await res.json().catch(() => ({}))) as { error?: string; fields?: ContactErrors };
       if (data.fields) {
         setFieldErrors(data.fields);
@@ -171,6 +180,10 @@ export function Contact() {
             </div>
 
             <p className="mt-5 text-sm text-muted">
+              {contact.privacyNote}
+            </p>
+
+            <p className="mt-3 text-sm text-muted">
               All fields marked with{" "}
               <span aria-hidden="true" className="text-grad font-bold">
                 *

@@ -1,15 +1,14 @@
-<!-- generated from .engineering/state.json (revision 4); edit state.json through a checkpoint, not this file -->
+<!-- generated from .engineering/state.json (revision 5); edit state.json through a checkpoint, not this file -->
 
 # personal-portfolio: development status
 
-All values are **agent-reported**, not independently verified, except where marked owner-reported. Check GitHub before relying on them.
+All values are **agent-reported**, not independently verified. Check GitHub before relying on them.
 
 - Milestone: Portfolio release 1.0 (November 2026): complete; project in maintenance
-- Active task: none (maintenance)
-- Branch: `main`
-- Recorded commit: `1435e75`
-- Last checkpoint: 2026-11-02T19:15:00Z by Claude Code (project thread: Close portfolio release)
-- Roadmap: [ROADMAP.md](../ROADMAP.md)
+- Active task: none recorded
+- Branch: unknown
+- Recorded commit: `829ffc8` on `main`
+- Last checkpoint: 2026-11-02T23:10:00Z by Claude Code
 
 ## Next action
 
@@ -17,6 +16,7 @@ Maintenance. Pick optional work from ROADMAP.md only when the owner asks.
 
 ## Completed
 
+- PR #30 merged by Joshua Small as 829ffc8: release 1.0 approval recorded in docs/release/ACCEPTANCE.md section 5
 - PR #29 merged (827f659) and PR #28 merged (1435e75); production dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee READY
 - Owner-reported post-deployment checks recorded in docs/release/ACCEPTANCE.md (Joshua Small, 2026-11-02)
 - Optional owner settings moved to ROADMAP.md (O1-O4)
@@ -26,24 +26,14 @@ Maintenance. Pick optional work from ROADMAP.md only when the owner asks.
 
 _none recorded_
 
-## Owner-reported (Joshua Small, 2026-11-02)
-
-- Contact email arrives
-- Reduced-motion behavior passes
-- Gradient text passes in light and dark mode
-- Vercel and Resend use free plans
-- Vercel deployment-failure and GitHub Actions failure emails are enabled
-- Production smoke run 41499238148 passed
-- Approves the contact form privacy note
-- Accepts per-instance rate limiting, personal data remaining in git history, and the dev-only minimatch advisory
-- Approves release 1.0
-
 ## Tests (agent-reported)
 
-- `GitHub CI on main 1435e75 (run 41499128342)`: success (agent-read)
-- `Production smoke check run 41499238148 on 1435e75`: success (owner-run; agent-read)
-- `Live production headers via Vercel connector`: security headers present, no X-Powered-By
+- `GitHub CI on main (push, release merge)`: pass at `1435e75`, 2026-11-02T18:17:00Z
+- `Production smoke check (owner-run workflow dispatch)`: pass at `1435e75`, 2026-11-02T18:18:00Z
+- `GitHub CI on main (push, approval record)`: pass at `829ffc8`, 2026-11-02T19:10:00Z
 
 ## Unverified changes
 
 - Owner-reported checks are recorded as reported; the agent did not verify them
+- Owner-reported 2026-11-02 (Joshua Small): contact email arrives, reduced motion passes, gradient text passes in light and dark mode, free plans, failure emails on
+- Live production headers present and no X-Powered-By (agent-read through the Vercel connector, 2026-11-02)

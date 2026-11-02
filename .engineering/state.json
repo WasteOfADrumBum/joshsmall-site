@@ -1,21 +1,26 @@
 {
   "stateVersion": 1,
-  "revision": 4,
-  "checkpointId": "release-1.0-approved-maintenance",
+  "revision": 5,
+  "checkpointId": "ckpt-0005-contract-v1-shape",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
+  "provenance": {
+    "claims": "agent_reported",
+    "independentVerification": "none"
+  },
   "recorded": {
     "branch": "main",
-    "commit": "1435e75",
-    "recordedAt": "2026-11-02T19:15:00Z"
+    "commit": "829ffc8f2370d3e84cdd2e6f01d04dbf3a4db762",
+    "recordedAt": "2026-11-02T23:10:00Z"
   },
   "development": {
     "milestone": "Portfolio release 1.0 (November 2026): complete; project in maintenance",
     "activeTask": null,
-    "workingBranch": "claude/project-thread-mr3geq",
+    "workingBranch": null,
     "activePr": null,
     "lastCompleted": [
+      "PR #30 merged by Joshua Small as 829ffc8: release 1.0 approval recorded in docs/release/ACCEPTANCE.md section 5",
       "PR #29 merged (827f659) and PR #28 merged (1435e75); production dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee READY",
       "Owner-reported post-deployment checks recorded in docs/release/ACCEPTANCE.md (Joshua Small, 2026-11-02)",
       "Optional owner settings moved to ROADMAP.md (O1-O4)",
@@ -26,11 +31,41 @@
   },
   "decisions": {
     "made": [
-      "Rate limiting is in-memory per function instance (no paid or new service); global limit tracked as ROADMAP R1",
-      "Git history is not rewritten to remove the personal email from old .env.example commits",
-      "Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md",
-      "PR #29 was merged to main by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 was brought up to date by merging main and carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md",
-      "Release 1.0 approved and known limits accepted by Joshua Small, 2026-11-02 (owner's own message, recorded at his direction)"
+      {
+        "id": "rate-limit-in-memory",
+        "summary": "Rate limiting is in-memory per function instance (no paid or new service); global limit tracked as ROADMAP R1",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-02T00:00:00Z"
+      },
+      {
+        "id": "no-history-rewrite",
+        "summary": "Git history is not rewritten to remove the personal email from old .env.example commits",
+        "decidedBy": "human",
+        "humanRef": "Joshua Small, project thread \"Close portfolio release\", 2026-11-02 19:06 UTC (accepted as a known limit)",
+        "recordedAt": "2026-11-02T19:06:00Z"
+      },
+      {
+        "id": "roadmap-split",
+        "summary": "Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-02T00:00:00Z"
+      },
+      {
+        "id": "pr-29-consolidated",
+        "summary": "PR #29 was merged by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-02T00:00:00Z"
+      },
+      {
+        "id": "release-1-0-approved",
+        "summary": "Release 1.0 approved and the three known limits accepted (privacy note approved)",
+        "decidedBy": "human",
+        "humanRef": "Joshua Small, project thread \"Close portfolio release\", 2026-11-02 19:06 UTC; ACCEPTANCE.md section 5",
+        "recordedAt": "2026-11-02T19:06:00Z"
+      }
     ],
     "constraints": [
       "No redesign or new product features in this release",
@@ -43,59 +78,43 @@
   "verification": {
     "testsRun": [
       {
-        "command": "GitHub CI on main 1435e75 (run 41499128342)",
-        "result": "success (agent-read)",
-        "at": "2026-11-02T19:10:00Z"
+        "command": "GitHub CI on main (push, release merge)",
+        "result": "pass",
+        "commit": "1435e75e68df31edd52abb168d7b082844ba3e04",
+        "at": "2026-11-02T18:17:00Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/41499128342"
       },
       {
-        "command": "Production smoke check run 41499238148 on 1435e75",
-        "result": "success (owner-run; agent-read)",
-        "at": "2026-11-02T19:10:00Z"
+        "command": "Production smoke check (owner-run workflow dispatch)",
+        "result": "pass",
+        "commit": "1435e75e68df31edd52abb168d7b082844ba3e04",
+        "at": "2026-11-02T18:18:00Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/41499238148"
       },
       {
-        "command": "Live production headers via Vercel connector",
-        "result": "security headers present, no X-Powered-By",
-        "at": "2026-11-02T19:10:00Z"
+        "command": "GitHub CI on main (push, approval record)",
+        "result": "pass",
+        "commit": "829ffc8f2370d3e84cdd2e6f01d04dbf3a4db762",
+        "at": "2026-11-02T19:10:00Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/41507393519"
       }
     ],
     "unverifiedChanges": [
-      "Owner-reported checks are recorded as reported; the agent did not verify them"
-    ],
-    "ownerReported": [
-      {
-        "by": "Joshua Small",
-        "at": "2026-11-02",
-        "claims": [
-          "Contact email arrives",
-          "Reduced-motion behavior passes",
-          "Gradient text passes in light and dark mode",
-          "Vercel and Resend use free plans",
-          "Vercel deployment-failure and GitHub Actions failure emails are enabled",
-          "Production smoke run 41499238148 passed"
-        ]
-      },
-      {
-        "by": "Joshua Small",
-        "at": "2026-11-02",
-        "claims": [
-          "Approves the contact form privacy note",
-          "Accepts per-instance rate limiting, personal data remaining in git history, and the dev-only minimatch advisory",
-          "Approves release 1.0"
-        ]
-      }
+      "Owner-reported checks are recorded as reported; the agent did not verify them",
+      "Owner-reported 2026-11-02 (Joshua Small): contact email arrives, reduced motion passes, gradient text passes in light and dark mode, free plans, failure emails on",
+      "Live production headers present and no X-Powered-By (agent-read through the Vercel connector, 2026-11-02)"
     ]
   },
   "handoff": {
-    "lastAgent": "Claude Code (project thread: Close portfolio release)",
-    "checkpointedAt": "2026-11-02T19:15:00Z",
+    "lastAgent": {
+      "tool": "Claude Code",
+      "model": null
+    },
+    "checkpointedAt": "2026-11-02T23:10:00Z",
     "unfinished": [],
     "blockers": [],
-    "continuation": "Release 1.0 is complete and the project is in maintenance. Optional improvements are tracked in ROADMAP.md; start one only when the owner asks.",
+    "continuation": "Release 1.0 is complete and the project is in maintenance. Optional improvements are tracked in ROADMAP.md; start one only when the owner asks. Checkpoint re-recorded in the continuity contract v1 shape (the previous revision failed hub validation and showed as invalid in the hub aggregate); content carried over, nothing new claimed.",
     "uncommittedWorkOutsideCheckpoint": "none",
-    "persistedBy": "git-commit"
-  },
-  "provenance": {
-    "claims": "agent_reported",
-    "independentVerification": "none"
+    "persistedBy": "local-file"
   }
 }

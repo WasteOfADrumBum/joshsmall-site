@@ -55,7 +55,7 @@ The release commit and deployment ID are filled in on [ACCEPTANCE.md](./ACCEPTAN
 - `npm ci` then `npm test`: 59 tests pass, 0 fail (51 before this release plus 8 new for the contact guard).
 - `npm run lint`: clean. `npm run typecheck`: clean from a clean checkout. `npm run build`: succeeds, `/` is static with daily revalidation, `/api/contact` dynamic.
 - `npm audit --omit=dev`: 0 vulnerabilities. Full `npm audit`: moderate `minimatch` advisory (GHSA-g3hv-75wg-m249) in ESLint's dev-only dependency tree, no non-breaking fix. Not shipped to production. Tracked in [ROADMAP.md](../../ROADMAP.md).
-- CI on GitHub: see the release PR's checks. Not claimed here until GitHub shows them green.
+- CI on GitHub (agent-read from the PR checks): "Lint, typecheck, test and build" passed on PR #28, commit `12e3504` ([run 41487445853](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/41487445853)). The preview deployment of that commit serves the same security headers and no `X-Powered-By`.
 
 ### Contact form
 

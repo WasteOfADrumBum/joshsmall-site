@@ -12,7 +12,7 @@ Owner and release approver: **Joshua Small**. Only the owner ticks the boxes in 
 - [x] Live headers, redirect, caching, image optimization, 404: checked (agent-run)
 - [x] axe WCAG A/AA: 0 violations at three viewport/theme combinations (agent-run)
 - [x] Slow-network run: LCP 2.2 s at 400 kbit/s (agent-run)
-- [ ] CI green on the release PR (filled in from GitHub after the run)
+- [x] CI green on the release PR #28: [run 41487445853](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/41487445853), "Lint, typecheck, test and build" passed 2026-11-02 on commit `12e3504`
 
 Owner-reported evidence:
 

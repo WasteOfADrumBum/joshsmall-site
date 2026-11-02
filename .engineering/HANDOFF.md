@@ -4,7 +4,7 @@
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 5, `release-1.0-hub-gate-reconciliation`, 2026-11-02T23:00:00Z by Claude Code
+- Checkpoint: revision 5, `release-1.0-hub-gate-reconciliation`, 2026-11-02T22:50:00Z by Claude Code
 - Written by: a local edit that the agent then pushed; confirm the branch head matches
 - Uncommitted work outside this checkpoint: **none**
 

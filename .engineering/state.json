@@ -8,7 +8,7 @@
   "recorded": {
     "branch": "main",
     "commit": "829ffc8f2370d3e84cdd2e6f01d04dbf3a4db762",
-    "recordedAt": "2026-11-02T23:00:00Z"
+    "recordedAt": "2026-11-02T22:50:00Z"
   },
   "development": {
     "milestone": "Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance",
@@ -113,7 +113,7 @@
       "tool": "Claude Code",
       "model": null
     },
-    "checkpointedAt": "2026-11-02T23:00:00Z",
+    "checkpointedAt": "2026-11-02T22:50:00Z",
     "unfinished": [
       "Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows"
     ],

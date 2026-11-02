@@ -6,14 +6,15 @@ Owner and release approver: **Joshua Small**. Only the owner ticks the boxes in 
 
 - [x] Release scope recorded (release record, section 1)
 - [x] Production identity recorded (release record, section 2)
-- [x] Local lint, typecheck, 60 unit tests, production build on the combined branch (#28 + #29's fixes): pass (agent-run)
+- [x] Local lint, typecheck, 60 unit tests, production build on #28 merged with `main` (which includes #29): pass (agent-run)
 - [x] Production dependencies: 0 npm advisories (agent-run)
 - [x] Secret scan of working tree and all 76 commits: none found (agent-run)
 - [x] Live headers, redirect, caching, image optimization, 404: checked (agent-run)
 - [x] axe WCAG A/AA: 0 violations at three viewport/theme combinations (agent-run)
 - [x] Slow-network run: LCP 2.2 s at 400 kbit/s (agent-run)
 - [x] Reduced motion: no console errors on or off; contact form messages for network error, timeout, HTML 500, 502 and success (agent-run, API mocked)
-- [ ] CI green on the consolidated head of PR #28 (filled in from GitHub after the run; it passed on the earlier head `12e3504`)
+- [ ] CI green on the current head of PR #28 (filled in from GitHub after the run; it passed on earlier heads)
+- [x] GitHub shows PR #29 merged to `main` by WasteOfADrumBum on 2026-11-02; its production deployment `dpl_ugrywgJJR6jxZds1tcNP7mGFyJzQ` is READY (agent-read)
 
 Owner-reported evidence:
 
@@ -21,7 +22,7 @@ Owner-reported evidence:
 
 ## 2. Owner gates (required for release)
 
-- [ ] Release PR reviewed, CI green, merged to `main`
+- [ ] PR #28 reviewed, CI green, merged to `main`
 - [ ] Production deployment of the merge commit is READY on Vercel. Commit: `________` Deployment: `dpl_________`
 - [ ] One real message sent from https://onesmall.company/#contact after that deploy arrives in the inbox
 - [ ] Home page spot-checked with reduced motion on (no Pause button, page works)
@@ -45,7 +46,6 @@ Owner-reported evidence:
 - [ ] Accepted: rate limiting is per function instance (best effort), not global
 - [ ] Accepted: the owner's personal email (old `.env.example`) and a full birth date (commits before PR #16) remain in git history; history is not rewritten
 - [ ] Accepted: dev-only `minimatch` advisory in the ESLint toolchain until ESLint ships a fix
-- [ ] PR #29 closed as superseded by #28 (its work is listed in the release record)
 
 ## 5. Approval
 

@@ -6,7 +6,7 @@ Prepared 2026-11-02 by an AI agent (Claude Code). Everything below marked *agent
 
 ## 1. Scope
 
-The release is the single-page portfolio at https://onesmall.company as it exists on `main`, plus the release-closure changes in the release PR (#28, which also carries the fixes from the superseded PR #29). No redesign and no new product features.
+The release is the single-page portfolio at https://onesmall.company as it exists on `main`, plus the release-closure changes. PR #29 (CI, reduced-motion hydration fix, non-object JSON → 400, 20 s request timeout, privacy note) was merged to `main` on 2026-11-02 at 17:54 UTC and is live. PR #28 builds on it with the remaining changes and replaces #29's `docs/RELEASE.md` with this record, which includes all of its findings. No redesign and no new product features.
 
 In scope:
 
@@ -38,10 +38,10 @@ Release-closure changes (release PR):
 | Item | Value |
 | --- | --- |
 | Repository | `WasteOfADrumBum/joshsmall-site`, branch `main` |
-| Production commit before this release | `5f0a849` (PR #27) |
+| Production commit at the time of writing | `827f659` (merge of PR #29), deployed as `dpl_ugrywgJJR6jxZds1tcNP7mGFyJzQ`, READY |
 | Vercel team / project | `task-forge3` / `joshsmall-portfolio` (`prj_VRXHTwxWZYMV0yNdhikFluAl34hg`), Node 24.x |
-| Current production deployment | `dpl_2oMid2nGeu1LXQjSG9Cv1KwvAK3Y`, READY, built from `5f0a849` |
-| Previous production deployment (rollback target) | `dpl_BV7JWLYfGWos6RzAkFGkTFp5ix97`, built from `64f42fc` (PR #26) |
+| Rollback target now | `dpl_2oMid2nGeu1LXQjSG9Cv1KwvAK3Y`, built from `5f0a849` (PR #27) |
+| Rollback target after #28 merges | `dpl_ugrywgJJR6jxZds1tcNP7mGFyJzQ` (PR #29) |
 | Domains | `onesmall.company` (verified, production); `joshsmall-portfolio.vercel.app` → 308 to `https://onesmall.company` |
 | DNS | Vercel DNS. CAA allows `letsencrypt.org`, `sectigo.com`, `pki.goog` |
 | Deployment protection | Vercel Authentication on all deployments except custom domains (previews are private) |

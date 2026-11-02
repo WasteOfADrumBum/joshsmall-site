@@ -13,7 +13,7 @@ All values are **agent-reported**, not independently verified. Check GitHub befo
 
 ## Next action
 
-Owner: review and merge PR #28 once CI is green on its consolidated head, close #29 as superseded, then work through docs/release/ACCEPTANCE.md section 2.
+Owner: review and merge PR #28 once CI is green, then work through docs/release/ACCEPTANCE.md section 2.
 
 ## Completed
 
@@ -23,7 +23,7 @@ Owner: review and merge PR #28 once CI is green on its consolidated head, close 
 - Contact form network-error message and privacy note
 - poweredByHeader off; .env.example placeholder recipient
 - Release record, acceptance record, ROADMAP.md, README links
-- Consolidated PR #29 into #28: reduced-motion hydration fix, asContactBody (non-object JSON → 400), 20 s request timeout with plain messages
+- Merged main (with PR #29) into #28; #29's fixes and findings reconciled into #28's code and records
 
 ## In progress
 

@@ -22,17 +22,17 @@
       "Contact form network-error message and privacy note",
       "poweredByHeader off; .env.example placeholder recipient",
       "Release record, acceptance record, ROADMAP.md, README links",
-      "Consolidated PR #29 into #28: reduced-motion hydration fix, asContactBody (non-object JSON \u2192 400), 20 s request timeout with plain messages"
+      "Merged main (with PR #29) into #28; #29's fixes and findings reconciled into #28's code and records"
     ],
     "inProgress": [],
-    "nextAction": "Owner: review and merge PR #28 once CI is green on its consolidated head, close #29 as superseded, then work through docs/release/ACCEPTANCE.md section 2."
+    "nextAction": "Owner: review and merge PR #28 once CI is green, then work through docs/release/ACCEPTANCE.md section 2."
   },
   "decisions": {
     "made": [
       "Rate limiting is in-memory per function instance (no paid or new service); global limit tracked as ROADMAP R1",
       "Git history is not rewritten to remove the personal email from old .env.example commits",
       "Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md",
-      "PR #29 superseded by #28 (owner request 2026-11-02); #29 is not merged"
+      "PR #29 was merged to main by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 was brought up to date by merging main and carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md"
     ],
     "constraints": [
       "No redesign or new product features in this release",

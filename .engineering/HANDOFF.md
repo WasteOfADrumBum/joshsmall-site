@@ -26,7 +26,7 @@ Read docs/release/2026-11-portfolio-release.md and ACCEPTANCE.md. After merge of
 - Rate limiting is in-memory per function instance (no paid or new service); global limit tracked as ROADMAP R1
 - Git history is not rewritten to remove the personal email from old .env.example commits
 - Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md
-- PR #29 superseded by #28 (owner request 2026-11-02); #29 is not merged
+- PR #29 was merged to main by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 was brought up to date by merging main and carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md
 
 ## Constraints
 

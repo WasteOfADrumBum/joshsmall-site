@@ -10,6 +10,11 @@ import { Section } from "./Section";
 
 type Status = "idle" | "sending" | "success" | "error";
 
+/** Long enough for a slow connection, short enough that the button doesn't spin forever. */
+const SEND_TIMEOUT_MS = 20_000;
+
+class ServerError extends Error {}
+
 const field =
   "mt-2 w-full rounded-xl border bg-bg px-4 py-3 text-fg placeholder:text-muted/70 transition-colors";
 
@@ -98,17 +103,26 @@ export function Contact() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
       });
       const data = (await res.json().catch(() => ({}))) as { error?: string; fields?: ContactErrors };
       if (data.fields) {
         setFieldErrors(data.fields);
         focusFirstInvalid(form, data.fields);
       }
-      if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
+      if (!res.ok) throw new ServerError(data.error ?? "Something went wrong. Please try again later.");
       form.reset();
       setStatus("success");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+      // Only the API's own messages are shown as-is; the browser's ("Failed to fetch", abort reasons) are not.
+      const timedOut = err instanceof DOMException && err.name === "TimeoutError";
+      setError(
+        err instanceof ServerError
+          ? err.message
+          : timedOut
+            ? "Sending is taking too long. Check your connection and try again."
+            : "Couldn't reach the server. Check your connection and try again.",
+      );
       setStatus("error");
     }
   }
@@ -177,6 +191,7 @@ export function Contact() {
               </span>
               <span className="sr-only">an asterisk</span> are required.
             </p>
+            <p className="mt-2 text-sm text-muted">{contact.privacy}</p>
 
             <button
               type="submit"

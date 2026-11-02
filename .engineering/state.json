@@ -1,41 +1,91 @@
 {
   "stateVersion": 1,
-  "revision": 0,
-  "checkpointId": "init-0000000",
+  "revision": 1,
+  "checkpointId": "r1-closeout-5f0a849",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
-    "branch": "main",
-    "commit": null,
-    "recordedAt": null
+    "branch": "claude/release-closeout",
+    "commit": "5f0a84971343fd6dc85bde2e162c90594dc8b492",
+    "recordedAt": "2026-11-02T17:20:00Z"
   },
   "development": {
-    "milestone": null,
-    "activeTask": null,
-    "workingBranch": null,
+    "milestone": "Portfolio release closeout (November 2026)",
+    "activeTask": "Release closeout PR: CI, fixes, release record, roadmap",
+    "workingBranch": "claude/release-closeout",
     "activePr": null,
-    "lastCompleted": [],
+    "lastCompleted": [
+      "Added CI (lint, typecheck, test, build) and a typecheck script",
+      "Fixed reduced-motion hydration error (React #418) on the hero Pause button",
+      "Contact API returns 400 for non-object JSON bodies; form handles network errors and a 20 s timeout",
+      "Added contact privacy note; replaced personal email in .env.example",
+      "Wrote docs/RELEASE.md (scope, production identity, evidence, manual checks) and ROADMAP.md"
+    ],
     "inProgress": [],
-    "nextAction": null
+    "nextAction": "Owner reviews and merges the closeout PR once CI is green, then works through the manual checks in docs/RELEASE.md"
   },
   "decisions": {
-    "made": [],
-    "constraints": [],
-    "unresolved": []
+    "made": [
+      "No real contact send repeated: the server send path is unchanged",
+      "Privacy disclosure is a one-line note under the form, not a policy page (no cookies or tracking)",
+      "Optional improvements recorded in ROADMAP.md, not implemented"
+    ],
+    "constraints": [
+      "No redesign or new product features in this release",
+      "Never record owner approvals as agent facts"
+    ],
+    "unresolved": [
+      "Contact API rate limiting (Vercel Firewall rule or accept honeypot + Resend 100/day cap)",
+      "Failure notifications (Hobby keeps runtime logs 1 hour)",
+      "DMARC record",
+      "www.onesmall.company not attached to the project",
+      "Personal email and birth date remain in public git history"
+    ]
   },
   "verification": {
-    "testsRun": [],
-    "unverifiedChanges": []
+    "testsRun": [
+      {
+        "command": "npm run lint",
+        "result": "pass"
+      },
+      {
+        "command": "npm run typecheck",
+        "result": "pass"
+      },
+      {
+        "command": "npm test",
+        "result": "pass (52/52)"
+      },
+      {
+        "command": "npm run build",
+        "result": "pass"
+      },
+      {
+        "command": "Playwright against next start: hydration, contact form states, API inputs",
+        "result": "pass"
+      },
+      {
+        "command": "npm audit --omit=dev",
+        "result": "0 vulnerabilities"
+      }
+    ],
+    "unverifiedChanges": [
+      "CI workflow has not run on GitHub yet",
+      "Closeout changes not yet deployed to production"
+    ]
   },
   "handoff": {
-    "lastAgent": null,
-    "checkpointedAt": null,
-    "unfinished": [],
+    "lastAgent": "Claude Code (project thread: Close portfolio site release)",
+    "checkpointedAt": "2026-11-02T17:20:00Z",
+    "unfinished": [
+      "Merge closeout PR (owner)",
+      "Owner manual checks listed in docs/RELEASE.md"
+    ],
     "blockers": [],
-    "continuation": null,
-    "uncommittedWorkOutsideCheckpoint": "unknown",
-    "persistedBy": "github-api"
+    "continuation": "Check the closeout PR's CI, then the production deployment after merge; record its id in docs/RELEASE.md if needed.",
+    "uncommittedWorkOutsideCheckpoint": "none",
+    "persistedBy": "local-file"
   },
   "provenance": {
     "claims": "agent_reported",

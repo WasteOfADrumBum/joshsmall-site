@@ -1,14 +1,16 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { validateContact } from "@/lib/contact";
+import { asContactBody, validateContact } from "@/lib/contact";
 
 export async function POST(request: Request) {
-  let body: Record<string, unknown>;
+  let body: Record<string, unknown> | null;
   try {
-    body = await request.json();
+    body = asContactBody(await request.json());
   } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    body = null;
   }
+  // `null` or an array is valid JSON but not a form; reading fields from it used to throw a 500.
+  if (!body) return NextResponse.json({ error: "Invalid request." }, { status: 400 });
 
   // Honeypot: pretend success so bots learn nothing.
   if (typeof body.company === "string" && body.company.trim() !== "") {

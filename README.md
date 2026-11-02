@@ -15,7 +15,7 @@ Full-stack & AI engineer building production TypeScript/React/Node.js software w
 - **Motion & icons:** Motion, Lucide
 - **Email:** Resend (contact form)
 - **Hosting:** Vercel
-- **Quality:** ESLint, Node's built-in test runner
+- **Quality:** ESLint, TypeScript, Node's built-in test runner, GitHub Actions CI
 
 ## Highlights
 
@@ -50,6 +50,7 @@ Then open http://localhost:3000.
 | `npm run build` | Production build |
 | `npm start` | Serve the production build |
 | `npm run lint` | Lint |
+| `npm run typecheck` | Generate Next route types and run `tsc` |
 | `npm test` | Run unit tests |
 
 ## Contact

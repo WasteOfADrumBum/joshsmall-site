@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { validateContact } from "@/lib/contact";
+import { asContactBody, validateContact } from "@/lib/contact";
 import {
   CONTACT_RATE_LIMIT,
   MAX_CONTACT_BODY_BYTES,
@@ -26,18 +26,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Your message is too long." }, { status: 413 });
   }
 
-  let body: Record<string, unknown>;
-  try {
-    const raw = await request.text();
-    if (raw.length > MAX_CONTACT_BODY_BYTES) {
-      return NextResponse.json({ error: "Your message is too long." }, { status: 413 });
-    }
-    const parsed: unknown = JSON.parse(raw);
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("not an object");
-    body = parsed as Record<string, unknown>;
-  } catch {
-    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  const raw = await request.text().catch(() => null);
+  if (raw !== null && raw.length > MAX_CONTACT_BODY_BYTES) {
+    return NextResponse.json({ error: "Your message is too long." }, { status: 413 });
   }
+  let body: Record<string, unknown> | null = null;
+  try {
+    // `null` or an array is valid JSON but not a form; reading fields from it used to throw a 500.
+    body = raw === null ? null : asContactBody(JSON.parse(raw));
+  } catch {
+    body = null;
+  }
+  if (!body) return NextResponse.json({ error: "Invalid request." }, { status: 400 });
 
   // Honeypot: pretend success so bots learn nothing.
   if (typeof body.company === "string" && body.company.trim() !== "") {

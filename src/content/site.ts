@@ -429,7 +429,7 @@ export const contact = {
   badges: ["Based in North Carolina", "Eastern Time (ET)"],
   /** Matches what the code does: no cookies, analytics or trackers; the form goes out by email through Resend. */
   privacyNote:
-    "Privacy: your name, email and message are emailed to me through Resend and used only to reply. This site sets no cookies and uses no analytics or tracking. Its host, Vercel, keeps short-lived request logs.",
+    "Privacy: your name, email and message are emailed to me through Resend and used only to reply. This site sets no cookies and runs no analytics or tracking. Its host, Vercel, keeps short-lived request logs.",
 };
 
 /** Same order as the sections on the page. */

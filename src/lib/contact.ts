@@ -10,6 +10,11 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const LABELS: Record<ContactField, string> = { name: "Name", email: "Email", message: "Message" };
 
+/** The parsed request body as a plain object, or null when it is JSON but not an object (null, an array, a string...). */
+export function asContactBody(input: unknown): Record<string, unknown> | null {
+  return typeof input === "object" && input !== null && !Array.isArray(input) ? (input as Record<string, unknown>) : null;
+}
+
 export function validateContact(input: Record<string, unknown>) {
   const values = {} as Record<ContactField, string>;
   const errors: ContactErrors = {};

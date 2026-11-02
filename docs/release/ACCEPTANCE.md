@@ -6,13 +6,14 @@ Owner and release approver: **Joshua Small**. Only the owner ticks the boxes in 
 
 - [x] Release scope recorded (release record, section 1)
 - [x] Production identity recorded (release record, section 2)
-- [x] Local lint, typecheck, 59 unit tests, production build: pass (agent-run)
+- [x] Local lint, typecheck, 60 unit tests, production build on the combined branch (#28 + #29's fixes): pass (agent-run)
 - [x] Production dependencies: 0 npm advisories (agent-run)
 - [x] Secret scan of working tree and all 76 commits: none found (agent-run)
 - [x] Live headers, redirect, caching, image optimization, 404: checked (agent-run)
 - [x] axe WCAG A/AA: 0 violations at three viewport/theme combinations (agent-run)
 - [x] Slow-network run: LCP 2.2 s at 400 kbit/s (agent-run)
-- [x] CI green on the release PR #28: [run 41487445853](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/41487445853), "Lint, typecheck, test and build" passed 2026-11-02 on commit `12e3504`
+- [x] Reduced motion: no console errors on or off; contact form messages for network error, timeout, HTML 500, 502 and success (agent-run, API mocked)
+- [ ] CI green on the consolidated head of PR #28 (filled in from GitHub after the run; it passed on the earlier head `12e3504`)
 
 Owner-reported evidence:
 
@@ -23,6 +24,7 @@ Owner-reported evidence:
 - [ ] Release PR reviewed, CI green, merged to `main`
 - [ ] Production deployment of the merge commit is READY on Vercel. Commit: `________` Deployment: `dpl_________`
 - [ ] One real message sent from https://onesmall.company/#contact after that deploy arrives in the inbox
+- [ ] Home page spot-checked with reduced motion on (no Pause button, page works)
 - [ ] Privacy note wording next to the contact form approved
 - [ ] Manual contrast check of gradient text and translucent cards (the elements axe could not judge) passes in both light and dark mode
 - [ ] Vercel plan and spending: confirmed Hobby, or a spend limit is set (https://vercel.com/teams/task-forge3/settings/billing)
@@ -35,12 +37,15 @@ Owner-reported evidence:
 - [ ] DMARC record added for `onesmall.company`
 - [ ] Required status check "Lint, typecheck, test and build" on `main` (branch protection)
 - [ ] Share previews refreshed in LinkedIn Post Inspector
+- [ ] `www.onesmall.company` added to the Vercel project as a redirect to the apex, or accepted as not served
+- [ ] Resend key "Joshua Small Portfolio" confirmed as sending-only for `onesmall.company`
 
 ## 4. Known, accepted limits
 
 - [ ] Accepted: rate limiting is per function instance (best effort), not global
-- [ ] Accepted: the owner's personal email remains in old commits of `.env.example`; history is not rewritten
+- [ ] Accepted: the owner's personal email (old `.env.example`) and a full birth date (commits before PR #16) remain in git history; history is not rewritten
 - [ ] Accepted: dev-only `minimatch` advisory in the ESLint toolchain until ESLint ships a fix
+- [ ] PR #29 closed as superseded by #28 (its work is listed in the release record)
 
 ## 5. Approval
 

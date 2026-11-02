@@ -10,6 +10,9 @@ import { Section } from "./Section";
 
 type Status = "idle" | "sending" | "success" | "error";
 
+/** Long enough for a slow connection, short enough that the button doesn't spin forever. */
+const SEND_TIMEOUT_MS = 20_000;
+
 const field =
   "mt-2 w-full rounded-xl border bg-bg px-4 py-3 text-fg placeholder:text-muted/70 transition-colors";
 
@@ -94,32 +97,39 @@ export function Contact() {
     setStatus("sending");
     setError("");
     let res: Response;
+    let data: { error?: string; fields?: ContactErrors };
     try {
       res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
       });
-    } catch {
-      // The request never reached the server (offline, dropped connection). The browser's own
-      // message ("Failed to fetch") means nothing to a visitor, so say what happened instead.
-      setError("Couldn't reach the server. Check your connection and try again.");
+      data = (await res.json().catch(() => ({}))) as typeof data;
+    } catch (err) {
+      // The request never completed (offline, dropped connection, timeout). The browser's own text
+      // ("Failed to fetch", abort reasons) means nothing to a visitor, so say what happened instead.
+      const timedOut = err instanceof DOMException && err.name === "TimeoutError";
+      setError(
+        timedOut
+          ? "Sending is taking too long. Check your connection and try again."
+          : "Couldn't reach the server. Check your connection and try again.",
+      );
       setStatus("error");
       return;
     }
-    try {
-      const data = (await res.json().catch(() => ({}))) as { error?: string; fields?: ContactErrors };
-      if (data.fields) {
-        setFieldErrors(data.fields);
-        focusFirstInvalid(form, data.fields);
-      }
-      if (!res.ok) throw new Error(data.error ?? "Something went wrong.");
-      form.reset();
-      setStatus("success");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
-      setStatus("error");
+    if (data.fields) {
+      setFieldErrors(data.fields);
+      focusFirstInvalid(form, data.fields);
     }
+    if (!res.ok) {
+      // Only the API's own messages are shown as-is.
+      setError(data.error ?? "Something went wrong. Please try again later.");
+      setStatus("error");
+      return;
+    }
+    form.reset();
+    setStatus("success");
   }
 
   return (

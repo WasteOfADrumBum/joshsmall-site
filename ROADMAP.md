@@ -44,11 +44,11 @@ Priority: **P1** do next, **P2** worthwhile, **P3** nice to have. No item may ad
 - **Acceptance:** each subdomain checked; header updated; preload submitted.
 - **Dependencies:** owners of the ui, cortex, task, photo and studio apps.
 
-### S4. Clear the dev-only `minimatch` advisory (P3)
-- **Purpose:** `npm audit` reports a moderate advisory in the ESLint toolchain.
-- **Scope:** update ESLint and `eslint-config-next` when a non-breaking fix exists.
-- **Acceptance:** `npm audit` reports 0 advisories; lint output unchanged.
-- **Dependencies:** upstream release.
+### S4. Dependency upkeep (P2)
+- **Purpose:** patch and minor updates are waiting (`next` 16.4.4, `react` 19.3.1, `resend`, `motion`, `lucide-react`), and `npm audit` reports a dev-only `minimatch` advisory in the ESLint toolchain.
+- **Scope:** take the patch and minor updates; add Dependabot or Renovate for npm and GitHub Actions; move to ESLint 10 when `eslint-config-next` supports it.
+- **Acceptance:** CI green after each update; `npm audit` reports 0 advisories; lint output unchanged.
+- **Dependencies:** upstream `eslint-config-next` release for the advisory.
 
 ## Performance
 
@@ -58,12 +58,18 @@ Priority: **P1** do next, **P2** worthwhile, **P3** nice to have. No item may ad
 - **Acceptance:** total page weight under 600 KB; animation looks the same; LCP no worse than 2.2 s at 400 kbit/s.
 - **Dependencies:** none.
 
+### P2. Smaller share image (P3)
+- **Purpose:** `og-image.png` is 467 KB, slow for crawlers fetching previews.
+- **Scope:** recompress it, or switch to JPEG, keeping 1200×630.
+- **Acceptance:** under 200 KB; LinkedIn Post Inspector shows the card.
+- **Dependencies:** none.
+
 ## Quality
 
 ### Q1. Automated accessibility and browser checks in CI (P2)
 - **Purpose:** the axe and keyboard checks for this release were run by hand.
-- **Scope:** a Playwright job that builds the site, runs axe at mobile and desktop widths, and tabs through the page.
-- **Acceptance:** CI fails on any axe violation or a focus stop without a visible indicator.
+- **Scope:** a Playwright job against `next start` that runs axe at mobile and desktop widths, tabs through the page, checks for hydration errors with and without reduced motion, and exercises the contact form against a mocked API.
+- **Acceptance:** CI fails on any axe violation, a focus stop without a visible indicator, a console error, or a wrong contact-form message.
 - **Dependencies:** CI workflow (done in release 1.0).
 
 ### Q2. Contact route tests (P3)
@@ -75,9 +81,9 @@ Priority: **P1** do next, **P2** worthwhile, **P3** nice to have. No item may ad
 ## Content
 
 ### C1. Custom 404 page (P3)
-- **Purpose:** unknown URLs show the default Next.js page instead of the site's look.
-- **Scope:** `not-found.tsx` with a link home, using existing styles.
-- **Acceptance:** 404 status kept, `noindex` kept, axe clean.
+- **Purpose:** unknown URLs show the default Next.js page, which inherits the home page's title and canonical, so it renders two `<title>` tags and a canonical pointing at `/`.
+- **Scope:** `not-found.tsx` with its own metadata and a link home, using existing styles.
+- **Acceptance:** 404 status kept, `noindex` kept, one `<title>`, no canonical to `/`, axe clean.
 - **Dependencies:** none.
 
 ### C2. README screenshot (P3)

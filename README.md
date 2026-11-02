@@ -4,9 +4,6 @@ Full-stack & AI engineer building production TypeScript/React/Node.js software w
 
 **Live:** [onesmall.company](https://onesmall.company)
 
-![Portfolio screenshot](./docs/screenshot.png)
-<!-- TODO: add docs/screenshot.png -->
-
 ## Tech stack
 
 - **Framework:** Next.js 16.4.3 (App Router), React 19.2.8
@@ -15,7 +12,7 @@ Full-stack & AI engineer building production TypeScript/React/Node.js software w
 - **Motion & icons:** Motion, Lucide
 - **Email:** Resend (contact form)
 - **Hosting:** Vercel
-- **Quality:** ESLint, Node's built-in test runner
+- **Quality:** ESLint, TypeScript, Node's built-in test runner, run in GitHub Actions CI on every PR and push to `main`
 
 ## Highlights
 
@@ -51,6 +48,17 @@ Then open http://localhost:3000.
 | `npm start` | Serve the production build |
 | `npm run lint` | Lint |
 | `npm test` | Run unit tests |
+| `npx tsc --noEmit` | Type check (run after `npm run build`, which generates Next's route types) |
+
+## Deploy
+
+Vercel builds every pull request as a preview and deploys `main` to production at [onesmall.company](https://onesmall.company) (`joshsmall-portfolio.vercel.app` redirects there). Set `RESEND_API_KEY`, `CONTACT_TO_EMAIL` and optionally `CONTACT_FROM_EMAIL` in the Vercel project's environment variables; never commit them. To roll back, promote the previous production deployment in Vercel (Deployments, the deployment, Promote to Production) or revert the merge on `main`.
+
+## Release and roadmap
+
+- Release scope: [docs/release-scope-1.0.0.md](docs/release-scope-1.0.0.md) (draft until the owner approves it).
+- Future work: [ROADMAP.md](ROADMAP.md). Roadmap items are optional enhancements and never reopen a completed release.
+- Release status, gates and evidence live in the [One Small Engineering hub](https://github.com/WasteOfADrumBum/one-small-engineering) registry; development state for agents lives in [.engineering/](.engineering/STATUS.md).
 
 ## Contact
 

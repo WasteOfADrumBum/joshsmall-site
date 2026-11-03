@@ -1,18 +1,18 @@
-<!-- generated from .engineering/state.json (revision 6); edit state.json through a checkpoint, not this file -->
+<!-- generated from .engineering/state.json (revision 8); edit state.json through a checkpoint, not this file -->
 
 # personal-portfolio: development status
 
 All values are **agent-reported**, not independently verified. Check GitHub before relying on them.
 
 - Milestone: Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance
-- Active task: none recorded
-- Branch: unknown
-- Recorded commit: `9aab29f` on `main`
-- Last checkpoint: 2026-11-03T04:35:00Z by Claude Code
+- Active task: Fix mobile hero: toggle overlapping the intro, and hard line under the hero glow
+- Branch: `claude/project-thread-x6i52i`
+- Recorded commit: `273ad8b` on `claude/project-thread-x6i52i`
+- Last checkpoint: 2026-11-03T23:00:00Z by Claude Code
 
 ## Next action
 
-Joshua Small: record verify:record passes for the ten hub gates (commands in one-small-engineering docs/acceptance/closeout-2026-11-02.md); then a registry PR sets hub approval. Otherwise maintenance: pick optional work from ROADMAP.md only when the owner asks.
+Joshua Small: review and merge PR #33 (mobile hero fixes). Hub gates still need his verify:record passes; otherwise maintenance from ROADMAP.md when the owner asks.
 
 ## Completed
 
@@ -25,13 +25,16 @@ Joshua Small: record verify:record passes for the ten hub gates (commands in one
 
 ## In progress
 
-_none recorded_
+- PR #33 on claude/project-thread-x6i52i: portrait scroll drift limited to md and up; hero glow faded out at the section bottom; awaiting owner review
 
 ## Tests (agent-reported)
 
 - `GitHub CI ci.yml on main`: pass at `1435e75`, 2026-11-02T19:00:00Z
 - `Production smoke check (production-smoke.yml)`: pass at `1435e75`, 2026-11-02T19:00:00Z
 - `GitHub CI ci.yml on main`: pass at `829ffc8`, 2026-11-02T19:11:50Z
+- `npm run typecheck && eslint src/components/Hero.tsx && npm test && npm run build`: pass at `26e0854`, 2026-11-03T22:50:00Z
+- `Playwright scroll check at 390x844: toggle bottom vs intro top at scroll 0/300/500/700`: pass at `26e0854`, 2026-11-03T22:50:00Z
+- `eslint src/components/Hero.tsx && npm run build; Playwright 390x844 pixel sample across hero bottom edge`: pass at `273ad8b`, 2026-11-03T23:00:00Z
 
 ## Unverified changes
 
@@ -39,3 +42,4 @@ _none recorded_
 - Owner-reported (Joshua Small, 2026-11-02): screen-reader testing passes and 200% zoom passes; screen reader, browser and OS not stated
 - None of the above is a hub verify:record pass; hub gates remain unverified until the verifier records them
 - Live production headers present and no X-Powered-By (agent-read through the Vercel connector, 2026-11-02)
+- Mobile hero overlap fix checked by the agent in headless Chromium at 390px only; not checked on a real phone

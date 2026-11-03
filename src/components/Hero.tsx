@@ -2,11 +2,19 @@
 
 import { ArrowDown, Mail, Pause, Play } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { useRef, useState } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import { profile } from "@/content/site";
 import { GitHubIcon, LinkedInIcon } from "./Icons";
 import { PortraitStage } from "./portrait/PortraitStage";
 import { RotatingWord } from "./RotatingWord";
+
+/** The portrait sits beside the intro from `md` up; below that it is stacked above it. */
+const SIDE_BY_SIDE = "(min-width: 768px)";
+const subscribeSideBySide = (onChange: () => void) => {
+  const mq = window.matchMedia(SIDE_BY_SIDE);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+};
 
 const fade = (delay: number) => ({
   initial: { opacity: 0, y: 24 },
@@ -21,6 +29,13 @@ export function Hero() {
   const running = !paused && !reduceMotion;
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  // The portrait drifts down as the hero scrolls away. Only when it sits beside the intro: stacked
+  // on a phone it would slide down over the intro paragraph.
+  const sideBySide = useSyncExternalStore(
+    subscribeSideBySide,
+    () => window.matchMedia(SIDE_BY_SIDE).matches,
+    () => false,
+  );
   const photoY = useTransform(scrollYProgress, [0, 1], [0, 140]);
   const textY = useTransform(scrollYProgress, [0, 1], [0, -60]);
   const glowY = useTransform(scrollYProgress, [0, 1], [0, 220]);
@@ -32,11 +47,19 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="relative overflow-hidden px-5 pb-20 pt-28 sm:px-8 md:pb-28 md:pt-36"
     >
-      <motion.div aria-hidden="true" style={{ y: glowY }} className="pointer-events-none absolute inset-0">
-        <div className="aurora aurora-a -right-24 top-0 h-[28rem] w-[28rem]" />
-        <div className="aurora aurora-b right-1/3 top-1/2 h-[24rem] w-[24rem]" />
-        <div className="aurora aurora-c -left-32 top-10 h-[26rem] w-[26rem]" />
-      </motion.div>
+      {/* The glow is clipped at the bottom of the section; the mask fades it out first so there is
+          no hard line where the next section starts. It sits on a wrapper that doesn't move, so the
+          fade stays put while the glow drifts down on scroll. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black_55%,transparent)]"
+      >
+        <motion.div style={{ y: glowY }} className="absolute inset-0">
+          <div className="aurora aurora-a -right-24 top-0 h-[28rem] w-[28rem]" />
+          <div className="aurora aurora-b right-1/3 top-1/2 h-[24rem] w-[24rem]" />
+          <div className="aurora aurora-c -left-32 top-10 h-[26rem] w-[26rem]" />
+        </motion.div>
+      </div>
 
       <div className="relative mx-auto max-w-6xl">
         <motion.div style={{ y: textY }}>
@@ -95,7 +118,7 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
             animate={{ opacity: 1, scale: 1, rotate: 0 }}
             transition={{ duration: 0.9, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            style={{ y: photoY }}
+            style={{ y: sideBySide ? photoY : 0 }}
             className="relative w-full max-w-[17.5rem] justify-self-center md:order-first md:justify-self-start"
           >
             <div aria-hidden="true" className="grad-border pulse-glow absolute -inset-3 bottom-11 rounded-[2rem] blur-2xl" />

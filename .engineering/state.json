@@ -1,19 +1,19 @@
 {
   "stateVersion": 1,
-  "revision": 6,
-  "checkpointId": "ckpt-0006-merge-main-into-pr32",
+  "revision": 7,
+  "checkpointId": "ckpt-0007-mobile-hero-overlap",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
-    "branch": "main",
-    "commit": "9aab29fb774d764d6d2602325c061702c47e06ba",
-    "recordedAt": "2026-11-03T04:35:00Z"
+    "branch": "claude/project-thread-x6i52i",
+    "commit": "26e0854243a1867869ec07fd1b242d8c35ac212c",
+    "recordedAt": "2026-11-03T22:50:00Z"
   },
   "development": {
     "milestone": "Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance",
-    "activeTask": null,
-    "workingBranch": null,
+    "activeTask": "Fix mobile hero toggle overlapping the intro paragraph while scrolling",
+    "workingBranch": "claude/project-thread-x6i52i",
     "activePr": null,
     "lastCompleted": [
       "PR #29 merged (827f659) and PR #28 merged (1435e75); production dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee READY",
@@ -23,8 +23,10 @@
       "Optional owner settings moved to ROADMAP.md (O1-O4)",
       ".engineering/state.json re-recorded in the continuity contract v1 shape (revisions 1-4 failed validation); PR #32 and PR #31 both did this and are reconciled here"
     ],
-    "inProgress": [],
-    "nextAction": "Joshua Small: record verify:record passes for the ten hub gates (commands in one-small-engineering docs/acceptance/closeout-2026-11-02.md); then a registry PR sets hub approval. Otherwise maintenance: pick optional work from ROADMAP.md only when the owner asks."
+    "inProgress": [
+      "Mobile hero overlap fix on claude/project-thread-x6i52i: portrait scroll drift limited to md and up; PR open, awaiting owner review"
+    ],
+    "nextAction": "Joshua Small: review and merge the mobile hero overlap PR (claude/project-thread-x6i52i). Hub gates still need his verify:record passes; otherwise maintenance from ROADMAP.md when the owner asks."
   },
   "decisions": {
     "made": [
@@ -96,13 +98,26 @@
         "commit": "829ffc8f2370d3e84cdd2e6f01d04dbf3a4db762",
         "at": "2026-11-02T19:11:50Z",
         "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/41507393519"
+      },
+      {
+        "command": "npm run typecheck && eslint src/components/Hero.tsx && npm test && npm run build",
+        "result": "pass",
+        "commit": "26e0854243a1867869ec07fd1b242d8c35ac212c",
+        "at": "2026-11-03T22:50:00Z"
+      },
+      {
+        "command": "Playwright scroll check at 390x844: toggle bottom vs intro top at scroll 0/300/500/700",
+        "result": "pass",
+        "commit": "26e0854243a1867869ec07fd1b242d8c35ac212c",
+        "at": "2026-11-03T22:50:00Z"
       }
     ],
     "unverifiedChanges": [
       "Owner-reported (Joshua Small, 2026-11-02): contact email arrives; reduced motion passes; gradient text passes in light and dark mode; Vercel and Resend on free plans; failure emails enabled",
       "Owner-reported (Joshua Small, 2026-11-02): screen-reader testing passes and 200% zoom passes; screen reader, browser and OS not stated",
       "None of the above is a hub verify:record pass; hub gates remain unverified until the verifier records them",
-      "Live production headers present and no X-Powered-By (agent-read through the Vercel connector, 2026-11-02)"
+      "Live production headers present and no X-Powered-By (agent-read through the Vercel connector, 2026-11-02)",
+      "Mobile hero overlap fix checked by the agent in headless Chromium at 390px only; not checked on a real phone"
     ]
   },
   "handoff": {
@@ -110,12 +125,13 @@
       "tool": "Claude Code",
       "model": null
     },
-    "checkpointedAt": "2026-11-03T04:35:00Z",
+    "checkpointedAt": "2026-11-03T22:50:00Z",
     "unfinished": [
+      "Mobile hero overlap PR awaits owner review and merge",
       "Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows"
     ],
     "blockers": [],
-    "continuation": "Release 1.0 is complete and approved in this repository; project in maintenance. The hub registry shows approval pending until Joshua Small records verify:record passes for its ten gates. Optional work is in ROADMAP.md; start one only when the owner asks.",
+    "continuation": "Mobile hero overlap fix is pushed on claude/project-thread-x6i52i with a PR open for owner review. Release 1.0 remains complete and approved; hub approval pending Joshua Small's verify:record passes.",
     "uncommittedWorkOutsideCheckpoint": "none",
     "persistedBy": "local-file"
   },

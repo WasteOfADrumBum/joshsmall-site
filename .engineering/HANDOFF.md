@@ -1,19 +1,20 @@
-<!-- generated from .engineering/state.json (revision 6) -->
+<!-- generated from .engineering/state.json (revision 7) -->
 
 # Handoff: personal-portfolio
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 6, `ckpt-0006-merge-main-into-pr32`, 2026-11-03T04:35:00Z by Claude Code
+- Checkpoint: revision 7, `ckpt-0007-mobile-hero-overlap`, 2026-11-03T22:50:00Z by Claude Code
 - Written by: a local edit that the agent then pushed; confirm the branch head matches
 - Uncommitted work outside this checkpoint: **none**
 
 ## Continue with
 
-Release 1.0 is complete and approved in this repository; project in maintenance. The hub registry shows approval pending until Joshua Small records verify:record passes for its ten gates. Optional work is in ROADMAP.md; start one only when the owner asks.
+Mobile hero overlap fix is pushed on claude/project-thread-x6i52i with a PR open for owner review. Release 1.0 remains complete and approved; hub approval pending Joshua Small's verify:record passes.
 
 ## Unfinished
 
+- Mobile hero overlap PR awaits owner review and merge
 - Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows
 
 ## Blockers

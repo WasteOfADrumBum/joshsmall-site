@@ -1,18 +1,18 @@
 {
   "stateVersion": 1,
-  "revision": 7,
-  "checkpointId": "ckpt-0007-mobile-hero-overlap",
+  "revision": 8,
+  "checkpointId": "ckpt-0008-hero-glow-fade",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
     "branch": "claude/project-thread-x6i52i",
-    "commit": "26e0854243a1867869ec07fd1b242d8c35ac212c",
-    "recordedAt": "2026-11-03T22:50:00Z"
+    "commit": "273ad8b2166a5d1965df3aebd9f46b05f8d2ea0d",
+    "recordedAt": "2026-11-03T23:00:00Z"
   },
   "development": {
     "milestone": "Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance",
-    "activeTask": "Fix mobile hero toggle overlapping the intro paragraph while scrolling",
+    "activeTask": "Fix mobile hero: toggle overlapping the intro, and hard line under the hero glow",
     "workingBranch": "claude/project-thread-x6i52i",
     "activePr": null,
     "lastCompleted": [
@@ -24,9 +24,9 @@
       ".engineering/state.json re-recorded in the continuity contract v1 shape (revisions 1-4 failed validation); PR #32 and PR #31 both did this and are reconciled here"
     ],
     "inProgress": [
-      "Mobile hero overlap fix on claude/project-thread-x6i52i: portrait scroll drift limited to md and up; PR open, awaiting owner review"
+      "PR #33 on claude/project-thread-x6i52i: portrait scroll drift limited to md and up; hero glow faded out at the section bottom; awaiting owner review"
     ],
-    "nextAction": "Joshua Small: review and merge the mobile hero overlap PR (claude/project-thread-x6i52i). Hub gates still need his verify:record passes; otherwise maintenance from ROADMAP.md when the owner asks."
+    "nextAction": "Joshua Small: review and merge PR #33 (mobile hero fixes). Hub gates still need his verify:record passes; otherwise maintenance from ROADMAP.md when the owner asks."
   },
   "decisions": {
     "made": [
@@ -110,6 +110,12 @@
         "result": "pass",
         "commit": "26e0854243a1867869ec07fd1b242d8c35ac212c",
         "at": "2026-11-03T22:50:00Z"
+      },
+      {
+        "command": "eslint src/components/Hero.tsx && npm run build; Playwright 390x844 pixel sample across hero bottom edge",
+        "result": "pass",
+        "commit": "273ad8b2166a5d1965df3aebd9f46b05f8d2ea0d",
+        "at": "2026-11-03T23:00:00Z"
       }
     ],
     "unverifiedChanges": [
@@ -125,13 +131,13 @@
       "tool": "Claude Code",
       "model": null
     },
-    "checkpointedAt": "2026-11-03T22:50:00Z",
+    "checkpointedAt": "2026-11-03T23:00:00Z",
     "unfinished": [
-      "Mobile hero overlap PR awaits owner review and merge",
+      "PR #33 (mobile hero fixes) awaits owner review and merge",
       "Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows"
     ],
     "blockers": [],
-    "continuation": "Mobile hero overlap fix is pushed on claude/project-thread-x6i52i with a PR open for owner review. Release 1.0 remains complete and approved; hub approval pending Joshua Small's verify:record passes.",
+    "continuation": "Mobile hero fixes (toggle overlap, glow line) are pushed on claude/project-thread-x6i52i with PR #33 open for owner review. Release 1.0 remains complete and approved; hub approval pending Joshua Small's verify:record passes.",
     "uncommittedWorkOutsideCheckpoint": "none",
     "persistedBy": "local-file"
   },

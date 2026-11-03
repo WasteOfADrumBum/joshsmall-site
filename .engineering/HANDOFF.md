@@ -1,20 +1,20 @@
-<!-- generated from .engineering/state.json (revision 7) -->
+<!-- generated from .engineering/state.json (revision 8) -->
 
 # Handoff: personal-portfolio
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 7, `ckpt-0007-mobile-hero-overlap`, 2026-11-03T22:50:00Z by Claude Code
+- Checkpoint: revision 8, `ckpt-0008-hero-glow-fade`, 2026-11-03T23:00:00Z by Claude Code
 - Written by: a local edit that the agent then pushed; confirm the branch head matches
 - Uncommitted work outside this checkpoint: **none**
 
 ## Continue with
 
-Mobile hero overlap fix is pushed on claude/project-thread-x6i52i with a PR open for owner review. Release 1.0 remains complete and approved; hub approval pending Joshua Small's verify:record passes.
+Mobile hero fixes (toggle overlap, glow line) are pushed on claude/project-thread-x6i52i with PR #33 open for owner review. Release 1.0 remains complete and approved; hub approval pending Joshua Small's verify:record passes.
 
 ## Unfinished
 
-- Mobile hero overlap PR awaits owner review and merge
+- PR #33 (mobile hero fixes) awaits owner review and merge
 - Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows
 
 ## Blockers

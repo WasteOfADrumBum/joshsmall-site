@@ -1,18 +1,18 @@
-<!-- generated from .engineering/state.json (revision 7); edit state.json through a checkpoint, not this file -->
+<!-- generated from .engineering/state.json (revision 8); edit state.json through a checkpoint, not this file -->
 
 # personal-portfolio: development status
 
 All values are **agent-reported**, not independently verified. Check GitHub before relying on them.
 
 - Milestone: Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance
-- Active task: Fix mobile hero toggle overlapping the intro paragraph while scrolling
+- Active task: Fix mobile hero: toggle overlapping the intro, and hard line under the hero glow
 - Branch: `claude/project-thread-x6i52i`
-- Recorded commit: `26e0854` on `claude/project-thread-x6i52i`
-- Last checkpoint: 2026-11-03T22:50:00Z by Claude Code
+- Recorded commit: `273ad8b` on `claude/project-thread-x6i52i`
+- Last checkpoint: 2026-11-03T23:00:00Z by Claude Code
 
 ## Next action
 
-Joshua Small: review and merge the mobile hero overlap PR (claude/project-thread-x6i52i). Hub gates still need his verify:record passes; otherwise maintenance from ROADMAP.md when the owner asks.
+Joshua Small: review and merge PR #33 (mobile hero fixes). Hub gates still need his verify:record passes; otherwise maintenance from ROADMAP.md when the owner asks.
 
 ## Completed
 
@@ -25,7 +25,7 @@ Joshua Small: review and merge the mobile hero overlap PR (claude/project-thread
 
 ## In progress
 
-- Mobile hero overlap fix on claude/project-thread-x6i52i: portrait scroll drift limited to md and up; PR open, awaiting owner review
+- PR #33 on claude/project-thread-x6i52i: portrait scroll drift limited to md and up; hero glow faded out at the section bottom; awaiting owner review
 
 ## Tests (agent-reported)
 
@@ -34,6 +34,7 @@ Joshua Small: review and merge the mobile hero overlap PR (claude/project-thread
 - `GitHub CI ci.yml on main`: pass at `829ffc8`, 2026-11-02T19:11:50Z
 - `npm run typecheck && eslint src/components/Hero.tsx && npm test && npm run build`: pass at `26e0854`, 2026-11-03T22:50:00Z
 - `Playwright scroll check at 390x844: toggle bottom vs intro top at scroll 0/300/500/700`: pass at `26e0854`, 2026-11-03T22:50:00Z
+- `eslint src/components/Hero.tsx && npm run build; Playwright 390x844 pixel sample across hero bottom edge`: pass at `273ad8b`, 2026-11-03T23:00:00Z
 
 ## Unverified changes
 

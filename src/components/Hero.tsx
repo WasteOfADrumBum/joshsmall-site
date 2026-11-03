@@ -47,11 +47,19 @@ export function Hero() {
       aria-labelledby="hero-title"
       className="relative overflow-hidden px-5 pb-20 pt-28 sm:px-8 md:pb-28 md:pt-36"
     >
-      <motion.div aria-hidden="true" style={{ y: glowY }} className="pointer-events-none absolute inset-0">
-        <div className="aurora aurora-a -right-24 top-0 h-[28rem] w-[28rem]" />
-        <div className="aurora aurora-b right-1/3 top-1/2 h-[24rem] w-[24rem]" />
-        <div className="aurora aurora-c -left-32 top-10 h-[26rem] w-[26rem]" />
-      </motion.div>
+      {/* The glow is clipped at the bottom of the section; the mask fades it out first so there is
+          no hard line where the next section starts. It sits on a wrapper that doesn't move, so the
+          fade stays put while the glow drifts down on scroll. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black_55%,transparent)]"
+      >
+        <motion.div style={{ y: glowY }} className="absolute inset-0">
+          <div className="aurora aurora-a -right-24 top-0 h-[28rem] w-[28rem]" />
+          <div className="aurora aurora-b right-1/3 top-1/2 h-[24rem] w-[24rem]" />
+          <div className="aurora aurora-c -left-32 top-10 h-[26rem] w-[26rem]" />
+        </motion.div>
+      </div>
 
       <div className="relative mx-auto max-w-6xl">
         <motion.div style={{ y: textY }}>

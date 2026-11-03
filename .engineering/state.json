@@ -1,36 +1,72 @@
 {
   "stateVersion": 1,
-  "revision": 4,
-  "checkpointId": "release-1.0-approved-maintenance",
+  "revision": 5,
+  "checkpointId": "release-1.0-hub-gate-reconciliation",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
     "branch": "main",
-    "commit": "1435e75",
-    "recordedAt": "2026-11-02T19:15:00Z"
+    "commit": "829ffc8f2370d3e84cdd2e6f01d04dbf3a4db762",
+    "recordedAt": "2026-11-02T22:50:00Z"
   },
   "development": {
-    "milestone": "Portfolio release 1.0 (November 2026): complete; project in maintenance",
-    "activeTask": null,
+    "milestone": "Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance",
+    "activeTask": {
+      "id": "hub-gate-reconciliation",
+      "title": "Reconcile release 1.0 evidence with the Engineering Hub registry"
+    },
     "workingBranch": "claude/project-thread-mr3geq",
     "activePr": null,
     "lastCompleted": [
       "PR #29 merged (827f659) and PR #28 merged (1435e75); production dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee READY",
-      "Owner-reported post-deployment checks recorded in docs/release/ACCEPTANCE.md (Joshua Small, 2026-11-02)",
-      "Optional owner settings moved to ROADMAP.md (O1-O4)",
-      "Release 1.0 approved by Joshua Small on 2026-11-02 (privacy note approved, known limits accepted); recorded in ACCEPTANCE.md section 5 at his direction"
+      "PR #30 merged (829ffc8): owner-reported post-deployment checks and Joshua Small's release approval in docs/release/ACCEPTANCE.md section 5",
+      "Owner-reported screen-reader and 200% zoom results (Joshua Small, 2026-11-02; screen reader and browser not stated) added to ACCEPTANCE.md section 2",
+      "ACCEPTANCE.md section 6 maps the release evidence to the hub's ten Showcase gates",
+      ".engineering/state.json rewritten to match the hub schema (revisions 1-4 were hand-edited and failed schema validation)"
     ],
-    "inProgress": [],
-    "nextAction": "Maintenance. Pick optional work from ROADMAP.md only when the owner asks."
+    "inProgress": [
+      "Hub registry PR in one-small-engineering adding owner-reported evidence, scope and gate notes for personal-portfolio"
+    ],
+    "nextAction": "Joshua Small: run verify:record for the ten hub gates (commands in the hub PR), then record approval in the hub registry. Until then the hub shows approval pending under its own validation rules."
   },
   "decisions": {
     "made": [
-      "Rate limiting is in-memory per function instance (no paid or new service); global limit tracked as ROADMAP R1",
-      "Git history is not rewritten to remove the personal email from old .env.example commits",
-      "Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md",
-      "PR #29 was merged to main by the owner on 2026-11-02 (17:54 UTC) while consolidation was in progress; #28 was brought up to date by merging main and carries the rest. #29's docs/RELEASE.md is replaced by docs/release/2026-11-portfolio-release.md",
-      "Release 1.0 approved and known limits accepted by Joshua Small, 2026-11-02 (owner's own message, recorded at his direction)"
+      {
+        "id": "rate-limit-per-instance",
+        "summary": "Rate limiting is in-memory per function instance (no paid or new service); global limit tracked as ROADMAP R1",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-02T17:00:00Z"
+      },
+      {
+        "id": "no-history-rewrite",
+        "summary": "Git history is not rewritten to remove the personal email from old .env.example commits",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-02T17:00:00Z"
+      },
+      {
+        "id": "optional-work-roadmap",
+        "summary": "Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-02T17:00:00Z"
+      },
+      {
+        "id": "pr29-superseded",
+        "summary": "PR #29 was merged by the owner while consolidation was in progress; #28 merged main and carries the rest; #29's docs/RELEASE.md replaced by docs/release/2026-11-portfolio-release.md",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-02T18:10:00Z"
+      },
+      {
+        "id": "release-1.0-approved",
+        "summary": "Joshua Small approved the privacy note, accepted the three known limits and approved release 1.0",
+        "decidedBy": "human",
+        "humanRef": "Project thread \"Close portfolio release\", message of 2026-11-02 19:06 UTC; docs/release/ACCEPTANCE.md section 5 at 829ffc8",
+        "recordedAt": "2026-11-02T19:15:00Z"
+      }
     ],
     "constraints": [
       "No redesign or new product features in this release",
@@ -38,61 +74,53 @@
       "Production DNS changes (DMARC) need owner approval",
       "Release approval belongs to Joshua Small"
     ],
-    "unresolved": []
+    "unresolved": [
+      "Hub registry approval for personal-portfolio stays pending until Joshua Small records his own verify:record passes for all ten gates (hub validator: approval needs releaseStatus verified, which needs every gate verified)"
+    ]
   },
   "verification": {
     "testsRun": [
       {
-        "command": "GitHub CI on main 1435e75 (run 41499128342)",
-        "result": "success (agent-read)",
-        "at": "2026-11-02T19:10:00Z"
+        "command": "GitHub CI ci.yml on main",
+        "result": "pass",
+        "commit": "1435e75e68df31edd52abb168d7b082844ba3e04",
+        "at": "2026-11-02T19:00:00Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/41499128342"
       },
       {
-        "command": "Production smoke check run 41499238148 on 1435e75",
-        "result": "success (owner-run; agent-read)",
-        "at": "2026-11-02T19:10:00Z"
+        "command": "Production smoke check (production-smoke.yml)",
+        "result": "pass",
+        "commit": "1435e75e68df31edd52abb168d7b082844ba3e04",
+        "at": "2026-11-02T19:00:00Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/41499238148"
       },
       {
-        "command": "Live production headers via Vercel connector",
-        "result": "security headers present, no X-Powered-By",
-        "at": "2026-11-02T19:10:00Z"
+        "command": "GitHub CI ci.yml on main",
+        "result": "pass",
+        "commit": "829ffc8f2370d3e84cdd2e6f01d04dbf3a4db762",
+        "at": "2026-11-02T19:11:50Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/41507393519"
       }
     ],
     "unverifiedChanges": [
-      "Owner-reported checks are recorded as reported; the agent did not verify them"
-    ],
-    "ownerReported": [
-      {
-        "by": "Joshua Small",
-        "at": "2026-11-02",
-        "claims": [
-          "Contact email arrives",
-          "Reduced-motion behavior passes",
-          "Gradient text passes in light and dark mode",
-          "Vercel and Resend use free plans",
-          "Vercel deployment-failure and GitHub Actions failure emails are enabled",
-          "Production smoke run 41499238148 passed"
-        ]
-      },
-      {
-        "by": "Joshua Small",
-        "at": "2026-11-02",
-        "claims": [
-          "Approves the contact form privacy note",
-          "Accepts per-instance rate limiting, personal data remaining in git history, and the dev-only minimatch advisory",
-          "Approves release 1.0"
-        ]
-      }
+      "Owner-reported (Joshua Small, 2026-11-02): contact email arrives; reduced motion passes; gradient text passes in light and dark mode; Vercel and Resend on free plans; failure emails enabled",
+      "Owner-reported (Joshua Small, 2026-11-02): screen-reader testing passes and 200% zoom passes; screen reader, browser and OS not stated",
+      "None of the above is a hub verify:record pass; hub gates remain unverified until the verifier records them"
     ]
   },
   "handoff": {
-    "lastAgent": "Claude Code (project thread: Close portfolio release)",
-    "checkpointedAt": "2026-11-02T19:15:00Z",
-    "unfinished": [],
+    "lastAgent": {
+      "tool": "Claude Code",
+      "model": null
+    },
+    "checkpointedAt": "2026-11-02T22:50:00Z",
+    "unfinished": [
+      "Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows"
+    ],
     "blockers": [],
-    "continuation": "Release 1.0 is complete and the project is in maintenance. Optional improvements are tracked in ROADMAP.md; start one only when the owner asks.",
+    "continuation": "Release 1.0 is complete and approved in this repository. The hub registry needs Joshua Small's verify:record passes before it can show approval. Optional work is in ROADMAP.md.",
     "uncommittedWorkOutsideCheckpoint": "none",
-    "persistedBy": "git-commit"
+    "persistedBy": "local-file"
   },
   "provenance": {
     "claims": "agent_reported",

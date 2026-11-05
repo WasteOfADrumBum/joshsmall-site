@@ -33,4 +33,15 @@ describe("validateContact", () => {
     const { values } = validateContact({ name: "Ada\r\nBcc: x@example.com", email: "ada@example.com", message: "Hi" });
     assert.equal(values.name, "Ada Bcc: x@example.com");
   });
+
+  it("treats non-string values as missing instead of stringifying them", () => {
+    const { errors } = validateContact({ name: { first: "Ada" }, email: ["a@b.co"], message: 42 });
+    assert.deepEqual(Object.keys(errors).sort(), ["email", "message", "name"]);
+  });
+
+  it("refuses fields longer than the form allows instead of truncating them", () => {
+    const { errors } = validateContact({ name: "Ada", email: "ada@example.com", message: "x".repeat(4001) });
+    assert.equal(errors.message, "Message must be 4000 characters or fewer.");
+    assert.deepEqual(validateContact({ name: "Ada", email: "ada@example.com", message: "x".repeat(4000) }).errors, {});
+  });
 });

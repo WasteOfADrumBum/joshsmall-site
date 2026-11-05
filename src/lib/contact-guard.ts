@@ -58,3 +58,55 @@ export function createRateLimiter({ max, windowMs }: { max: number; windowMs: nu
     return { ok: true, retryAfterSeconds: 0 };
   };
 }
+
+/**
+ * Reads the request body as UTF-8 text, stopping as soon as it passes `maxBytes`. A missing or
+ * dishonest Content-Length (a chunked upload) can't make the function buffer a large body.
+ * Returns "too-large" when the limit is passed and null when the body can't be read.
+ */
+export async function readBodyCapped(request: Request, maxBytes: number): Promise<string | "too-large" | null> {
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      if (total > maxBytes) {
+        await reader.cancel().catch(() => {});
+        return "too-large";
+      }
+      chunks.push(value);
+    }
+  } catch {
+    return null;
+  }
+  const bytes = new Uint8Array(total);
+  let offset = 0;
+  for (const c of chunks) {
+    bytes.set(c, offset);
+    offset += c.byteLength;
+  }
+  return new TextDecoder().decode(bytes);
+}
+
+/** How long the email provider gets before the visitor is told sending failed. Below the form's own 20 s limit. */
+export const PROVIDER_TIMEOUT_MS = 10_000;
+
+export class ProviderTimeoutError extends Error {
+  constructor() {
+    super("Email provider timed out");
+    this.name = "ProviderTimeoutError";
+  }
+}
+
+/** Rejects with ProviderTimeoutError if `work` hasn't settled within `ms`. */
+export function withTimeout<T>(work: Promise<T>, ms: number): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<never>((_, reject) => {
+    timer = setTimeout(() => reject(new ProviderTimeoutError()), ms);
+  });
+  return Promise.race([work, timeout]).finally(() => clearTimeout(timer));
+}

@@ -1,12 +1,13 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { nav } from "@/content/site";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const sections = nav
@@ -26,7 +27,13 @@ export function Nav() {
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    // Escape closes the menu and puts focus back on its button, so keyboard users aren't left on
+    // a link that just disappeared.
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setOpen(false);
+      toggleRef.current?.focus();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
@@ -54,6 +61,7 @@ export function Nav() {
         </ul>
 
         <button
+          ref={toggleRef}
           type="button"
           className="rounded-lg p-2 lg:hidden"
           aria-expanded={open}

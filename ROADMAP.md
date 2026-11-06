@@ -104,6 +104,12 @@ Priority: **P1** do next, **P2** worthwhile, **P3** nice to have. No item may ad
 - **Acceptance:** each status code (400, 403, 413, 415, 429, 502, 503, 200) covered.
 - **Dependencies:** none.
 
+### Q3. Contact success sometimes not shown in Firefox and WebKit (P2)
+- **Purpose:** in the weekly full suite (two workers), one contact test per run in Firefox or WebKit sometimes saw the API answer 200 while the form showed neither success nor an error for 12 s. Retries pass, and the required CI subset has not hit it. It may be test load, or a real case where a visitor's message is sent but the form looks stuck.
+- **Scope:** download the `weekly-firefox` or `weekly-webkit` artifact of a failing run, read the trace of the failed attempt (network, console, DOM), then fix the cause in the form or the test.
+- **Acceptance:** five consecutive weekly runs with no flaky contact test in Firefox or WebKit.
+- **Dependencies:** none. Evidence: docs/ci/EVIDENCE.md, "Weekly full suite".
+
 ## Content
 
 ### C1. Custom 404 page (P3)

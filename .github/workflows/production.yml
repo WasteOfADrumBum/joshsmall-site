@@ -39,7 +39,9 @@ jobs:
       (github.event.deployment_status.state == 'success' &&
        startsWith(github.event.deployment.environment, 'Production') &&
        github.event.deployment.creator.login == 'vercel[bot]')
-    runs-on: ubuntu-latest
+    # Browser jobs stay on Playwright's supported Ubuntu. On ubuntu-latest (26.04) the browser
+    # packages came from a mirror that stalled installs; see docs/ci/README.md.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
@@ -82,7 +84,7 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          key: playwright-chromium-${{ runner.os }}-ubuntu-24.04-${{ hashFiles('package-lock.json') }}
       - if: steps.browsers.outputs.cache-hit != 'true'
         run: npx playwright install chromium
       # System packages come from apt; a stalled mirror fails this step quickly instead of using up the job.

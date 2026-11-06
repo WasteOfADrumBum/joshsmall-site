@@ -22,7 +22,9 @@ env:
 jobs:
   full-matrix:
     name: Full browser suite (${{ matrix.browser }})
-    runs-on: ubuntu-latest
+    # Browser jobs stay on Playwright's supported Ubuntu. On ubuntu-latest (26.04) the browser
+    # packages came from a mirror that stalled installs; see docs/ci/README.md.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
       contents: read
@@ -76,7 +78,9 @@ jobs:
 
   lighthouse:
     name: Lighthouse trend (not a gate)
-    runs-on: ubuntu-latest
+    # Browser jobs stay on Playwright's supported Ubuntu. On ubuntu-latest (26.04) the browser
+    # packages came from a mirror that stalled installs; see docs/ci/README.md.
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read

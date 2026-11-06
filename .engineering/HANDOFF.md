@@ -1,20 +1,21 @@
-<!-- generated from .engineering/state.json (revision 9) -->
+<!-- generated from .engineering/state.json (revision 10) -->
 
 # Handoff: personal-portfolio
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 9, `ckpt-0009-ci-cd-standard`, 2026-11-06T01:00:00Z by Claude Code
+- Checkpoint: revision 10, `ckpt-0010-ci-cd-merged`, 2026-11-06T06:40:00Z by Claude Code
 - Written by: a local edit that the agent then pushed; confirm the branch head matches
 - Uncommitted work outside this checkpoint: **none**
 
 ## Continue with
 
-PR #34 on claude/project-thread-zdhgmq carries the CI/CD work. Check its CI gate, merge when green, then confirm Production verification ran for the merged SHA (dispatch production.yml with expect_sha if it did not) and fill in the post-merge section of docs/ci/EVIDENCE.md.
+PR #34 is merged (31724b1) and production was verified on it. PR #40 on claude/project-thread-zdhgmq carries the apt-stall fix (ubuntu-24.04), the Reveal flicker fix, test race fixes, evidence and this checkpoint. Merge it when green, confirm main CI and production verification, then take ROADMAP Q3.
 
 ## Unfinished
 
-- Merge PR #34 after the CI gate passes; verify production on the merged commit; record post-merge evidence
+- Merge PR #40 after its CI gate passes; confirm CI on main and production verification
+- ROADMAP Q3: Firefox/WebKit contact flake in the weekly suite
 - Owner settings: ruleset import for main; Vercel Deployment Checks
 - Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows
 
@@ -31,6 +32,8 @@ PR #34 on claude/project-thread-zdhgmq carries the CI/CD work. Check its CI gate
 - [human] Joshua Small approved the privacy note, accepted the three known limits and approved release 1.0 (Project thread "Close portfolio release", message of 2026-11-02 19:06 UTC; docs/release/ACCEPTANCE.md section 5 at 829ffc8)
 - [agent] One aggregate CI gate job is the only check to require; docs-only PRs skip build and browser jobs and the gate validates that skip
 - [agent] WebKit tests against the local http server strip HSTS and the CSP upgrade-insecure-requests directive in the test harness only; deployed headers are checked by production verification
+- [agent] Chromium CI job skips install-deps' optional fallback-font packages when a real Chromium launch already works; full install-deps runs otherwise (documented exception in docs/ci/README.md)
+- [agent] Browser-running jobs pinned to ubuntu-24.04 (Playwright-supported); ubuntu-latest 26.04 apt mirror stalled browser package installs
 
 ## Constraints
 
@@ -43,3 +46,4 @@ PR #34 on claude/project-thread-zdhgmq carries the CI/CD work. Check its CI gate
 
 - Hub registry approval for personal-portfolio stays pending until Joshua Small records his own verify:record passes for all ten gates (hub validator: approval needs releaseStatus verified, which needs every gate verified)
 - Protecting main (ruleset import) and Vercel Deployment Checks are owner settings this session cannot change; see docs/ci/README.md
+- Firefox/WebKit contact flake in the weekly suite (ROADMAP Q3): API answered 200 but the form showed nothing for 12 s; cause unknown (test load or real UI issue)

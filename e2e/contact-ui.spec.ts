@@ -8,6 +8,8 @@ import { contactForm, expectNoPersonalDataIn, sentTo, submission } from "./suppo
 // that a real inbox received anything.
 
 const SEND_FAILED = "Couldn't send your message. Please try again later.";
+// The handler may take up to its 10 s provider limit before answering, so success is awaited that long.
+const ANSWERED = { timeout: 12_000 };
 const serverLog = () => readFileSync(path.join(process.cwd(), "test-results", "server.log"), "utf8");
 
 test.beforeEach(async ({ page }, testInfo) => {
@@ -50,7 +52,7 @@ test("a valid message goes through the real handler to the provider exactly once
   const s = submission(runId(testInfo));
   await f.fill(s);
   await f.submit.click();
-  await expect(f.status).toHaveText("Thanks! Your message was sent. I'll be in touch soon.");
+  await expect(f.status).toHaveText("Thanks! Your message was sent. I'll be in touch soon.", ANSWERED);
   await expect(f.name).toHaveValue("");
   await expect(f.message).toHaveValue("");
   const sent = await sentTo(s.tag);
@@ -67,8 +69,11 @@ test("double-clicking send submits once and shows a loading state", async ({ pag
   await f.fill(s);
   let posts = 0;
   page.on("request", (r) => r.url().endsWith("/api/contact") && posts++);
+  // Waiting for the answer first means a failure says whether a request went out and how it ended.
+  const answer = page.waitForResponse((r) => r.url().endsWith("/api/contact"), ANSWERED);
   await f.submit.dblclick();
-  await expect(f.status).toContainText("Your message was sent");
+  expect((await answer).status()).toBe(200);
+  await expect(f.status).toContainText("Your message was sent", ANSWERED);
   expect(posts).toBe(1);
   expect(await sentTo(s.tag)).toHaveLength(1);
 });
@@ -158,13 +163,20 @@ test.describe("rate limiting", () => {
   }, testInfo) => {
     const f = contactForm(page);
     const s = submission(runId(testInfo));
+    // Each send waits for its own answer. The success text from the previous send is still on screen,
+    // so waiting on the text alone would let the next fill race the form reset.
+    const send = async () => {
+      const answer = page.waitForResponse((r) => r.url().endsWith("/api/contact"), ANSWERED);
+      await f.submit.click();
+      return (await answer).status();
+    };
     for (let i = 1; i <= 5; i++) {
       await f.fill({ ...s, message: `${s.message} #${i}` });
-      await f.submit.click();
-      await expect(f.status).toContainText("Your message was sent");
+      expect(await send()).toBe(200);
+      await expect(f.message).toHaveValue("");
     }
     await f.fill(s);
-    await f.submit.click();
+    expect(await send()).toBe(429);
     await expect(f.status).toHaveText("Too many messages in a short time. Please try again in a few minutes.");
     await expect(f.message).toHaveValue(s.message);
     expect(await sentTo(s.tag)).toHaveLength(5);

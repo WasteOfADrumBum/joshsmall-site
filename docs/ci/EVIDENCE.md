@@ -7,7 +7,7 @@ an evidence-backed standard" (PR #34). Nothing here records an owner verificatio
 - **Candidate:** branch `claude/project-thread-zdhgmq`, PR
   [#34](https://github.com/WasteOfADrumBum/joshsmall-site/pull/34). The final candidate SHA, CI run,
   merged SHA, deployment and production-verification run are listed in
-  [Post-merge verification](#post-merge-verification), filled in after the merge.
+  [Post-merge verification](#post-merge-verification).
 - **Baseline:** `main` at `1eb9c1b` (before this PR).
 
 ## 1. Baseline (before this PR)
@@ -40,7 +40,7 @@ exposed):
 
 | Measure | Before | After (PR #34 final candidate) |
 | --- | --- | --- |
-| PR wall-clock, push to all checks done | ~83 s (one job) | see [Post-merge verification](#post-merge-verification) |
+| PR wall-clock, push to all checks done | ~83 s (one job) | about 3 min (see [Post-merge verification](#post-merge-verification)) |
 | Time to first actionable failure | ~83 s (one serial job) | ~15 s for workflow and secret issues; static checks fail in about 1 min |
 | Browser suite | none | Chromium: 62 tests in about 2 min on the runner; Firefox and WebKit run in parallel |
 | Duplicate installs/builds | one install, one build | the Chromium job builds once and tests the same build; the cross-browser job builds its own copy in parallel instead of waiting for the Chromium job to hand over its build, which would serialise the two jobs |
@@ -231,7 +231,7 @@ documentation.
 | Meaningful UI, API and browser validation | 25 | 23 | No inbox-delivery evidence; device emulation only |
 | Deployment gating, production verification, recovery | 20 | 13 | Production can still go live before CI (Deployment Checks not enabled); notification delivery unverified |
 | Workflow and application security | 20 | 18 | CSP keeps `'unsafe-inline'`; one accepted dev advisory |
-| Accessibility, compatibility, performance, SEO | 15 | 13 | Manual screen-reader, zoom and visual checks outstanding; no real devices |
+| Accessibility, compatibility, performance, SEO | 15 | 13 | Manual screen-reader, zoom and visual checks outstanding; no real devices; one open Firefox/WebKit contact flake in the weekly suite (ROADMAP Q3) |
 | Merge enforcement and operational reliability | 10 | 5 | `main` not yet protected (detection only) |
 | Speed, diagnostics, maintainability | 10 | 9 | Cross-browser job builds separately |
 | **Total** | **100** | **81** | |
@@ -260,4 +260,51 @@ or full accessibility conformance.
 
 ## Post-merge verification
 
-Filled in after the merge.
+PR #34 merged at 2026-11-06 05:27 UTC as merge commit `31724b15b9c6bbe62bb1f159829823d18983dd8d`,
+after every check passed on its head `c29f096`
+([CI run](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42142405076)).
+
+| Check | Result | Link |
+| --- | --- | --- |
+| Vercel production deployment of `31724b1` | Created 05:27:46 UTC | GitHub deployment `7593150179` |
+| Production verification from the `deployment_status` event | PASS at 05:28:36: production served `31724b15b9c6`, 8/8 HTTP checks, 6/6 browser checks (desktop and phone) | [run 42168559834](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42168559834) |
+| CodeQL on `main` | PASS | [run 42168525197](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42168525197) |
+| CI on `main` (push) | FAIL: infrastructure. Security, Firefox and WebKit passed. The Chromium job timed out in "Install browser system dependencies", so no tests ran | [run 42168525354](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42168525354) |
+| Notification path (`notify_dry_run`, impossible expected commit) | PASS: verification refused the commit ("not on main") and failed. The notify job printed the issue it would open, and no issue was created. The protection report warned that `main` is not protected (expected until owner action 1) | [run 42169367974](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42169367974) |
+| Weekly deep checks, run by hand | Links and Lighthouse PASS. The full Firefox and WebKit suites found real problems, fixed in PR #40. One flaky contact test remains (see below) | [first run on `main`](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42169371336), [latest on PR #40](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42173298654) |
+
+**The push failure.** apt fetched package lists at 14.7 MB/s, but the nine optional font packages
+Chromium's `install-deps` adds came at about 50 KB/s. It reached the fourth of them before the
+5-minute limit. The same thing happened on `c29f096` before a rerun passed. The runner image already
+has Chromium's libraries, and the site self-hosts its fonts. The follow-up PR therefore tries a real
+Chromium launch first and installs the full set only if the launch fails.
+
+### Weekly full suite (first runs)
+
+The weekly suite runs every test in Firefox and WebKit, not only the `@cross` subset. Its first
+runs found:
+
+1. **A real flicker in the scroll reveal (fixed).** `Reveal` measured visibility on the element it
+   animates. An element near the 20% threshold at a viewport edge slid itself out of view, slid
+   back, and never stopped. It happens in every engine. Chromium's axe wait missed it because
+   its fades run as Web Animations and the inline style held a steady value. Visibility is now
+   measured on a box that does not move. After the fix, the axe sweeps pass in both engines.
+2. **A race in the rate-limit test (fixed).** It waited on success text that was already on screen
+   from the previous send, so a later fill could race the form reset. Each send now waits for its
+   own response.
+3. **One remaining flake (open, ROADMAP Q3).** In each run, one Firefox or WebKit contact test
+   sometimes saw `/api/contact` answer 200 while the form showed nothing for 12 s. The retry passed.
+   The required `@cross` subset has not hit it on any PR run. The traces are in that run's artifact.
+   `failOnFlakyTests` keeps the weekly run red until this is fixed.
+
+The contact success assertions now wait 12 s, which covers the handler's 10 s provider limit.
+
+**Deployment gating.** Production served `31724b1` while CI on `main` was still running. That is
+the gap Vercel Deployment Checks closes (owner action 2).
+
+### Timing on the final candidate
+
+| Measure | Before | After |
+| --- | --- | --- |
+| PR wall-clock, start to CI gate (clean run) | ~83 s, no browser tests | about 3 min: detection 6 s, then the Chromium job (2 min 44 s) in parallel with security (9 s) and Firefox + WebKit (1 min 39 s), then the gate (3 s). Queueing adds up to about 1½ min |
+| Merge to production verified | not measured; checks every 6 hours | about 1 min 15 s (deploy event 05:27:46, verified 05:28:36) |

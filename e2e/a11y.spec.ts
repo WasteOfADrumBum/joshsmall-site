@@ -37,18 +37,27 @@ async function settle(page: Page, selector: string) {
           root.contains(target)
         );
       });
+      // Described before waiting, so a failure can say what was still moving.
+      const describe = (a: Animation) => {
+        const el = (a.effect as KeyframeEffect | null)?.target as Element | null;
+        const name = el ? `${el.tagName.toLowerCase()}.${[...el.classList].slice(0, 2).join(".")}` : "?";
+        return `${name}:${a.playState}:${Math.round(Number(a.effect?.getComputedTiming().endTime))}ms`;
+      };
+      const pending = running.map(describe);
       await Promise.all(running.map((a) => a.finished.catch(() => undefined)));
       const opacities = [...root.querySelectorAll<HTMLElement>("[style*=opacity]")].map((el) => el.style.opacity);
-      return `${running.length}|${opacities.join(",")}`;
+      return `${running.length}|${opacities.join(",")}|${pending.join(" ")}`;
     });
+  // Only the count and the opacities decide whether the section is at rest.
+  const key = (s: string) => s.split("|").slice(0, 2).join("|");
   let previous = await sample();
   for (let i = 0; i < 20; i++) {
     await page.waitForTimeout(250);
     const next = await sample();
-    if (next === previous && next.startsWith("0|")) return;
+    if (key(next) === key(previous) && next.startsWith("0|")) return;
     previous = next;
   }
-  throw new Error(`animations in ${selector} did not settle`);
+  throw new Error(`animations in ${selector} did not settle; last sample (count|opacities|animations): ${previous}`);
 }
 
 /** Scrolls each section into view, lets its entrance animation settle, then checks it. */

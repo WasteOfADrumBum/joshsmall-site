@@ -99,10 +99,18 @@ jobs:
           key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
       - if: steps.browsers.outputs.cache-hit != 'true'
         run: npx playwright install chromium
-      # System packages come from apt; a stalled mirror fails this step quickly instead of using up the job.
+      # The runner image already has Chromium's libraries. On it, install-deps only adds optional
+      # CJK, Thai and Unicode fallback fonts. The site self-hosts its fonts, so tests never use them,
+      # and they come from the apt pocket that has stalled this job. Try a real launch first, and
+      # install the full set only if the launch fails. A stalled mirror still fails within 5 minutes.
       - name: Install browser system dependencies
         timeout-minutes: 5
-        run: npx playwright install-deps chromium
+        run: |
+          if node -e 'require("@playwright/test").chromium.launch().then((b) => b.close())'; then
+            echo "Chromium launches with the runner's libraries; skipping the optional font packages."
+          else
+            npx playwright install-deps chromium
+          fi
       - name: Browser tests against the production server (Chromium)
         run: npm run test:e2e
         env:

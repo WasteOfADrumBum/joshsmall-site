@@ -1,0 +1,112 @@
+name: Weekly deep checks
+
+# Broader and noisier checks that should not block pull requests:
+#   - the whole browser suite in Firefox and WebKit (pull requests run only the @cross subset there);
+#   - outbound links (third-party failures warn; onesmall.company and owner repos fail);
+#   - Lighthouse lab metrics for the live site, three runs each on mobile and desktop, kept as a trend.
+
+on:
+  schedule:
+    - cron: "23 8 * * 1"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: weekly-deep-checks
+  cancel-in-progress: false
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  full-matrix:
+    name: Full browser suite (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build
+      - run: npx playwright install --with-deps "$BROWSER"
+        env:
+          BROWSER: ${{ matrix.browser }}
+      - run: npx playwright test --project="$BROWSER"
+        env:
+          BROWSER: ${{ matrix.browser }}
+          CI: "true"
+          FULL_MATRIX: "1"
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: weekly-${{ matrix.browser }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: warn
+
+  links:
+    name: Outbound links
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - run: npm run links
+
+  lighthouse:
+    name: Lighthouse trend (not a gate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions: {}
+    steps:
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - name: Three runs per form factor against https://onesmall.company
+        run: |
+          set -euo pipefail
+          mkdir -p lh
+          for preset in mobile desktop; do
+            for i in 1 2 3; do
+              flags="--quiet --chrome-flags=--headless=new --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=lh/$preset-$i.json"
+              if [ "$preset" = desktop ]; then flags="$flags --preset=desktop"; fi
+              # shellcheck disable=SC2086
+              npx --yes lighthouse@13.5.0 https://onesmall.company/ $flags || echo "::warning::Lighthouse run $preset-$i failed"
+            done
+          done
+          node -e '
+            const fs = require("fs");
+            const rows = ["### Lighthouse medians (lab data, 3 runs; a trend, not a verdict)", "", "| Form factor | Perf | A11y | Best practices | SEO | LCP ms | CLS | TBT ms |", "|---|---|---|---|---|---|---|---|"];
+            const med = (a) => a.sort((x, y) => x - y)[Math.floor(a.length / 2)];
+            for (const p of ["mobile", "desktop"]) {
+              const runs = [1, 2, 3].map((i) => `lh/${p}-${i}.json`).filter(fs.existsSync).map((f) => JSON.parse(fs.readFileSync(f)));
+              if (!runs.length) continue;
+              const c = (k) => med(runs.map((r) => Math.round(r.categories[k].score * 100)));
+              const a = (k) => med(runs.map((r) => r.audits[k].numericValue));
+              rows.push(`| ${p} | ${c("performance")} | ${c("accessibility")} | ${c("best-practices")} | ${c("seo")} | ${Math.round(a("largest-contentful-paint"))} | ${a("cumulative-layout-shift").toFixed(3)} | ${Math.round(a("total-blocking-time"))} |`);
+            }
+            fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, rows.join("\n") + "\n");'
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lighthouse
+          path: lh/
+          retention-days: 30

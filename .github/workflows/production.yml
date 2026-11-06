@@ -1,0 +1,143 @@
+name: Production verification
+
+# Read-only checks of https://onesmall.company:
+#   - after every successful Vercel production deployment (deployment_status from vercel[bot]),
+#     waiting until the site serves the deployed commit;
+#   - every six hours as a fallback;
+#   - by hand (Actions > Production verification > Run workflow).
+# It never sends email. The URL checked is fixed in scripts/smoke.mjs and playwright.prod.config.ts;
+# nothing from the event is used as a URL. A failure opens (or comments on) one GitHub issue
+# labelled "production-check", which notifies repository watchers.
+
+on:
+  deployment_status:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      expect_sha:
+        description: "Optional: full commit SHA production should be serving"
+        required: false
+        default: ""
+      notify_dry_run:
+        description: "On failure, print the issue that would be opened instead of opening it"
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: production-verification
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Verify production
+    # Only successful Production deployments made by Vercel; previews and other events are ignored.
+    if: >-
+      github.event_name != 'deployment_status' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production' &&
+       github.event.deployment.creator.login == 'vercel[bot]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    env:
+      DEPLOY_SHA: ${{ github.event.deployment.sha || inputs.expect_sha }}
+    steps:
+      # The checks always come from main, never from the deployed ref.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate the expected commit
+        id: sha
+        run: |
+          set -euo pipefail
+          if [ -z "${DEPLOY_SHA}" ]; then echo "expect=" >> "$GITHUB_OUTPUT"; echo "No expected commit (scheduled run)."; exit 0; fi
+          if ! printf '%s' "$DEPLOY_SHA" | grep -Eq '^[0-9a-f]{40}$'; then echo "::error::Not a full commit SHA"; exit 1; fi
+          if ! git merge-base --is-ancestor "$DEPLOY_SHA" origin/main; then
+            echo "::error::$DEPLOY_SHA is not on main; refusing to treat it as a production release"; exit 1
+          fi
+          echo "expect=$DEPLOY_SHA" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - name: HTTP checks (headers, redirects, SEO endpoints, contact validation, commit identity)
+        run: node scripts/smoke.mjs
+        env:
+          EXPECT_SHA: ${{ steps.sha.outputs.expect }}
+      - id: modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: node_modules
+          key: modules-${{ runner.os }}-node24-${{ hashFiles('package-lock.json') }}
+      - if: steps.modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --no-fund
+      - id: browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.browsers.outputs.cache-hit != 'true'
+        run: npx playwright install chromium
+      - run: npx playwright install-deps chromium
+      - name: Browser checks (rendering, hydration and console errors, navigation, 404)
+        run: npm run test:prod
+      - name: Upload browser report
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: production-browser-report-${{ github.run_attempt }}
+          path: |
+            playwright-report-prod/
+            test-results/
+          retention-days: 7
+          if-no-files-found: ignore
+
+  protection:
+    name: Report protection of main
+    if: github.event_name != 'deployment_status'
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: node scripts/check-protection.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+  notify:
+    name: Open or update the failure issue
+    needs: verify
+    if: failure()
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      issues: write
+    steps:
+      - name: Open or comment on the production-check issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          TRIGGER: ${{ github.event_name }}
+          DRY_RUN: ${{ inputs.notify_dry_run && 'true' || 'false' }}
+        run: |
+          set -euo pipefail
+          body="Production verification failed (trigger: ${TRIGGER}). Details and the failure type for each check: ${RUN_URL}"
+          existing=$(gh issue list --repo "$REPO" --label production-check --state open --json number --jq '.[0].number // empty')
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "Dry run. Would ${existing:+comment on #$existing}${existing:-open a new issue}: $body"; exit 0
+          fi
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --repo "$REPO" --body "$body"
+          else
+            gh label create production-check --repo "$REPO" --color B60205 --description "Automated production verification failed" --force
+            gh issue create --repo "$REPO" --label production-check --title "Production verification failed" --body "$body"
+          fi

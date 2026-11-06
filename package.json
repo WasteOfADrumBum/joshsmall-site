@@ -8,7 +8,14 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
-    "test": "node --test --disable-warning=MODULE_TYPELESS_PACKAGE_JSON 'src/**/*.test.ts'"
+    "test": "node --test --disable-warning=MODULE_TYPELESS_PACKAGE_JSON 'src/**/*.test.ts'",
+    "test:e2e": "playwright test --project=chromium",
+    "test:e2e:cross": "playwright test --project=firefox --project=webkit",
+    "test:prod": "playwright test --config=playwright.prod.config.ts",
+    "smoke": "node scripts/smoke.mjs",
+    "format:check": "prettier --check e2e scripts playwright.config.ts playwright.prod.config.ts .github",
+    "format": "prettier --write e2e scripts playwright.config.ts playwright.prod.config.ts .github",
+    "links": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-links.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.52.0",
@@ -27,6 +34,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
+    "playwright-core": "1.63.0",
     "prettier": "3.9.10",
     "tailwindcss": "^4",
     "typescript": "^5"

@@ -13,6 +13,20 @@ const urls = new Set();
   else if (v && typeof v === "object") Object.values(v).forEach(walk);
 })(site);
 
+// Reported statuses are reduced to an HTTP code or a fixed error name, so nothing a remote server
+// sends is copied verbatim into the job summary.
+const KNOWN_ERRORS = [
+  "ENOTFOUND",
+  "ECONNREFUSED",
+  "ECONNRESET",
+  "ETIMEDOUT",
+  "EAI_AGAIN",
+  "TimeoutError",
+  "AbortError",
+];
+const errorName = (err) => KNOWN_ERRORS.find((k) => k === err?.cause?.code || k === err?.name) ?? "network-error";
+const httpCode = (status) => (Number.isInteger(status) && status >= 100 && status <= 999 ? Number(status) : 0);
+
 const firstParty = (u) =>
   /^https:\/\/([a-z0-9-]+\.)?onesmall\.company(\/|$)/.test(u) || u.startsWith("https://github.com/WasteOfADrumBum");
 
@@ -26,10 +40,10 @@ async function probe(url) {
         headers: { "user-agent": "onesmall-link-check" },
       });
       await res.body?.cancel();
-      if (res.status < 400) return { ok: true, status: res.status };
-      if (attempt === 2 || res.status < 500) return { ok: false, status: res.status };
+      if (res.status < 400) return { ok: true, status: httpCode(res.status) };
+      if (attempt === 2 || res.status < 500) return { ok: false, status: httpCode(res.status) };
     } catch (err) {
-      if (attempt === 2) return { ok: false, status: err.cause?.code ?? err.name };
+      if (attempt === 2) return { ok: false, status: errorName(err) };
     }
     await new Promise((r) => setTimeout(r, 3_000));
   }

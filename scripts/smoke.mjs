@@ -187,10 +187,17 @@ await check("contact API validates without sending anything", async () => {
   assert(method.status === 405, `GET: ${method.status}`);
 });
 
+// Escapes text for a Markdown table cell: backslashes first, then pipes; newlines become spaces.
+const mdCell = (text) =>
+  String(text)
+    .replace(/\\/g, "\\\\")
+    .replace(/\|/g, "\\|")
+    .replace(/[\r\n]+/g, " ");
+
 const failed = results.filter((r) => !r.ok);
 if (process.env.GITHUB_STEP_SUMMARY) {
   const rows = results.map(
-    (r) => `| ${r.ok ? "✅" : "❌"} | ${r.name} | ${r.ok ? "" : r.kind} | ${r.note.replace(/\|/g, "\\|")} | ${r.ms} |`,
+    (r) => `| ${r.ok ? "✅" : "❌"} | ${r.name} | ${r.ok ? "" : r.kind} | ${mdCell(r.note)} | ${r.ms} |`,
   );
   appendFileSync(
     process.env.GITHUB_STEP_SUMMARY,

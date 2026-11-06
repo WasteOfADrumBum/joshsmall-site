@@ -51,7 +51,18 @@ export default defineConfig({
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 800 } } },
     { name: "firefox", grep: CROSS, use: { ...devices["Desktop Firefox"], viewport: { width: 1280, height: 800 } } },
-    { name: "webkit", grep: CROSS, use: { ...devices["Desktop Safari"], viewport: { width: 1280, height: 800 } } },
+    {
+      name: "webkit",
+      grep: CROSS,
+      use: {
+        ...devices["Desktop Safari"],
+        viewport: { width: 1280, height: 800 },
+        // WebKit applies the production CSP's upgrade-insecure-requests to http://127.0.0.1, so every
+        // asset would be fetched over HTTPS from a plain-HTTP test server. Chromium and Firefox treat
+        // loopback as secure and enforce the full CSP; the deployed header is checked by scripts/smoke.mjs.
+        bypassCSP: true,
+      },
+    },
   ],
   webServer: [
     {

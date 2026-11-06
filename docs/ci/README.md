@@ -26,7 +26,7 @@ current score are in [EVIDENCE.md](./EVIDENCE.md).
 | Workflow lint, workflow security and secret scan | actionlint (with shellcheck), zizmor, gitleaks over the full history | ~15 s |
 | **CI gate** | Checks the results above | ~5 s |
 
-Failures upload the Playwright HTML report, traces and screenshots, `test-results/server.log` and
+Every browser job uploads the Playwright HTML report and, for failed tests, traces and screenshots, plus `test-results/server.log` and
 `test-results/environment.json` (commit, Node, Playwright and runner versions) for seven days.
 
 ## Run the checks locally
@@ -137,4 +137,4 @@ ESLint still covers all source.
 | `npm audit` gate for dev dependencies is `high`, not `moderate` | `minimatch` (GHSA-g3hv-75wg-m249, moderate) inside `typescript-eslint`, lint only | Only repository-authored patterns reach it; the fix needs a major `eslint-config-next` change. Already accepted as a known limit on 2026-11-02 | Joshua Small | 2027-02-01 or the next `eslint-config-next` release |
 | CSP keeps `'unsafe-inline'` for scripts and styles | Whole site | The home page is static; nonces would force per-request rendering. Tracked as ROADMAP S2 | Joshua Small | ROADMAP S2 |
 | Prettier scope excludes `src/` | Formatting only | Avoids unrelated churn; ESLint covers `src/` | Joshua Small | Next refactor |
-| WebKit browser tests run with `bypassCSP` | WebKit project in `playwright.config.ts` only | WebKit upgrades `http://127.0.0.1` requests to HTTPS under `upgrade-insecure-requests`, which a local test server cannot serve. Chromium and Firefox enforce the full CSP, and the deployed header is checked after every production deploy | Joshua Small | If the tests move to an HTTPS test server |
+| WebKit browser tests strip `Strict-Transport-Security` and the CSP `upgrade-insecure-requests` directive | WebKit against the local `http://` test server only (`webkitLoopbackHttp` in `e2e/support/fixtures.ts`) | WebKit upgrades later requests to `https://127.0.0.1` after seeing them, which a local test server cannot serve. Both only matter over HTTPS; the rest of the CSP stays enforced in WebKit, Chromium and Firefox get the headers unchanged, and the deployed headers are checked after every production deploy | Joshua Small | If the tests move to an HTTPS test server |

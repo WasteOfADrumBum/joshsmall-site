@@ -9,10 +9,39 @@ import { test as base, expect, type Page, type TestInfo } from "@playwright/test
 type Fixtures = {
   allowedProblems: RegExp | null;
   problems: string[];
+  webkitLoopbackHttp: void;
 };
 
 export const test = base.extend<Fixtures>({
   allowedProblems: [null, { option: true }],
+  /**
+   * WebKit upgrades later requests to https://127.0.0.1 after it sees the production
+   * Strict-Transport-Security header or the CSP's upgrade-insecure-requests on plain HTTP, which a
+   * local test server cannot serve. For WebKit against an http:// server only, the test harness
+   * removes those two (HTTPS-only) instructions from responses; everything else in the CSP stays
+   * enforced. Chromium and Firefox get the headers unchanged, and the deployed headers are checked
+   * by scripts/smoke.mjs.
+   */
+  webkitLoopbackHttp: [
+    async ({ context, browserName, baseURL }, use) => {
+      if (browserName === "webkit" && baseURL?.startsWith("http://")) {
+        await context.route(`${new URL(baseURL).origin}/**`, async (route) => {
+          const response = await route.fetch();
+          const headers = { ...response.headers() };
+          delete headers["strict-transport-security"];
+          if (headers["content-security-policy"]) {
+            headers["content-security-policy"] = headers["content-security-policy"]
+              .split(";")
+              .filter((d) => d.trim() !== "upgrade-insecure-requests")
+              .join(";");
+          }
+          await route.fulfill({ response, headers });
+        });
+      }
+      await use();
+    },
+    { auto: true },
+  ],
   problems: [
     async ({ page, allowedProblems, baseURL }, use, testInfo) => {
       const origin = new URL(baseURL ?? "http://127.0.0.1").origin;
@@ -51,7 +80,6 @@ export async function gotoHome(page: Page, path = "/") {
   await expect(page.getByRole("group", { name: "Portrait view" })).toBeVisible();
 }
 
-/** A stable client address per test, so the per-client rate limit never couples tests together. */
 /**
  * Identifies one attempt of one test. Retries get a fresh value, so a retry never inherits the
  * first attempt's sent messages or rate-limit slots and reports its own result.
@@ -60,6 +88,7 @@ export function runId(testInfo: TestInfo) {
   return `${testInfo.testId}-r${testInfo.retry}`;
 }
 
+/** A stable client address per test, so the per-client rate limit never couples tests together. */
 export function clientIp(seed: string) {
   let h = 0;
   for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0;

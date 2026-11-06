@@ -7,12 +7,12 @@
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
     "branch": "claude/project-thread-zdhgmq",
-    "commit": "138a2f39891dcd3176830d3f4234d674473e0d94",
-    "recordedAt": "2026-11-06T05:50:00Z"
+    "commit": "848004f7e93acde9f5f0ce4e8968ad5f91f48213",
+    "recordedAt": "2026-11-06T06:40:00Z"
   },
   "development": {
     "milestone": "Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance",
-    "activeTask": "Follow-up PR #40: stop the Chromium CI job stalling on optional apt font packages; record post-merge evidence for PR #34",
+    "activeTask": "Follow-up PR #40: browser jobs on ubuntu-24.04 (apt stalls), Reveal flicker fix and test races found by the weekly suite, post-merge evidence for PR #34",
     "workingBranch": "claude/project-thread-zdhgmq",
     "activePr": 40,
     "lastCompleted": [
@@ -24,12 +24,14 @@
       "Independent review agent: 3 material and 11 minor findings; material ones fixed (axe animation wait, deployment_status comment, rename-safe docs-only check)",
       "docs/ci/README.md (pipeline, local commands, owner settings, rollback, exceptions) and docs/ci/EVIDENCE.md (requirements, evidence, score 81/100)",
       "PR #34 merged as 31724b15b9c6bbe62bb1f159829823d18983dd8d (2026-11-06 05:27 UTC) after all checks passed on c29f096; production verification passed from the deployment_status event at 05:28 UTC with production serving 31724b1",
-      "Notification path checked with a dry run (impossible expected commit): verification failed as intended and the notify job printed the issue it would open; no issue created"
+      "Notification path checked with a dry run (impossible expected commit): verification failed as intended and the notify job printed the issue it would open; no issue created",
+      "PR #40: browser jobs on ubuntu-24.04; Chromium skips optional apt fonts when it already launches",
+      "PR #40: Reveal measures visibility on an unmoving box (fixes endless flicker at viewport edges, found by the weekly Firefox/WebKit axe sweep); rate-limit test waits for each response; contact success waits 12 s"
     ],
     "inProgress": [
-      "PR #40 CI, then merge; weekly.yml manual run 42169371336 result to record"
+      "PR #40 merge, then CI on main"
     ],
-    "nextAction": "Agent: merge PR #40 when the CI gate is green and confirm CI on main passes. Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate (docs/ci/README.md)."
+    "nextAction": "Agent: merge PR #40 once its CI gate is green and confirm CI on main and production verification pass. Next engineering item: ROADMAP Q3 (Firefox/WebKit contact flake in the weekly suite; read the trace artifact). Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate."
   },
   "decisions": {
     "made": [
@@ -88,6 +90,13 @@
         "decidedBy": "agent",
         "humanRef": null,
         "recordedAt": "2026-11-06T05:50:00Z"
+      },
+      {
+        "id": "browser-jobs-ubuntu-2404",
+        "summary": "Browser-running jobs pinned to ubuntu-24.04 (Playwright-supported); ubuntu-latest 26.04 apt mirror stalled browser package installs",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-06T06:40:00Z"
       }
     ],
     "constraints": [
@@ -98,7 +107,8 @@
     ],
     "unresolved": [
       "Hub registry approval for personal-portfolio stays pending until Joshua Small records his own verify:record passes for all ten gates (hub validator: approval needs releaseStatus verified, which needs every gate verified)",
-      "Protecting main (ruleset import) and Vercel Deployment Checks are owner settings this session cannot change; see docs/ci/README.md"
+      "Protecting main (ruleset import) and Vercel Deployment Checks are owner settings this session cannot change; see docs/ci/README.md",
+      "Firefox/WebKit contact flake in the weekly suite (ROADMAP Q3): API answered 200 but the form showed nothing for 12 s; cause unknown (test load or real UI issue)"
     ]
   },
   "verification": {
@@ -177,10 +187,38 @@
         "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42169367974"
       },
       {
-        "command": "npm run format:check; zizmor --offline .github/workflows/ci.yml; local Chromium launch probe",
+        "command": "weekly.yml full suite by hand on main (Firefox and WebKit axe sweeps never settled on #human-side; contact flakes)",
+        "result": "fail",
+        "commit": "31724b15b9c6bbe62bb1f159829823d18983dd8d",
+        "at": "2026-11-06T05:41:37Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42169371336"
+      },
+      {
+        "command": "weekly.yml on PR #40 after the Reveal fix (axe passes in Firefox and WebKit; Firefox fully green on 73ce25c)",
         "result": "pass",
-        "commit": "138a2f39891dcd3176830d3f4234d674473e0d94",
-        "at": "2026-11-06T05:45:00Z"
+        "commit": "73ce25c",
+        "at": "2026-11-06T06:14:20Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42172620976"
+      },
+      {
+        "command": "weekly.yml on PR #40 head 848004f (one flaky contact test each in Firefox and WebKit, passed on retry; failOnFlakyTests fails the run)",
+        "result": "fail",
+        "commit": "848004f",
+        "at": "2026-11-06T06:30:00Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42173298654"
+      },
+      {
+        "command": "GitHub CI ci.yml on PR #40 head 848004f (ubuntu-24.04 browser jobs)",
+        "result": "pass",
+        "commit": "848004f",
+        "at": "2026-11-06T06:30:00Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42173303901"
+      },
+      {
+        "command": "local: npm test (67), eslint, tsc, format:check, CI=1 playwright test --project=chromium (61 passed, 1 skipped)",
+        "result": "pass",
+        "commit": "8517ef2",
+        "at": "2026-11-06T06:00:00Z"
       }
     ],
     "unverifiedChanges": [
@@ -190,8 +228,7 @@
       "Live production headers present and no X-Powered-By (agent-read through the Vercel connector, 2026-11-02)",
       "Mobile hero overlap fix checked by the agent in headless Chromium at 390px only; not checked on a real phone",
       "Firefox and WebKit runs are only verified in GitHub Actions (no WebKit locally)",
-      "Delivery of the production-check issue notification to the owner has not been verified end to end",
-      "ci.yml Chromium launch probe (PR #40) not yet seen on a GitHub runner at this checkpoint"
+      "Delivery of the production-check issue notification to the owner has not been verified end to end"
     ]
   },
   "handoff": {
@@ -199,16 +236,17 @@
       "tool": "Claude Code",
       "model": null
     },
-    "checkpointedAt": "2026-11-06T05:50:00Z",
+    "checkpointedAt": "2026-11-06T06:40:00Z",
     "unfinished": [
-      "Merge PR #40 after its CI gate passes; confirm CI on main is green; record the weekly.yml run result in docs/ci/EVIDENCE.md",
+      "Merge PR #40 after its CI gate passes; confirm CI on main and production verification",
+      "ROADMAP Q3: Firefox/WebKit contact flake in the weekly suite",
       "Owner settings: ruleset import for main; Vercel Deployment Checks",
       "Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows"
     ],
     "blockers": [
       "Branch protection and Vercel Deployment Checks need the owner (no write access to rulesets or Vercel settings from this session)"
     ],
-    "continuation": "PR #34 is merged (31724b1) and production was verified on it. PR #40 on claude/project-thread-zdhgmq carries the Chromium apt-stall fix, post-merge evidence and this checkpoint. Check its CI gate, merge when green, confirm CI on main passes, and fill the weekly row (WEEKLY_RESULT) in docs/ci/EVIDENCE.md if still a placeholder.",
+    "continuation": "PR #34 is merged (31724b1) and production was verified on it. PR #40 on claude/project-thread-zdhgmq carries the apt-stall fix (ubuntu-24.04), the Reveal flicker fix, test race fixes, evidence and this checkpoint. Merge it when green, confirm main CI and production verification, then take ROADMAP Q3.",
     "uncommittedWorkOutsideCheckpoint": "none",
     "persistedBy": "local-file"
   },

@@ -231,7 +231,7 @@ documentation.
 | Meaningful UI, API and browser validation | 25 | 23 | No inbox-delivery evidence; device emulation only |
 | Deployment gating, production verification, recovery | 20 | 13 | Production can still go live before CI (Deployment Checks not enabled); notification delivery unverified |
 | Workflow and application security | 20 | 18 | CSP keeps `'unsafe-inline'`; one accepted dev advisory |
-| Accessibility, compatibility, performance, SEO | 15 | 13 | Manual screen-reader, zoom and visual checks outstanding; no real devices |
+| Accessibility, compatibility, performance, SEO | 15 | 13 | Manual screen-reader, zoom and visual checks outstanding; no real devices; one open Firefox/WebKit contact flake in the weekly suite (ROADMAP Q3) |
 | Merge enforcement and operational reliability | 10 | 5 | `main` not yet protected (detection only) |
 | Speed, diagnostics, maintainability | 10 | 9 | Cross-browser job builds separately |
 | **Total** | **100** | **81** | |
@@ -271,13 +271,33 @@ after every check passed on its head `c29f096`
 | CodeQL on `main` | PASS | [run 42168525197](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42168525197) |
 | CI on `main` (push) | FAIL: infrastructure. Security, Firefox and WebKit passed. The Chromium job timed out in "Install browser system dependencies", so no tests ran | [run 42168525354](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42168525354) |
 | Notification path (`notify_dry_run`, impossible expected commit) | PASS: verification refused the commit ("not on main") and failed. The notify job printed the issue it would open, and no issue was created. The protection report warned that `main` is not protected (expected until owner action 1) | [run 42169367974](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42169367974) |
-| Weekly deep checks, run once by hand | WEEKLY_RESULT | [run 42169371336](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42169371336) |
+| Weekly deep checks, run by hand | Links and Lighthouse PASS. The full Firefox and WebKit suites found real problems, fixed in PR #40. One flaky contact test remains (see below) | [first run on `main`](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42169371336), [latest on PR #40](https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42173298654) |
 
 **The push failure.** apt fetched package lists at 14.7 MB/s, but the nine optional font packages
 Chromium's `install-deps` adds came at about 50 KB/s. It reached the fourth of them before the
 5-minute limit. The same thing happened on `c29f096` before a rerun passed. The runner image already
 has Chromium's libraries, and the site self-hosts its fonts. The follow-up PR therefore tries a real
 Chromium launch first and installs the full set only if the launch fails.
+
+### Weekly full suite (first runs)
+
+The weekly suite runs every test in Firefox and WebKit, not only the `@cross` subset. Its first
+runs found:
+
+1. **A real flicker in the scroll reveal (fixed).** `Reveal` measured visibility on the element it
+   animates. An element near the 20% threshold at a viewport edge slid itself out of view, slid
+   back, and never stopped. It happens in every engine. Chromium's axe wait missed it because
+   its fades run as Web Animations and the inline style held a steady value. Visibility is now
+   measured on a box that does not move. After the fix, the axe sweeps pass in both engines.
+2. **A race in the rate-limit test (fixed).** It waited on success text that was already on screen
+   from the previous send, so a later fill could race the form reset. Each send now waits for its
+   own response.
+3. **One remaining flake (open, ROADMAP Q3).** In each run, one Firefox or WebKit contact test
+   sometimes saw `/api/contact` answer 200 while the form showed nothing for 12 s. The retry passed.
+   The required `@cross` subset has not hit it on any PR run. The traces are in that run's artifact.
+   `failOnFlakyTests` keeps the weekly run red until this is fixed.
+
+The contact success assertions now wait 12 s, which covers the handler's 10 s provider limit.
 
 **Deployment gating.** Production served `31724b1` while CI on `main` was still running. That is
 the gap Vercel Deployment Checks closes (owner action 2).

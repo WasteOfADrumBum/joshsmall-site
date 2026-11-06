@@ -5,14 +5,14 @@
 All values are **agent-reported**, not independently verified. Check GitHub before relying on them.
 
 - Milestone: Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance
-- Active task: Follow-up PR #40: stop the Chromium CI job stalling on optional apt font packages; record post-merge evidence for PR #34
+- Active task: Follow-up PR #40: browser jobs on ubuntu-24.04 (apt stalls), Reveal flicker fix and test races found by the weekly suite, post-merge evidence for PR #34
 - Branch: `claude/project-thread-zdhgmq`
-- Recorded commit: `138a2f3` on `claude/project-thread-zdhgmq`
-- Last checkpoint: 2026-11-06T05:50:00Z by Claude Code
+- Recorded commit: `848004f` on `claude/project-thread-zdhgmq`
+- Last checkpoint: 2026-11-06T06:40:00Z by Claude Code
 
 ## Next action
 
-Agent: merge PR #40 when the CI gate is green and confirm CI on main passes. Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate (docs/ci/README.md).
+Agent: merge PR #40 once its CI gate is green and confirm CI on main and production verification pass. Next engineering item: ROADMAP Q3 (Firefox/WebKit contact flake in the weekly suite; read the trace artifact). Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate.
 
 ## Completed
 
@@ -25,10 +25,12 @@ Agent: merge PR #40 when the CI gate is green and confirm CI on main passes. Jos
 - docs/ci/README.md (pipeline, local commands, owner settings, rollback, exceptions) and docs/ci/EVIDENCE.md (requirements, evidence, score 81/100)
 - PR #34 merged as 31724b15b9c6bbe62bb1f159829823d18983dd8d (2026-11-06 05:27 UTC) after all checks passed on c29f096; production verification passed from the deployment_status event at 05:28 UTC with production serving 31724b1
 - Notification path checked with a dry run (impossible expected commit): verification failed as intended and the notify job printed the issue it would open; no issue created
+- PR #40: browser jobs on ubuntu-24.04; Chromium skips optional apt fonts when it already launches
+- PR #40: Reveal measures visibility on an unmoving box (fixes endless flicker at viewport edges, found by the weekly Firefox/WebKit axe sweep); rate-limit test waits for each response; contact success waits 12 s
 
 ## In progress
 
-- PR #40 CI, then merge; weekly.yml manual run 42169371336 result to record
+- PR #40 merge, then CI on main
 
 ## Tests (agent-reported)
 
@@ -43,7 +45,11 @@ Agent: merge PR #40 when the CI gate is green and confirm CI on main passes. Jos
 - `production.yml from deployment_status after merging PR #34 (8/8 HTTP checks, 6/6 browser checks)`: pass at `31724b1`, 2026-11-06T05:28:36Z
 - `GitHub CI ci.yml push on main`: fail at `31724b1`, 2026-11-06T05:34:10Z
 - `production.yml workflow_dispatch expect_sha=0x40 notify_dry_run=true (failure path and notify dry run)`: pass at `31724b1`, 2026-11-06T05:36:10Z
-- `npm run format:check; zizmor --offline .github/workflows/ci.yml; local Chromium launch probe`: pass at `138a2f3`, 2026-11-06T05:45:00Z
+- `weekly.yml full suite by hand on main (Firefox and WebKit axe sweeps never settled on #human-side; contact flakes)`: fail at `31724b1`, 2026-11-06T05:41:37Z
+- `weekly.yml on PR #40 after the Reveal fix (axe passes in Firefox and WebKit; Firefox fully green on 73ce25c)`: pass at `73ce25c`, 2026-11-06T06:14:20Z
+- `weekly.yml on PR #40 head 848004f (one flaky contact test each in Firefox and WebKit, passed on retry; failOnFlakyTests fails the run)`: fail at `848004f`, 2026-11-06T06:30:00Z
+- `GitHub CI ci.yml on PR #40 head 848004f (ubuntu-24.04 browser jobs)`: pass at `848004f`, 2026-11-06T06:30:00Z
+- `local: npm test (67), eslint, tsc, format:check, CI=1 playwright test --project=chromium (61 passed, 1 skipped)`: pass at `8517ef2`, 2026-11-06T06:00:00Z
 
 ## Unverified changes
 
@@ -54,4 +60,3 @@ Agent: merge PR #40 when the CI gate is green and confirm CI on main passes. Jos
 - Mobile hero overlap fix checked by the agent in headless Chromium at 390px only; not checked on a real phone
 - Firefox and WebKit runs are only verified in GitHub Actions (no WebKit locally)
 - Delivery of the production-check issue notification to the owner has not been verified end to end
-- ci.yml Chromium launch probe (PR #40) not yet seen on a GitHub runner at this checkpoint

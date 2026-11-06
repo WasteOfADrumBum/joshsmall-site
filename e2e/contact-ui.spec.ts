@@ -163,13 +163,20 @@ test.describe("rate limiting", () => {
   }, testInfo) => {
     const f = contactForm(page);
     const s = submission(runId(testInfo));
+    // Each send waits for its own answer. The success text from the previous send is still on screen,
+    // so waiting on the text alone would let the next fill race the form reset.
+    const send = async () => {
+      const answer = page.waitForResponse((r) => r.url().endsWith("/api/contact"), ANSWERED);
+      await f.submit.click();
+      return (await answer).status();
+    };
     for (let i = 1; i <= 5; i++) {
       await f.fill({ ...s, message: `${s.message} #${i}` });
-      await f.submit.click();
-      await expect(f.status).toContainText("Your message was sent");
+      expect(await send()).toBe(200);
+      await expect(f.message).toHaveValue("");
     }
     await f.fill(s);
-    await f.submit.click();
+    expect(await send()).toBe(429);
     await expect(f.status).toHaveText("Too many messages in a short time. Please try again in a few minutes.");
     await expect(f.message).toHaveValue(s.message);
     expect(await sentTo(s.tag)).toHaveLength(5);

@@ -69,7 +69,10 @@ test("double-clicking send submits once and shows a loading state", async ({ pag
   await f.fill(s);
   let posts = 0;
   page.on("request", (r) => r.url().endsWith("/api/contact") && posts++);
+  // Waiting for the answer first means a failure says whether a request went out and how it ended.
+  const answer = page.waitForResponse((r) => r.url().endsWith("/api/contact"), ANSWERED);
   await f.submit.dblclick();
+  expect((await answer).status()).toBe(200);
   await expect(f.status).toContainText("Your message was sent", ANSWERED);
   expect(posts).toBe(1);
   expect(await sentTo(s.tag)).toHaveLength(1);

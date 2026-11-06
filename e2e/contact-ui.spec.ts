@@ -8,6 +8,8 @@ import { contactForm, expectNoPersonalDataIn, sentTo, submission } from "./suppo
 // that a real inbox received anything.
 
 const SEND_FAILED = "Couldn't send your message. Please try again later.";
+// The handler may take up to its 10 s provider limit before answering, so success is awaited that long.
+const ANSWERED = { timeout: 12_000 };
 const serverLog = () => readFileSync(path.join(process.cwd(), "test-results", "server.log"), "utf8");
 
 test.beforeEach(async ({ page }, testInfo) => {
@@ -50,7 +52,7 @@ test("a valid message goes through the real handler to the provider exactly once
   const s = submission(runId(testInfo));
   await f.fill(s);
   await f.submit.click();
-  await expect(f.status).toHaveText("Thanks! Your message was sent. I'll be in touch soon.");
+  await expect(f.status).toHaveText("Thanks! Your message was sent. I'll be in touch soon.", ANSWERED);
   await expect(f.name).toHaveValue("");
   await expect(f.message).toHaveValue("");
   const sent = await sentTo(s.tag);
@@ -68,7 +70,7 @@ test("double-clicking send submits once and shows a loading state", async ({ pag
   let posts = 0;
   page.on("request", (r) => r.url().endsWith("/api/contact") && posts++);
   await f.submit.dblclick();
-  await expect(f.status).toContainText("Your message was sent");
+  await expect(f.status).toContainText("Your message was sent", ANSWERED);
   expect(posts).toBe(1);
   expect(await sentTo(s.tag)).toHaveLength(1);
 });

@@ -39,7 +39,9 @@ jobs:
           node-version: "24"
       - run: npm ci --no-audit --no-fund
       - run: npm run build
-      - run: npx playwright install --with-deps "$BROWSER"
+      - name: Install the browser and its system dependencies
+        timeout-minutes: 8
+        run: npx playwright install --with-deps "$BROWSER"
         env:
           BROWSER: ${{ matrix.browser }}
       - run: npx playwright test --project="$BROWSER"

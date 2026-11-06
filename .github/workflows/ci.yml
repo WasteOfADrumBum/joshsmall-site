@@ -1,35 +1,257 @@
 name: CI
 
+# One required check, "CI gate", decides whether a change may merge. It fails if any mandatory job
+# fails, is cancelled or is skipped when it should have run. Documentation-only pull requests skip
+# the build and browser jobs, and the gate checks that this was the only reason they were skipped.
+# Run the same checks locally with the npm scripts named in each step (see docs/ci/README.md).
+
 on:
   pull_request:
   push:
     branches: [main]
+  merge_group:
+  workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 concurrency:
-  group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  # Superseded pull request runs are cancelled; runs on main always finish.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+  NODE_VERSION: "24" # matches the Vercel project's Node.js 24.x
 
 jobs:
+  changes:
+    name: Detect change type
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+    outputs:
+      code: ${{ steps.classify.outputs.code }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - id: classify
+        name: Classify changed files
+        env:
+          EVENT: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" != "pull_request" ]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"; echo "Not a pull request: run everything."; exit 0
+          fi
+          # On pull_request the checkout is the merge commit; its first parent is the base branch.
+          # --no-renames lists both sides of a rename, so moving code into docs/ still counts as code.
+          changed=$(git diff --no-renames --name-only HEAD^1 HEAD)
+          echo "$changed"
+          # Documentation only: Markdown anywhere, docs/, and the continuity record. Anything else is code.
+          if echo "$changed" | grep -qvE '(\.md$|^docs/|^\.engineering/)'; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "code=false" >> "$GITHUB_OUTPUT"; echo "::notice::Documentation-only change: build and browser jobs are skipped."
+          fi
+
   verify:
-    name: Lint, typecheck, test and build
+    name: Static checks, unit tests, build and Chromium browser tests
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # Matches the Vercel project's Node.js version.
-          node-version: 24
-          cache: npm
-      - run: npm ci
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Restore node_modules (keyed on the lockfile)
+        id: modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: node_modules
+          key: modules-${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --no-fund
+      - run: npm run format:check
       - run: npm run lint
       - run: npm run typecheck
       - run: npm test
+      - name: Dependency audit (production at moderate, everything incl. build tools at high)
+        run: |
+          npm audit --omit=dev --audit-level=moderate
+          npm audit --audit-level=high
       - run: npm run build
         env:
-          NEXT_TELEMETRY_DISABLED: "1"
-      # Fails only on high or critical advisories in packages that ship to production.
-      - run: npm audit --omit=dev --audit-level=high
+          BUILD_COMMIT_SHA: ${{ github.sha }}
+      - name: Restore Playwright browsers
+        id: browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.browsers.outputs.cache-hit != 'true'
+        run: npx playwright install chromium
+      # System packages come from apt; a stalled mirror fails this step quickly instead of using up the job.
+      - name: Install browser system dependencies
+        timeout-minutes: 5
+        run: npx playwright install-deps chromium
+      - name: Browser tests against the production server (Chromium)
+        run: npm run test:e2e
+        env:
+          CI: "true"
+          # The same value the build used; the tests check the app reports it in X-Build-Commit.
+          BUILD_COMMIT_SHA: ${{ github.sha }}
+      - name: Record test environment
+        if: ${{ !cancelled() }}
+        env:
+          SHA: ${{ github.sha }}
+          REF: ${{ github.ref }}
+        run: |
+          mkdir -p test-results
+          node -e '
+            const pw = require("@playwright/test/package.json").version;
+            require("fs").writeFileSync("test-results/environment.json", JSON.stringify({
+              commit: process.env.SHA, ref: process.env.REF, node: process.version,
+              playwright: pw, runner: process.env.RUNNER_OS + " " + process.env.ImageOS, at: new Date().toISOString()
+            }, null, 2));'
+      - name: Upload browser test report and traces
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: e2e-chromium-${{ github.run_attempt }}
+          # Synthetic data only: the server log is checked for submitted values at the end of the run.
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: warn
+
+  cross-browser:
+    name: Firefox and WebKit browser tests
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - id: modules
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: node_modules
+          key: modules-${{ runner.os }}-node${{ env.NODE_VERSION }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.modules.outputs.cache-hit != 'true'
+        run: npm ci --no-audit --no-fund
+      # Built here rather than downloaded from the verify job: the build takes about 10 s, runs in
+      # parallel, and avoids publishing .next (which holds per-build preview keys) as an artifact.
+      - run: npm run build
+      - id: browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-firefox-webkit-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - if: steps.browsers.outputs.cache-hit != 'true'
+        run: npx playwright install firefox webkit
+      # System packages come from apt; a stalled mirror fails this step quickly instead of using up the job.
+      - name: Install browser system dependencies
+        timeout-minutes: 5
+        run: npx playwright install-deps firefox webkit
+      - name: Critical journeys in Firefox and WebKit (tests tagged @cross)
+        run: npm run test:e2e:cross
+        env:
+          CI: "true"
+      - name: Upload browser test report and traces
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: e2e-cross-${{ github.run_attempt }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
+          if-no-files-found: warn
+
+  security:
+    name: Workflow lint, workflow security and secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0 # the secret scan reads the whole history
+          persist-credentials: false
+      - name: Install pinned, checksum-verified tools
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/bin"; cd "$RUNNER_TEMP"
+          curl -sSfL --max-time 60 -o actionlint.tgz https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz
+          echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  actionlint.tgz" | sha256sum -c -
+          tar -xzf actionlint.tgz -C bin actionlint
+          curl -sSfL --max-time 60 -o gitleaks.tgz https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz
+          echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  gitleaks.tgz" | sha256sum -c -
+          tar -xzf gitleaks.tgz -C bin gitleaks
+          python3 -m pip install --quiet --disable-pip-version-check --user zizmor==1.31.1
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+      - name: actionlint (workflow syntax and shell)
+        run: actionlint -color
+      - name: zizmor (dangerous workflow patterns)
+        run: zizmor --persona=regular --min-severity=low .github/workflows
+        env:
+          # Read-only token for zizmor's online audits (known-vulnerable action versions, tag checks).
+          GH_TOKEN: ${{ github.token }}
+      - name: gitleaks (secrets in the full git history)
+        run: gitleaks git --no-banner --redact --exit-code 1 .
+
+  gate:
+    name: CI gate
+    if: always()
+    needs: [changes, verify, cross-browser, security]
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Check every mandatory job
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          CODE: ${{ needs.changes.outputs.code }}
+          VERIFY: ${{ needs.verify.result }}
+          CROSS: ${{ needs.cross-browser.result }}
+          SECURITY: ${{ needs.security.result }}
+          SHA: ${{ github.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -u
+          echo "Candidate revision: $SHA${HEAD_SHA:+ (pull request head $HEAD_SHA)}"
+          fail=0
+          need() { if [ "$2" != "success" ]; then echo "::error::$1 is '$2', expected success"; fail=1; else echo "ok  $1"; fi; }
+          need "Detect change type" "$CHANGES"
+          need "Security checks" "$SECURITY"
+          if [ "$CODE" = "false" ]; then
+            # The only permitted skip: a documentation-only pull request.
+            for pair in "Build and Chromium tests=$VERIFY" "Firefox and WebKit tests=$CROSS"; do
+              name=${pair%%=*}; result=${pair#*=}
+              if [ "$result" = "skipped" ]; then echo "ok  $name skipped (documentation only)"; else need "$name" "$result"; fi
+            done
+          elif [ "$CODE" = "true" ]; then
+            need "Build and Chromium tests" "$VERIFY"
+            need "Firefox and WebKit tests" "$CROSS"
+          else
+            echo "::error::Change type unknown ('$CODE'); refusing to pass."; fail=1
+          fi
+          exit $fail

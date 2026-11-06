@@ -1,31 +1,32 @@
-<!-- generated from .engineering/state.json (revision 8); edit state.json through a checkpoint, not this file -->
+<!-- generated from .engineering/state.json (revision 9); edit state.json through a checkpoint, not this file -->
 
 # personal-portfolio: development status
 
 All values are **agent-reported**, not independently verified. Check GitHub before relying on them.
 
 - Milestone: Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance
-- Active task: Fix mobile hero: toggle overlapping the intro, and hard line under the hero glow
-- Branch: `claude/project-thread-x6i52i`
-- Recorded commit: `273ad8b` on `claude/project-thread-x6i52i`
-- Last checkpoint: 2026-11-03T23:00:00Z by Claude Code
+- Active task: Raise CI/CD to an evidence-backed standard (PR #34): browser tests on the production build, CI gate, security scans, production verification
+- Branch: `claude/project-thread-zdhgmq`
+- Recorded commit: `1063875` on `claude/project-thread-zdhgmq`
+- Last checkpoint: 2026-11-06T01:00:00Z by Claude Code
 
 ## Next action
 
-Joshua Small: review and merge PR #33 (mobile hero fixes). Hub gates still need his verify:record passes; otherwise maintenance from ROADMAP.md when the owner asks.
+Agent: merge PR #34 when the CI gate is green, then verify production serves the merged commit and record it in docs/ci/EVIDENCE.md. Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate (docs/ci/README.md).
 
 ## Completed
 
-- PR #29 merged (827f659) and PR #28 merged (1435e75); production dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee READY
-- PR #30 merged by Joshua Small as 829ffc8: release 1.0 approval recorded in docs/release/ACCEPTANCE.md section 5
-- PR #31 merged by Joshua Small: owner-reported screen-reader and 200% zoom results (screen reader and browser not stated) and ACCEPTANCE.md section 6 (evidence by hub gate)
-- Hub PR one-small-engineering#72 merged: owner-reported evidence, target 1.0.0 and scope linked for personal-portfolio; approval stays pending until verification
-- Optional owner settings moved to ROADMAP.md (O1-O4)
-- .engineering/state.json re-recorded in the continuity contract v1 shape (revisions 1-4 failed validation); PR #32 and PR #31 both did this and are reconciled here
+- PR #33 (mobile hero fixes) merged on GitHub; the revision 8 record still listed it as open
+- PR #34: Playwright suite on next start (journeys, contact path through the real handler with a local Resend stand-in, axe and WCAG behaviour checks, performance and SEO budgets); Firefox and WebKit for @cross tests
+- PR #34: CI gate aggregate job, SHA-pinned actions, actionlint, zizmor, gitleaks, CodeQL, Dependabot with cooldown
+- PR #34: production.yml verifies production after each Vercel production deployment, every 6 hours and by hand; failures open a production-check issue; weekly.yml runs the full cross-browser suite, link checks and Lighthouse trends
+- PR #34: app fixes found by tests: contact input types and lengths, body byte cap, provider timeout, no-store, Escape focus in the mobile menu, hero Pause pill contrast, X-Build-Commit header
+- Independent review agent: 3 material and 11 minor findings; material ones fixed (axe animation wait, deployment_status comment, rename-safe docs-only check)
+- docs/ci/README.md (pipeline, local commands, owner settings, rollback, exceptions) and docs/ci/EVIDENCE.md (requirements, evidence, score 81/100)
 
 ## In progress
 
-- PR #33 on claude/project-thread-x6i52i: portrait scroll drift limited to md and up; hero glow faded out at the section bottom; awaiting owner review
+- PR #34 final CI run, then merge and production verification against the merged commit
 
 ## Tests (agent-reported)
 
@@ -35,6 +36,7 @@ Joshua Small: review and merge PR #33 (mobile hero fixes). Hub gates still need 
 - `npm run typecheck && eslint src/components/Hero.tsx && npm test && npm run build`: pass at `26e0854`, 2026-11-03T22:50:00Z
 - `Playwright scroll check at 390x844: toggle bottom vs intro top at scroll 0/300/500/700`: pass at `26e0854`, 2026-11-03T22:50:00Z
 - `eslint src/components/Hero.tsx && npm run build; Playwright 390x844 pixel sample across hero bottom edge`: pass at `273ad8b`, 2026-11-03T23:00:00Z
+- `npm test (67), lint, typecheck, CI=1 playwright test --project=chromium (61 passed, 1 skipped)`: pass at `7ecb257`, 2026-11-06T00:47:00Z
 
 ## Unverified changes
 
@@ -43,3 +45,5 @@ Joshua Small: review and merge PR #33 (mobile hero fixes). Hub gates still need 
 - None of the above is a hub verify:record pass; hub gates remain unverified until the verifier records them
 - Live production headers present and no X-Powered-By (agent-read through the Vercel connector, 2026-11-02)
 - Mobile hero overlap fix checked by the agent in headless Chromium at 390px only; not checked on a real phone
+- Firefox and WebKit runs are only verified in GitHub Actions (no WebKit locally)
+- Delivery of the production-check issue notification to the owner has not been verified end to end

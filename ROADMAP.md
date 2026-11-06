@@ -8,8 +8,8 @@ Priority: **P1** do next, **P2** worthwhile, **P3** nice to have. No item may ad
 
 ### O1. Require CI before merging to `main` (P2)
 - **Purpose:** CI runs on every PR, but nothing stops a merge while it is red.
-- **Scope:** branch protection or a ruleset on `main` requiring "Lint, typecheck, test and build" (https://github.com/WasteOfADrumBum/joshsmall-site/settings/branches).
-- **Acceptance:** a PR with a failing check cannot be merged without an explicit bypass.
+- **Scope:** import `.github/rulesets/main.json` at https://github.com/WasteOfADrumBum/joshsmall-site/settings/rules (New ruleset > Import). It requires pull requests and the **CI gate** check, blocks force pushes and deletion of `main`, and has no bypass list. Steps in `docs/ci/README.md`.
+- **Acceptance:** a PR with a failing CI gate cannot be merged; the "Report protection of main" job in Production verification passes.
 - **Dependencies:** none.
 
 ### O2. Refresh share previews (P3)

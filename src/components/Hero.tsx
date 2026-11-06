@@ -75,13 +75,14 @@ export function Hero() {
               <span aria-hidden="true" className="size-2.5 shrink-0 rounded-full bg-muted" />
               {profile.availability}
             </p>
-            {/* Hidden with CSS, not left out, under reduced motion: the server can't know the preference,
+            {/* Same translucent backing as the availability pill: over the hero glow on phones the text
+                otherwise drops below 4.5:1 contrast. Hidden with CSS, not left out, under reduced motion: the server can't know the preference,
                 and rendering it conditionally made the server and client HTML differ (React error 418). */}
             <button
               type="button"
               onClick={() => setPaused((p) => !p)}
               aria-label={paused ? "Play headline animation" : "Pause headline animation"}
-              className="inline-flex items-center gap-1.5 rounded-full border border-line px-3 py-1 text-sm text-muted transition-colors hover:border-accent hover:text-fg motion-reduce:hidden"
+              className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface/70 px-3 py-1 text-sm text-muted transition-colors hover:border-accent hover:text-fg motion-reduce:hidden"
             >
               {paused ? <Play aria-hidden="true" size={14} /> : <Pause aria-hidden="true" size={14} />}
               {paused ? "Play" : "Pause"}

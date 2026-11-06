@@ -19,8 +19,15 @@ export function validateContact(input: Record<string, unknown>) {
   const values = {} as Record<ContactField, string>;
   const errors: ContactErrors = {};
   for (const f of CONTACT_FIELDS) {
-    values[f] = String(input[f] ?? "").trim().slice(0, CONTACT_LIMITS[f]);
+    // Only strings count. An object or number would otherwise become "[object Object]" or "42" and pass.
+    const raw = input[f];
+    values[f] = typeof raw === "string" ? raw.trim() : "";
     if (!values[f]) errors[f] = `${LABELS[f]} is required.`;
+    // The form's maxLength stops this in the browser; a direct request is refused rather than cut short.
+    else if (values[f].length > CONTACT_LIMITS[f]) {
+      errors[f] = `${LABELS[f]} must be ${CONTACT_LIMITS[f]} characters or fewer.`;
+      values[f] = values[f].slice(0, CONTACT_LIMITS[f]);
+    }
   }
   // The name goes into the email subject, so line breaks and other control characters become spaces.
   values.name = values.name.replace(/[\u0000-\u001f\u007f]+/g, " ").trim();

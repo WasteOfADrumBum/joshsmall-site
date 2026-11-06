@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { clientKey, createRateLimiter, isAllowedOrigin, isJsonContentType } from "./contact-guard.ts";
+import {
+  ProviderTimeoutError,
+  clientKey,
+  createRateLimiter,
+  isAllowedOrigin,
+  isJsonContentType,
+  readBodyCapped,
+  withTimeout,
+} from "./contact-guard.ts";
 
 describe("isAllowedOrigin", () => {
   it("allows a same-host origin and requests without Origin", () => {
@@ -57,5 +65,40 @@ describe("createRateLimiter", () => {
     const take = createRateLimiter({ max: 1, windowMs: 60_000 }, 3);
     for (const k of ["a", "b", "c", "d", "e"]) assert.equal(take(k, 0).ok, true);
     assert.equal(take("e", 1).ok, false, "the newest key is still tracked");
+  });
+});
+
+describe("readBodyCapped", () => {
+  const post = (body: BodyInit) => new Request("http://localhost/api/contact", { method: "POST", body, duplex: "half" } as RequestInit);
+
+  it("returns the text of a body within the limit", async () => {
+    assert.equal(await readBodyCapped(post('{"a":"é"}'), 64), '{"a":"é"}');
+  });
+
+  it("counts bytes, not characters", async () => {
+    assert.equal(await readBodyCapped(post("é".repeat(10)), 15), "too-large", "10 characters are 20 bytes");
+  });
+
+  it("stops reading a streamed body once it passes the limit", async () => {
+    let pulled = 0;
+    const stream = new ReadableStream<Uint8Array>({
+      pull(controller) {
+        pulled += 1;
+        controller.enqueue(new Uint8Array(1024));
+        if (pulled > 1000) controller.close();
+      },
+    });
+    assert.equal(await readBodyCapped(post(stream), 4096), "too-large");
+    assert.ok(pulled < 20, `read ${pulled} chunks`);
+  });
+});
+
+describe("withTimeout", () => {
+  it("passes through a result that arrives in time", async () => {
+    assert.equal(await withTimeout(Promise.resolve("ok"), 50), "ok");
+  });
+
+  it("rejects with ProviderTimeoutError when the work is too slow", async () => {
+    await assert.rejects(withTimeout(new Promise(() => {}), 10), ProviderTimeoutError);
   });
 });

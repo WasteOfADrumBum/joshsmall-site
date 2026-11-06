@@ -1,0 +1,107 @@
+name: Weekly deep checks
+
+# Broader and noisier checks that should not block pull requests:
+#   - the whole browser suite in Firefox and WebKit (pull requests run only the @cross subset there);
+#   - outbound links (third-party failures warn; onesmall.company and owner repos fail);
+#   - Lighthouse lab metrics for the live site, three runs each on mobile and desktop, kept as a trend.
+
+on:
+  schedule:
+    - cron: "23 8 * * 1"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: weekly-deep-checks
+  cancel-in-progress: false
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  full-matrix:
+    name: Full browser suite (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [firefox, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build
+      - name: Install the browser and its system dependencies
+        timeout-minutes: 8
+        run: npx playwright install --with-deps "$BROWSER"
+        env:
+          BROWSER: ${{ matrix.browser }}
+      - run: npx playwright test --project="$BROWSER"
+        env:
+          BROWSER: ${{ matrix.browser }}
+          CI: "true"
+          FULL_MATRIX: "1"
+      - if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: weekly-${{ matrix.browser }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: warn
+
+  links:
+    name: Outbound links
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - run: npm run links
+
+  lighthouse:
+    name: Lighthouse trend (not a gate)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      - name: Three runs per form factor against https://onesmall.company
+        run: |
+          set -euo pipefail
+          mkdir -p lh
+          for preset in mobile desktop; do
+            for i in 1 2 3; do
+              flags="--quiet --chrome-flags=--headless=new --only-categories=performance,accessibility,best-practices,seo --output=json --output-path=lh/$preset-$i.json"
+              if [ "$preset" = desktop ]; then flags="$flags --preset=desktop"; fi
+              # shellcheck disable=SC2086
+              npx --yes lighthouse@13.5.0 https://onesmall.company/ $flags || echo "::warning::Lighthouse run $preset-$i failed"
+            done
+          done
+      - run: node scripts/lighthouse-summary.mjs
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: lighthouse
+          path: lh/
+          retention-days: 30

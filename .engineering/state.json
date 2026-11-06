@@ -1,20 +1,20 @@
 {
   "stateVersion": 1,
-  "revision": 9,
-  "checkpointId": "ckpt-0009-ci-cd-standard",
+  "revision": 10,
+  "checkpointId": "ckpt-0010-ci-cd-merged",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
     "branch": "claude/project-thread-zdhgmq",
-    "commit": "10638759991953ee8eaded66e651be62c8faadd7",
-    "recordedAt": "2026-11-06T01:00:00Z"
+    "commit": "138a2f39891dcd3176830d3f4234d674473e0d94",
+    "recordedAt": "2026-11-06T05:50:00Z"
   },
   "development": {
     "milestone": "Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance",
-    "activeTask": "Raise CI/CD to an evidence-backed standard (PR #34): browser tests on the production build, CI gate, security scans, production verification",
+    "activeTask": "Follow-up PR #40: stop the Chromium CI job stalling on optional apt font packages; record post-merge evidence for PR #34",
     "workingBranch": "claude/project-thread-zdhgmq",
-    "activePr": 34,
+    "activePr": 40,
     "lastCompleted": [
       "PR #33 (mobile hero fixes) merged on GitHub; the revision 8 record still listed it as open",
       "PR #34: Playwright suite on next start (journeys, contact path through the real handler with a local Resend stand-in, axe and WCAG behaviour checks, performance and SEO budgets); Firefox and WebKit for @cross tests",
@@ -22,12 +22,14 @@
       "PR #34: production.yml verifies production after each Vercel production deployment, every 6 hours and by hand; failures open a production-check issue; weekly.yml runs the full cross-browser suite, link checks and Lighthouse trends",
       "PR #34: app fixes found by tests: contact input types and lengths, body byte cap, provider timeout, no-store, Escape focus in the mobile menu, hero Pause pill contrast, X-Build-Commit header",
       "Independent review agent: 3 material and 11 minor findings; material ones fixed (axe animation wait, deployment_status comment, rename-safe docs-only check)",
-      "docs/ci/README.md (pipeline, local commands, owner settings, rollback, exceptions) and docs/ci/EVIDENCE.md (requirements, evidence, score 81/100)"
+      "docs/ci/README.md (pipeline, local commands, owner settings, rollback, exceptions) and docs/ci/EVIDENCE.md (requirements, evidence, score 81/100)",
+      "PR #34 merged as 31724b15b9c6bbe62bb1f159829823d18983dd8d (2026-11-06 05:27 UTC) after all checks passed on c29f096; production verification passed from the deployment_status event at 05:28 UTC with production serving 31724b1",
+      "Notification path checked with a dry run (impossible expected commit): verification failed as intended and the notify job printed the issue it would open; no issue created"
     ],
     "inProgress": [
-      "PR #34 final CI run, then merge and production verification against the merged commit"
+      "PR #40 CI, then merge; weekly.yml manual run 42169371336 result to record"
     ],
-    "nextAction": "Agent: merge PR #34 when the CI gate is green, then verify production serves the merged commit and record it in docs/ci/EVIDENCE.md. Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate (docs/ci/README.md)."
+    "nextAction": "Agent: merge PR #40 when the CI gate is green and confirm CI on main passes. Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate (docs/ci/README.md)."
   },
   "decisions": {
     "made": [
@@ -79,6 +81,13 @@
         "decidedBy": "agent",
         "humanRef": null,
         "recordedAt": "2026-11-06T01:00:00Z"
+      },
+      {
+        "id": "chromium-skip-optional-fonts",
+        "summary": "Chromium CI job skips install-deps' optional fallback-font packages when a real Chromium launch already works; full install-deps runs otherwise (documented exception in docs/ci/README.md)",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-06T05:50:00Z"
       }
     ],
     "constraints": [
@@ -138,6 +147,40 @@
         "result": "pass",
         "commit": "7ecb257f0837d377d3441d84c8a39b0d12948a6b",
         "at": "2026-11-06T00:47:00Z"
+      },
+      {
+        "command": "GitHub CI ci.yml on PR #34 head (Chromium job rerun after an apt stall)",
+        "result": "pass",
+        "commit": "c29f096213dba74ca223fce9a045b7563f910f55",
+        "at": "2026-11-06T05:26:58Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42142405076"
+      },
+      {
+        "command": "production.yml from deployment_status after merging PR #34 (8/8 HTTP checks, 6/6 browser checks)",
+        "result": "pass",
+        "commit": "31724b15b9c6bbe62bb1f159829823d18983dd8d",
+        "at": "2026-11-06T05:28:36Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42168559834"
+      },
+      {
+        "command": "GitHub CI ci.yml push on main",
+        "result": "fail",
+        "commit": "31724b15b9c6bbe62bb1f159829823d18983dd8d",
+        "at": "2026-11-06T05:34:10Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42168525354"
+      },
+      {
+        "command": "production.yml workflow_dispatch expect_sha=0x40 notify_dry_run=true (failure path and notify dry run)",
+        "result": "pass",
+        "commit": "31724b15b9c6bbe62bb1f159829823d18983dd8d",
+        "at": "2026-11-06T05:36:10Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42169367974"
+      },
+      {
+        "command": "npm run format:check; zizmor --offline .github/workflows/ci.yml; local Chromium launch probe",
+        "result": "pass",
+        "commit": "138a2f39891dcd3176830d3f4234d674473e0d94",
+        "at": "2026-11-06T05:45:00Z"
       }
     ],
     "unverifiedChanges": [
@@ -147,7 +190,8 @@
       "Live production headers present and no X-Powered-By (agent-read through the Vercel connector, 2026-11-02)",
       "Mobile hero overlap fix checked by the agent in headless Chromium at 390px only; not checked on a real phone",
       "Firefox and WebKit runs are only verified in GitHub Actions (no WebKit locally)",
-      "Delivery of the production-check issue notification to the owner has not been verified end to end"
+      "Delivery of the production-check issue notification to the owner has not been verified end to end",
+      "ci.yml Chromium launch probe (PR #40) not yet seen on a GitHub runner at this checkpoint"
     ]
   },
   "handoff": {
@@ -155,16 +199,16 @@
       "tool": "Claude Code",
       "model": null
     },
-    "checkpointedAt": "2026-11-06T01:00:00Z",
+    "checkpointedAt": "2026-11-06T05:50:00Z",
     "unfinished": [
-      "Merge PR #34 after the CI gate passes; verify production on the merged commit; record post-merge evidence",
+      "Merge PR #40 after its CI gate passes; confirm CI on main is green; record the weekly.yml run result in docs/ci/EVIDENCE.md",
       "Owner settings: ruleset import for main; Vercel Deployment Checks",
       "Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows"
     ],
     "blockers": [
       "Branch protection and Vercel Deployment Checks need the owner (no write access to rulesets or Vercel settings from this session)"
     ],
-    "continuation": "PR #34 on claude/project-thread-zdhgmq carries the CI/CD work. Check its CI gate, merge when green, then confirm Production verification ran for the merged SHA (dispatch production.yml with expect_sha if it did not) and fill in the post-merge section of docs/ci/EVIDENCE.md.",
+    "continuation": "PR #34 is merged (31724b1) and production was verified on it. PR #40 on claude/project-thread-zdhgmq carries the Chromium apt-stall fix, post-merge evidence and this checkpoint. Check its CI gate, merge when green, confirm CI on main passes, and fill the weekly row (WEEKLY_RESULT) in docs/ci/EVIDENCE.md if still a placeholder.",
     "uncommittedWorkOutsideCheckpoint": "none",
     "persistedBy": "local-file"
   },

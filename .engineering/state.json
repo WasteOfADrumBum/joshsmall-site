@@ -1,32 +1,33 @@
 {
   "stateVersion": 1,
-  "revision": 8,
-  "checkpointId": "ckpt-0008-hero-glow-fade",
+  "revision": 9,
+  "checkpointId": "ckpt-0009-ci-cd-standard",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
-    "branch": "claude/project-thread-x6i52i",
-    "commit": "273ad8b2166a5d1965df3aebd9f46b05f8d2ea0d",
-    "recordedAt": "2026-11-03T23:00:00Z"
+    "branch": "claude/project-thread-zdhgmq",
+    "commit": "10638759991953ee8eaded66e651be62c8faadd7",
+    "recordedAt": "2026-11-06T01:00:00Z"
   },
   "development": {
     "milestone": "Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance",
-    "activeTask": "Fix mobile hero: toggle overlapping the intro, and hard line under the hero glow",
-    "workingBranch": "claude/project-thread-x6i52i",
-    "activePr": null,
+    "activeTask": "Raise CI/CD to an evidence-backed standard (PR #34): browser tests on the production build, CI gate, security scans, production verification",
+    "workingBranch": "claude/project-thread-zdhgmq",
+    "activePr": 34,
     "lastCompleted": [
-      "PR #29 merged (827f659) and PR #28 merged (1435e75); production dpl_H2W4sexCyyGjyUhDuEdMHW1hYjee READY",
-      "PR #30 merged by Joshua Small as 829ffc8: release 1.0 approval recorded in docs/release/ACCEPTANCE.md section 5",
-      "PR #31 merged by Joshua Small: owner-reported screen-reader and 200% zoom results (screen reader and browser not stated) and ACCEPTANCE.md section 6 (evidence by hub gate)",
-      "Hub PR one-small-engineering#72 merged: owner-reported evidence, target 1.0.0 and scope linked for personal-portfolio; approval stays pending until verification",
-      "Optional owner settings moved to ROADMAP.md (O1-O4)",
-      ".engineering/state.json re-recorded in the continuity contract v1 shape (revisions 1-4 failed validation); PR #32 and PR #31 both did this and are reconciled here"
+      "PR #33 (mobile hero fixes) merged on GitHub; the revision 8 record still listed it as open",
+      "PR #34: Playwright suite on next start (journeys, contact path through the real handler with a local Resend stand-in, axe and WCAG behaviour checks, performance and SEO budgets); Firefox and WebKit for @cross tests",
+      "PR #34: CI gate aggregate job, SHA-pinned actions, actionlint, zizmor, gitleaks, CodeQL, Dependabot with cooldown",
+      "PR #34: production.yml verifies production after each Vercel production deployment, every 6 hours and by hand; failures open a production-check issue; weekly.yml runs the full cross-browser suite, link checks and Lighthouse trends",
+      "PR #34: app fixes found by tests: contact input types and lengths, body byte cap, provider timeout, no-store, Escape focus in the mobile menu, hero Pause pill contrast, X-Build-Commit header",
+      "Independent review agent: 3 material and 11 minor findings; material ones fixed (axe animation wait, deployment_status comment, rename-safe docs-only check)",
+      "docs/ci/README.md (pipeline, local commands, owner settings, rollback, exceptions) and docs/ci/EVIDENCE.md (requirements, evidence, score 81/100)"
     ],
     "inProgress": [
-      "PR #33 on claude/project-thread-x6i52i: portrait scroll drift limited to md and up; hero glow faded out at the section bottom; awaiting owner review"
+      "PR #34 final CI run, then merge and production verification against the merged commit"
     ],
-    "nextAction": "Joshua Small: review and merge PR #33 (mobile hero fixes). Hub gates still need his verify:record passes; otherwise maintenance from ROADMAP.md when the owner asks."
+    "nextAction": "Agent: merge PR #34 when the CI gate is green, then verify production serves the merged commit and record it in docs/ci/EVIDENCE.md. Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate (docs/ci/README.md)."
   },
   "decisions": {
     "made": [
@@ -64,6 +65,20 @@
         "decidedBy": "human",
         "humanRef": "Project thread \"Close portfolio release\", message of 2026-11-02 19:06 UTC; docs/release/ACCEPTANCE.md section 5 at 829ffc8",
         "recordedAt": "2026-11-02T19:15:00Z"
+      },
+      {
+        "id": "ci-gate-single-check",
+        "summary": "One aggregate CI gate job is the only check to require; docs-only PRs skip build and browser jobs and the gate validates that skip",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-06T01:00:00Z"
+      },
+      {
+        "id": "webkit-loopback-headers",
+        "summary": "WebKit tests against the local http server strip HSTS and the CSP upgrade-insecure-requests directive in the test harness only; deployed headers are checked by production verification",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-06T01:00:00Z"
       }
     ],
     "constraints": [
@@ -73,7 +88,8 @@
       "Release approval belongs to Joshua Small"
     ],
     "unresolved": [
-      "Hub registry approval for personal-portfolio stays pending until Joshua Small records his own verify:record passes for all ten gates (hub validator: approval needs releaseStatus verified, which needs every gate verified)"
+      "Hub registry approval for personal-portfolio stays pending until Joshua Small records his own verify:record passes for all ten gates (hub validator: approval needs releaseStatus verified, which needs every gate verified)",
+      "Protecting main (ruleset import) and Vercel Deployment Checks are owner settings this session cannot change; see docs/ci/README.md"
     ]
   },
   "verification": {
@@ -116,6 +132,12 @@
         "result": "pass",
         "commit": "273ad8b2166a5d1965df3aebd9f46b05f8d2ea0d",
         "at": "2026-11-03T23:00:00Z"
+      },
+      {
+        "command": "npm test (67), lint, typecheck, CI=1 playwright test --project=chromium (61 passed, 1 skipped)",
+        "result": "pass",
+        "commit": "7ecb257f0837d377d3441d84c8a39b0d12948a6b",
+        "at": "2026-11-06T00:47:00Z"
       }
     ],
     "unverifiedChanges": [
@@ -123,7 +145,9 @@
       "Owner-reported (Joshua Small, 2026-11-02): screen-reader testing passes and 200% zoom passes; screen reader, browser and OS not stated",
       "None of the above is a hub verify:record pass; hub gates remain unverified until the verifier records them",
       "Live production headers present and no X-Powered-By (agent-read through the Vercel connector, 2026-11-02)",
-      "Mobile hero overlap fix checked by the agent in headless Chromium at 390px only; not checked on a real phone"
+      "Mobile hero overlap fix checked by the agent in headless Chromium at 390px only; not checked on a real phone",
+      "Firefox and WebKit runs are only verified in GitHub Actions (no WebKit locally)",
+      "Delivery of the production-check issue notification to the owner has not been verified end to end"
     ]
   },
   "handoff": {
@@ -131,13 +155,16 @@
       "tool": "Claude Code",
       "model": null
     },
-    "checkpointedAt": "2026-11-03T23:00:00Z",
+    "checkpointedAt": "2026-11-06T01:00:00Z",
     "unfinished": [
-      "PR #33 (mobile hero fixes) awaits owner review and merge",
+      "Merge PR #34 after the CI gate passes; verify production on the merged commit; record post-merge evidence",
+      "Owner settings: ruleset import for main; Vercel Deployment Checks",
       "Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows"
     ],
-    "blockers": [],
-    "continuation": "Mobile hero fixes (toggle overlap, glow line) are pushed on claude/project-thread-x6i52i with PR #33 open for owner review. Release 1.0 remains complete and approved; hub approval pending Joshua Small's verify:record passes.",
+    "blockers": [
+      "Branch protection and Vercel Deployment Checks need the owner (no write access to rulesets or Vercel settings from this session)"
+    ],
+    "continuation": "PR #34 on claude/project-thread-zdhgmq carries the CI/CD work. Check its CI gate, merge when green, then confirm Production verification ran for the merged SHA (dispatch production.yml with expect_sha if it did not) and fill in the post-merge section of docs/ci/EVIDENCE.md.",
     "uncommittedWorkOutsideCheckpoint": "none",
     "persistedBy": "local-file"
   },

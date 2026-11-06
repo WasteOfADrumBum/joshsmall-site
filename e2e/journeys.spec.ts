@@ -1,17 +1,5 @@
 import { nav, profile, projects, sideProjects } from "../src/content/site";
-import type { Page } from "@playwright/test";
-import { expect, gotoHome, test } from "./support/fixtures";
-
-/** Smooth scrolling is on; history remembers the scroll position at the moment you leave, so wait for it to stop. */
-async function scrollSettled(page: Page) {
-  await expect
-    .poll(async () => {
-      const a = await page.evaluate(() => scrollY);
-      await page.waitForTimeout(150);
-      return a === (await page.evaluate(() => scrollY));
-    })
-    .toBe(true);
-}
+import { expect, gotoHome, scrollSettled, test } from "./support/fixtures";
 
 // Content is read from src/content/site.ts, so editing copy never breaks these tests.
 

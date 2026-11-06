@@ -74,10 +74,26 @@ export const test = base.extend<Fixtures>({
 
 export { expect };
 
-/** Loads the home page and waits until React has hydrated (the portrait toggle only renders on the client). */
+/** Waits until the page stops scrolling (smooth scrolling to a #section or scroll restoration). */
+export async function scrollSettled(page: Page) {
+  await expect
+    .poll(async () => {
+      const a = await page.evaluate(() => scrollY);
+      await page.waitForTimeout(150);
+      return a === (await page.evaluate(() => scrollY));
+    })
+    .toBe(true);
+}
+
+/**
+ * Loads the home page and waits until React has hydrated (the portrait toggle only renders on the
+ * client). With a #section, also waits for the browser to finish scrolling there, so a click does
+ * not land on a target that is still moving.
+ */
 export async function gotoHome(page: Page, path = "/") {
   await page.goto(path);
   await expect(page.getByRole("group", { name: "Portrait view" })).toBeVisible();
+  if (path.includes("#")) await scrollSettled(page);
 }
 
 /**

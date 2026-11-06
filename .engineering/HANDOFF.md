@@ -1,25 +1,26 @@
-<!-- generated from .engineering/state.json (revision 8) -->
+<!-- generated from .engineering/state.json (revision 9) -->
 
 # Handoff: personal-portfolio
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 8, `ckpt-0008-hero-glow-fade`, 2026-11-03T23:00:00Z by Claude Code
+- Checkpoint: revision 9, `ckpt-0009-ci-cd-standard`, 2026-11-06T01:00:00Z by Claude Code
 - Written by: a local edit that the agent then pushed; confirm the branch head matches
 - Uncommitted work outside this checkpoint: **none**
 
 ## Continue with
 
-Mobile hero fixes (toggle overlap, glow line) are pushed on claude/project-thread-x6i52i with PR #33 open for owner review. Release 1.0 remains complete and approved; hub approval pending Joshua Small's verify:record passes.
+PR #34 on claude/project-thread-zdhgmq carries the CI/CD work. Check its CI gate, merge when green, then confirm Production verification ran for the merged SHA (dispatch production.yml with expect_sha if it did not) and fill in the post-merge section of docs/ci/EVIDENCE.md.
 
 ## Unfinished
 
-- PR #33 (mobile hero fixes) awaits owner review and merge
+- Merge PR #34 after the CI gate passes; verify production on the merged commit; record post-merge evidence
+- Owner settings: ruleset import for main; Vercel Deployment Checks
 - Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows
 
 ## Blockers
 
-_none recorded_
+- Branch protection and Vercel Deployment Checks need the owner (no write access to rulesets or Vercel settings from this session)
 
 ## Decisions
 
@@ -28,6 +29,8 @@ _none recorded_
 - [agent] Optional work goes to ROADMAP.md; release gates only in docs/release/ACCEPTANCE.md
 - [agent] PR #29 was merged by the owner while consolidation was in progress; #28 merged main and carries the rest; #29's docs/RELEASE.md replaced by docs/release/2026-11-portfolio-release.md
 - [human] Joshua Small approved the privacy note, accepted the three known limits and approved release 1.0 (Project thread "Close portfolio release", message of 2026-11-02 19:06 UTC; docs/release/ACCEPTANCE.md section 5 at 829ffc8)
+- [agent] One aggregate CI gate job is the only check to require; docs-only PRs skip build and browser jobs and the gate validates that skip
+- [agent] WebKit tests against the local http server strip HSTS and the CSP upgrade-insecure-requests directive in the test harness only; deployed headers are checked by production verification
 
 ## Constraints
 
@@ -39,3 +42,4 @@ _none recorded_
 ## Unresolved decisions
 
 - Hub registry approval for personal-portfolio stays pending until Joshua Small records his own verify:record passes for all ten gates (hub validator: approval needs releaseStatus verified, which needs every gate verified)
+- Protecting main (ruleset import) and Vercel Deployment Checks are owner settings this session cannot change; see docs/ci/README.md

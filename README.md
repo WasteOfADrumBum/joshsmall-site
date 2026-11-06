@@ -14,7 +14,7 @@ Full-stack & AI engineer building production TypeScript/React/Node.js software w
 - **Motion & icons:** Motion, Lucide
 - **Email:** Resend (contact form)
 - **Hosting:** Vercel
-- **Quality:** ESLint, TypeScript, Node's built-in test runner, GitHub Actions CI and a scheduled production smoke check
+- **Quality:** ESLint, TypeScript, Prettier, Node's built-in test runner, Playwright with axe on the production build, CodeQL, and production checks after every deployment
 
 ## Highlights
 
@@ -52,8 +52,13 @@ Then open http://localhost:3000.
 | `npm run lint` | Lint |
 | `npm run typecheck` | Generate route types and type-check |
 | `npm test` | Run unit tests |
+| `npm run format:check` | Check formatting of tests, scripts and workflows |
+| `npm run test:e2e` | Browser tests in Chromium against the production build (run `npm run build` first) |
+| `npm run test:e2e:cross` | The `@cross` browser tests in Firefox and WebKit |
+| `npm run smoke` | Read-only checks of https://onesmall.company |
+| `npm run test:prod` | Read-only browser checks of https://onesmall.company |
 
-CI runs lint, typecheck, tests, the production build and a production-dependency audit on every pull request.
+Every pull request runs static checks, unit tests, the production build, browser and accessibility tests, and security scans; one **CI gate** check summarises them. See [docs/ci/README.md](./docs/ci/README.md) for the whole pipeline and [docs/ci/EVIDENCE.md](./docs/ci/EVIDENCE.md) for the evidence.
 
 ## Project docs
 

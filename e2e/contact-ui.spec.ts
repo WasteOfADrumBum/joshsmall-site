@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { clientIp, expect, gotoHome, test } from "./support/fixtures";
+import { clientIp, expect, gotoHome, test, runId } from "./support/fixtures";
 import { contactForm, expectNoPersonalDataIn, sentTo, submission } from "./support/contact";
 
 // The whole path runs for real: browser form -> /api/contact handler -> Resend SDK -> local stand-in.
@@ -11,7 +11,7 @@ const SEND_FAILED = "Couldn't send your message. Please try again later.";
 const serverLog = () => readFileSync(path.join(process.cwd(), "test-results", "server.log"), "utf8");
 
 test.beforeEach(async ({ page }, testInfo) => {
-  await page.setExtraHTTPHeaders({ "x-forwarded-for": clientIp(testInfo.testId) });
+  await page.setExtraHTTPHeaders({ "x-forwarded-for": clientIp(runId(testInfo)) });
   await gotoHome(page, "/#contact");
 });
 
@@ -47,7 +47,7 @@ test("a valid message goes through the real handler to the provider exactly once
   page,
 }, testInfo) => {
   const f = contactForm(page);
-  const s = submission(testInfo.testId);
+  const s = submission(runId(testInfo));
   await f.fill(s);
   await f.submit.click();
   await expect(f.status).toHaveText("Thanks! Your message was sent. I'll be in touch soon.");
@@ -63,7 +63,7 @@ test("a valid message goes through the real handler to the provider exactly once
 
 test("double-clicking send submits once and shows a loading state", async ({ page }, testInfo) => {
   const f = contactForm(page);
-  const s = submission(testInfo.testId);
+  const s = submission(runId(testInfo));
   await f.fill(s);
   let posts = 0;
   page.on("request", (r) => r.url().endsWith("/api/contact") && posts++);
@@ -86,7 +86,7 @@ test.describe("when sending fails", () => {
   ] as const) {
     test(`keeps the text and offers a retry when ${why}`, async ({ page }, testInfo) => {
       const f = contactForm(page);
-      const s = submission(testInfo.testId, mode);
+      const s = submission(runId(testInfo), mode);
       await f.fill(s);
       await f.submit.click();
       await expect(f.status).toHaveText(SEND_FAILED);
@@ -103,7 +103,7 @@ test.describe("when sending fails", () => {
   test("a provider that never answers is cut off by the handler and the form recovers", async ({ page }, testInfo) => {
     test.setTimeout(45_000);
     const f = contactForm(page);
-    const s = submission(testInfo.testId, "e2e-slow");
+    const s = submission(runId(testInfo), "e2e-slow");
     await f.fill(s);
     const started = Date.now();
     await f.submit.click();
@@ -127,7 +127,7 @@ test.describe("when the browser can't reach the server", () => {
 
   test("says so and keeps the text", async ({ page }, testInfo) => {
     const f = contactForm(page);
-    const s = submission(testInfo.testId);
+    const s = submission(runId(testInfo));
     await page.route("**/api/contact", (route) => route.abort("internetdisconnected"));
     await f.fill(s);
     await f.submit.click();
@@ -139,7 +139,7 @@ test.describe("when the browser can't reach the server", () => {
 
 test("a filled honeypot looks successful to the bot but sends nothing", async ({ page }, testInfo) => {
   const f = contactForm(page);
-  const s = submission(testInfo.testId);
+  const s = submission(runId(testInfo));
   await f.fill(s);
   await f.form.locator('input[name="company"]').fill("Bot Inc", { force: true });
   await f.submit.click();
@@ -157,7 +157,7 @@ test.describe("rate limiting", () => {
     page,
   }, testInfo) => {
     const f = contactForm(page);
-    const s = submission(testInfo.testId);
+    const s = submission(runId(testInfo));
     for (let i = 1; i <= 5; i++) {
       await f.fill({ ...s, message: `${s.message} #${i}` });
       await f.submit.click();

@@ -84,7 +84,7 @@ test.describe("performance budgets", () => {
     expect(info.natural / (info.shown * info.dpr)).toBeLessThanOrEqual(2);
   });
 
-  test("layout stays stable while the page, fonts and animations load @cross", async ({ page, browserName }) => {
+  test("layout stays stable while the page, fonts and animations load", async ({ page, browserName }) => {
     test.skip(browserName !== "chromium", "The Layout Instability API exists only in Chromium");
     await gotoHome(page);
     const cls = await page.evaluate(
@@ -188,6 +188,13 @@ test.describe("security headers of the built app", () => {
       expect(h["content-security-policy"]).not.toContain("unsafe-eval");
       expect(h["content-security-policy"]).toContain("frame-ancestors 'none'");
     }
+  });
+
+  test("the build reports its commit in X-Build-Commit", async ({ request }) => {
+    const expected = (process.env.BUILD_COMMIT_SHA ?? "").trim();
+    test.skip(!expected, "Set BUILD_COMMIT_SHA for both the build and the tests to check this (CI does)");
+    const res = await request.get("/");
+    expect(res.headers()["x-build-commit"]).toBe(expected);
   });
 
   test("the home page is publicly cacheable and the contact API is not", async ({ request }) => {

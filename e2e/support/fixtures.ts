@@ -1,4 +1,4 @@
-import { test as base, expect, type Page } from "@playwright/test";
+import { test as base, expect, type Page, type TestInfo } from "@playwright/test";
 
 /**
  * Every test fails if the page throws, logs a console error (React hydration errors included) or a
@@ -52,6 +52,14 @@ export async function gotoHome(page: Page, path = "/") {
 }
 
 /** A stable client address per test, so the per-client rate limit never couples tests together. */
+/**
+ * Identifies one attempt of one test. Retries get a fresh value, so a retry never inherits the
+ * first attempt's sent messages or rate-limit slots and reports its own result.
+ */
+export function runId(testInfo: TestInfo) {
+  return `${testInfo.testId}-r${testInfo.retry}`;
+}
+
 export function clientIp(seed: string) {
   let h = 0;
   for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0;

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
-import { clientIp } from "./support/fixtures";
+import { clientIp, runId } from "./support/fixtures";
 import { expectNoPersonalDataIn, sentTo, submission } from "./support/contact";
 
 // Direct requests to the real /api/contact handler running under `next start`.
@@ -24,8 +24,8 @@ test.describe("contact API", () => {
   });
 
   test("refuses cross-site origins and accepts its own", async ({ request, baseURL }, testInfo) => {
-    const s = submission(testInfo.testId);
-    const headers = { ...json, "x-forwarded-for": clientIp(testInfo.testId) };
+    const s = submission(runId(testInfo));
+    const headers = { ...json, "x-forwarded-for": clientIp(runId(testInfo)) };
     const evil = await request.post("/api/contact", {
       headers: { ...headers, origin: "https://evil.example" },
       data: s,
@@ -92,9 +92,9 @@ test.describe("contact API", () => {
   });
 
   test("answers are never cacheable and never echo what was sent", async ({ request }, testInfo) => {
-    const s = submission(testInfo.testId, "e2e-reject");
+    const s = submission(runId(testInfo), "e2e-reject");
     const res = await request.post("/api/contact", {
-      headers: { ...json, "x-forwarded-for": clientIp(testInfo.testId) },
+      headers: { ...json, "x-forwarded-for": clientIp(runId(testInfo)) },
       data: s,
     });
     expect(res.status()).toBe(502);
@@ -107,10 +107,10 @@ test.describe("contact API", () => {
   });
 
   test("markup in a submission is sent as plain text and not reflected", async ({ request }, testInfo) => {
-    const s = submission(testInfo.testId);
+    const s = submission(runId(testInfo));
     const name = `${s.name} <img src=x onerror=alert(1)>`;
     const res = await request.post("/api/contact", {
-      headers: { ...json, "x-forwarded-for": clientIp(testInfo.testId) },
+      headers: { ...json, "x-forwarded-for": clientIp(runId(testInfo)) },
       data: { ...s, name, message: "<script>alert(1)</script>" },
     });
     expect(res.status()).toBe(200);
@@ -122,8 +122,8 @@ test.describe("contact API", () => {
   });
 
   test("concurrent sends from one client are capped at five per window", async ({ request }, testInfo) => {
-    const s = submission(testInfo.testId);
-    const headers = { ...json, "x-forwarded-for": clientIp(testInfo.testId) };
+    const s = submission(runId(testInfo));
+    const headers = { ...json, "x-forwarded-for": clientIp(runId(testInfo)) };
     const results = await Promise.all(
       Array.from({ length: 7 }, (_, i) =>
         request.post("/api/contact", { headers, data: { ...s, message: `${s.message} ${i}` } }),
@@ -136,14 +136,14 @@ test.describe("contact API", () => {
     expect(await sentTo(s.tag)).toHaveLength(5);
     // Another visitor is unaffected.
     const other = await request.post("/api/contact", {
-      headers: { ...json, "x-forwarded-for": clientIp(`${testInfo.testId}-other`) },
+      headers: { ...json, "x-forwarded-for": clientIp(`${runId(testInfo)}-other`) },
       data: s,
     });
     expect(other.status()).toBe(200);
   });
 
   test("invalid requests never reach the provider and logs hold no personal data", async ({ request }, testInfo) => {
-    const s = submission(testInfo.testId);
+    const s = submission(runId(testInfo));
     for (const data of [
       { ...s, email: "bad" },
       { ...s, message: "" },

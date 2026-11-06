@@ -10,6 +10,7 @@
 // answered wrongly) or "network" (no answer after retries), and a summary goes to
 // $GITHUB_STEP_SUMMARY when it is set.
 
+import { execFileSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
 
 const SITE = "https://onesmall.company";
@@ -75,6 +76,17 @@ async function check(name, fn) {
   }
 }
 
+/** True when `served` is a later commit on the checked-out history that contains EXPECT_SHA. */
+function servedContainsExpected(served) {
+  if (!/^[0-9a-f]{40}$/.test(served) || served === EXPECT_SHA) return false;
+  try {
+    execFileSync("git", ["merge-base", "--is-ancestor", EXPECT_SHA, served], { stdio: "ignore" });
+    return true;
+  } catch {
+    return false; // not an ancestor, or the commit is not in this checkout
+  }
+}
+
 let homeHtml = "";
 
 await check("production serves the expected commit", async () => {
@@ -84,6 +96,9 @@ await check("production serves the expected commit", async () => {
     const served = res.headers.get("x-build-commit") ?? "";
     if (!EXPECT_SHA) return served ? `serving ${served.slice(0, 12)}` : "no commit header (deployment predates it)";
     if (served === EXPECT_SHA) return `serving ${served.slice(0, 12)}`;
+    // A later deployment can replace this one while we wait; a newer commit that contains it passes.
+    if (servedContainsExpected(served))
+      return `serving ${served.slice(0, 12)}, which already contains ${EXPECT_SHA.slice(0, 12)}`;
     if (Date.now() > deadline)
       throw new Error(
         `expected ${EXPECT_SHA.slice(0, 12)}, serving ${served.slice(0, 12) || "unknown"} after ${COMMIT_WAIT_MS / 1000}s`,

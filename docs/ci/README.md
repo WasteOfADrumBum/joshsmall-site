@@ -92,7 +92,13 @@ previous deployment live. Confirm this the first time by watching one deployment
 
 `scripts/smoke.mjs` and `e2e/prod/smoke.spec.ts` check a fixed URL; nothing from the deployment
 event is used as a URL. The deployment SHA from the event must be a full SHA on `main`, and the
-checks come from `main`. Each failure is labelled **functional** (wrong answer), **network** (no
+check scripts come from `main`. If a newer deployment replaces the expected one while the check
+waits, a served commit that already contains the expected one passes with a note.
+
+GitHub reads the workflow file itself from the deployed commit on `deployment_status`, so any branch
+Vercel deploys can bring its own workflow. Keep **Vercel > Settings > Git > Git Fork Protection**
+on, so pull requests from forks are never deployed (and never trigger workflows) without your
+approval. This applies to any workflow listening to `deployment_status`, not just this one. Each failure is labelled **functional** (wrong answer), **network** (no
 answer after retries) or **blocked** (an earlier check failed).
 
 On failure the workflow opens one issue labelled `production-check`, or comments on the open one.

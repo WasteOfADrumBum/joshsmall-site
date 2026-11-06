@@ -47,7 +47,8 @@ jobs:
             echo "code=true" >> "$GITHUB_OUTPUT"; echo "Not a pull request: run everything."; exit 0
           fi
           # On pull_request the checkout is the merge commit; its first parent is the base branch.
-          changed=$(git diff --name-only HEAD^1 HEAD)
+          # --no-renames lists both sides of a rename, so moving code into docs/ still counts as code.
+          changed=$(git diff --no-renames --name-only HEAD^1 HEAD)
           echo "$changed"
           # Documentation only: Markdown anywhere, docs/, and the continuity record. Anything else is code.
           if echo "$changed" | grep -qvE '(\.md$|^docs/|^\.engineering/)'; then
@@ -103,6 +104,8 @@ jobs:
         run: npm run test:e2e
         env:
           CI: "true"
+          # The same value the build used; the tests check the app reports it in X-Build-Commit.
+          BUILD_COMMIT_SHA: ${{ github.sha }}
       - name: Record test environment
         if: ${{ !cancelled() }}
         env:

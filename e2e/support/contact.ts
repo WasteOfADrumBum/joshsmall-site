@@ -35,8 +35,9 @@ export function contactForm(page: Page) {
 }
 
 /** A unique, recognisable submission. `mode` selects the stand-in's behaviour (see mock-resend.mjs). */
-export function submission(testId: string, mode = "ok") {
-  const tag = `${mode === "ok" ? "e2e-ok" : mode}-${testId.slice(-10)}`;
+export function submission(id: string, mode = "ok") {
+  // `id` comes from runId(): the end of the test hash plus the attempt number.
+  const tag = `${mode === "ok" ? "e2e-ok" : mode}-${id.slice(-13)}`;
   return {
     name: `Tess Tester ${tag}`,
     email: `tess.${tag}@example.test`,

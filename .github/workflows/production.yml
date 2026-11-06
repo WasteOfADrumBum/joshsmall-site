@@ -37,7 +37,7 @@ jobs:
     if: >-
       github.event_name != 'deployment_status' ||
       (github.event.deployment_status.state == 'success' &&
-       github.event.deployment.environment == 'Production' &&
+       startsWith(github.event.deployment.environment, 'Production') &&
        github.event.deployment.creator.login == 'vercel[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -46,7 +46,9 @@ jobs:
     env:
       DEPLOY_SHA: ${{ github.event.deployment.sha || inputs.expect_sha }}
     steps:
-      # The checks always come from main, never from the deployed ref.
+      # The check scripts are taken from main, not from the deployed commit. GitHub still reads this
+      # workflow file from the deployed commit on deployment_status, so a branch could change it:
+      # keep Vercel's protection for fork deployments on (see docs/ci/README.md).
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: main

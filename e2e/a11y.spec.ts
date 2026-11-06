@@ -2,7 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 import { nav, profile } from "../src/content/site";
 import { contactForm, submission } from "./support/contact";
-import { clientIp, expect, gotoHome, test } from "./support/fixtures";
+import { clientIp, expect, gotoHome, test, runId } from "./support/fixtures";
 
 // Automated checks for applicable WCAG 2.2 AA criteria. Passing them is not full conformance:
 // screen-reader output, real zoom and visual judgement still need people (see docs/ci/EVIDENCE.md).
@@ -17,22 +17,35 @@ async function axe(page: Page, include?: string) {
 }
 
 /**
- * Waits until animations inside `selector` have come to rest: Motion writes inline opacity, and a
- * half-faded element would give axe a wrong contrast reading. "At rest" means two samples 250 ms
- * apart are identical, whatever the final value.
+ * Waits until entrance animations inside `selector` have finished, so axe never measures contrast on
+ * a half-faded element. Motion runs its fades as Web Animations while the inline style still reads
+ * the start value, so inline styles alone are not enough: this also waits for every finite
+ * script-created animation in the section (CSS animations, such as the looping headline, are left out).
+ * "At rest" means no such animation is running and two samples 250 ms apart match.
  */
 async function settle(page: Page, selector: string) {
   const sample = () =>
-    page
-      .locator(selector)
-      .evaluate((root) =>
-        [...root.querySelectorAll<HTMLElement>("[style*=opacity]")].map((el) => el.style.opacity).join(","),
-      );
+    page.locator(selector).evaluate(async (root) => {
+      const running = document.getAnimations().filter((a) => {
+        const target = (a.effect as KeyframeEffect | null)?.target;
+        return (
+          !(a instanceof CSSAnimation) &&
+          !(a instanceof CSSTransition) &&
+          (a.playState === "running" || a.pending) &&
+          Number.isFinite(a.effect?.getComputedTiming().endTime) &&
+          target instanceof Element &&
+          root.contains(target)
+        );
+      });
+      await Promise.all(running.map((a) => a.finished.catch(() => undefined)));
+      const opacities = [...root.querySelectorAll<HTMLElement>("[style*=opacity]")].map((el) => el.style.opacity);
+      return `${running.length}|${opacities.join(",")}`;
+    });
   let previous = await sample();
   for (let i = 0; i < 20; i++) {
     await page.waitForTimeout(250);
     const next = await sample();
-    if (next === previous) return;
+    if (next === previous && next.startsWith("0|")) return;
     previous = next;
   }
   throw new Error(`animations in ${selector} did not settle`);
@@ -52,6 +65,9 @@ async function axeEverySection(page: Page) {
 }
 
 test.describe("axe", () => {
+  // Each test waits for every section's entrance animation in turn before checking it.
+  test.describe.configure({ timeout: 90_000 });
+
   for (const colorScheme of ["dark", "light"] as const) {
     test(`every section passes in ${colorScheme} system mode on desktop`, async ({ page }) => {
       await page.emulateMedia({ colorScheme });
@@ -89,7 +105,7 @@ test.describe("axe", () => {
     });
 
     test("validation errors, failure and success all pass", async ({ page }, testInfo) => {
-      await page.setExtraHTTPHeaders({ "x-forwarded-for": clientIp(testInfo.testId) });
+      await page.setExtraHTTPHeaders({ "x-forwarded-for": clientIp(runId(testInfo)) });
       await gotoHome(page, "/#contact");
       const f = contactForm(page);
       await settle(page, "#contact");
@@ -97,12 +113,12 @@ test.describe("axe", () => {
       await expect(f.name).toHaveAttribute("aria-invalid", "true");
       expect(await axe(page, "#contact form")).toEqual([]);
 
-      await f.fill(submission(testInfo.testId, "e2e-reject"));
+      await f.fill(submission(runId(testInfo), "e2e-reject"));
       await f.submit.click();
       await expect(f.status).toContainText("Couldn't send");
       expect(await axe(page, "#contact form")).toEqual([]);
 
-      await f.fill(submission(`${testInfo.testId}-ok`));
+      await f.fill(submission(`${runId(testInfo)}-ok`));
       await f.submit.click();
       await expect(f.status).toContainText("Your message was sent");
       expect(await axe(page, "#contact form")).toEqual([]);

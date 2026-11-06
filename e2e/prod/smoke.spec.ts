@@ -8,7 +8,8 @@ test("home page renders, hydrates and loads only first-party resources", async (
   const foreign: string[] = [];
   page.on("request", (r) => {
     const u = r.url();
-    if (!u.startsWith(baseURL!) && !u.startsWith("data:") && !u.startsWith("blob:")) foreign.push(u);
+    if (u.startsWith("data:") || u.startsWith("blob:")) return;
+    if (new URL(u).origin !== new URL(baseURL!).origin) foreign.push(u);
   });
   await gotoHome(page);
   await expect(page.getByRole("heading", { level: 1 })).toHaveAccessibleName(profile.headline);

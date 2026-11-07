@@ -16,7 +16,7 @@ updates:
       # TypeScript 7 is unsupported: typescript-eslint (latest 8.72.1) peers typescript <6.1.0.
       # Revisit when a typescript-eslint release widens that peer range to include 7.
       - dependency-name: typescript
-        update-types: ['version-update:semver-major']
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: github-actions
     directory: /
     schedule:

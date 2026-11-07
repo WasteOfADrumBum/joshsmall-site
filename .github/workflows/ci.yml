@@ -26,7 +26,7 @@ env:
 jobs:
   changes:
     name: Detect change type
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 3
     permissions:
       contents: read
@@ -199,7 +199,7 @@ jobs:
 
   security:
     name: Workflow lint, workflow security and secret scan
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
       contents: read
@@ -234,7 +234,7 @@ jobs:
     name: CI gate
     if: always()
     needs: [changes, verify, cross-browser, security]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 2
     permissions: {}
     steps:

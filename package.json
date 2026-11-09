@@ -18,23 +18,23 @@
     "links": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/check-links.mjs"
   },
   "dependencies": {
-    "lucide-react": "^1.52.0",
-    "motion": "^14.0.0",
+    "lucide-react": "^1.66.0",
+    "motion": "^14.9.0",
     "next": "16.4.3",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "resend": "^6.32.0"
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "resend": "^6.37.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
-    "@playwright/test": "1.63.0",
+    "@playwright/test": "1.64.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.3",
-    "playwright-core": "1.63.0",
+    "playwright-core": "1.64.1",
     "prettier": "3.9.10",
     "tailwindcss": "^4",
     "typescript": "^5"

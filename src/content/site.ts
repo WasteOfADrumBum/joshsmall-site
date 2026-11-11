@@ -281,7 +281,7 @@ export const projects: Project[] = [
     description:
       "A space-themed React component library that looks like it shipped on a starship, built on React, TypeScript and SCSS design tokens. The docs site has live examples and copyable code, and it's on npm today: npm install @onesmall/ui.",
     highlights: [
-      "Passes WCAG AAA while looking like this, with light and dark themes driven by SCSS tokens",
+      "Meets WCAG 2.2 AA with AAA color contrast while looking like this, with light and dark themes driven by SCSS tokens",
       "Utility classes, smooth motion and drag and drop built in, all driven by classes and data attributes",
       "Tailwind-style responsive utilities with Bootstrap-friendly names",
       "Machine-readable docs for AI agents, generated from the same data as the docs pages, plus an agent skill in the npm package so coding assistants use it correctly",
@@ -305,6 +305,21 @@ export const projects: Project[] = [
     stack: ["JavaScript", "HTML", "CSS", "Google Drive API", "Vercel Functions"],
     liveUrl: "https://cortex.onesmall.company",
     repoUrl: "https://github.com/WasteOfADrumBum/cortex-brain-task",
+    status: "Live",
+  },
+  {
+    slug: "ai-hub",
+    title: "AI Hub",
+    tagline: "One page that shows what every AI on my team did.",
+    description:
+      "I run several AI tools side by side, Claude, ChatGPT, Codex, Grok and Muse, and each one owns part of my work. They log updates and handoffs to a shared Google Sheet, and AI Hub turns that into one view: the latest from each tool, open handoffs, and any area that has gone quiet. It's private by design, so there's no public link.",
+    highlights: [
+      "Reads the Sheet with a read-only Google service account and never writes to it",
+      "Passcode sign-in with a signed, httpOnly cookie; real data is never served without it",
+      "Installable app that caches only its shell on the device, never the data",
+      "Flags any area whose AI has missed its expected check-in",
+    ],
+    stack: ["JavaScript", "HTML", "CSS", "Google Sheets API", "Vercel Functions", "PWA"],
     status: "Live",
   },
   {

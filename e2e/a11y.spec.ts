@@ -54,7 +54,10 @@ async function settle(page: Page, selector: string) {
   for (let i = 0; i < 20; i++) {
     await page.waitForTimeout(250);
     const next = await sample();
-    if (key(next) === key(previous) && next.startsWith("0|")) return;
+    // A fractional inline opacity is a fade still in progress (WebKit can report no running
+    // animation while motion is mid-fade), so the section is at rest only at 0 or 1.
+    const midFade = next.split("|")[1].split(",").some((o) => o !== "" && o !== "0" && o !== "1");
+    if (key(next) === key(previous) && next.startsWith("0|") && !midFade) return;
     previous = next;
   }
   throw new Error(`animations in ${selector} did not settle; last sample (count|opacities|animations): ${previous}`);

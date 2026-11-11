@@ -45,8 +45,19 @@ async function settle(page: Page, selector: string) {
       };
       const pending = running.map(describe);
       await Promise.all(running.map((a) => a.finished.catch(() => undefined)));
-      const opacities = [...root.querySelectorAll<HTMLElement>("[style*=opacity]")].map((el) => el.style.opacity);
-      return `${running.length}|${opacities.join(",")}|${pending.join(" ")}`;
+      const faded = [...root.querySelectorAll<HTMLElement>("[style*=opacity]")];
+      const opacities = faded.map((el) => el.style.opacity);
+      // An entrance fade that has not started yet (its delay is still counting down, or the
+      // in-view observer has not fired, as seen in WebKit and Firefox) sits at opacity 0 with no
+      // running animation. Count such elements that are mostly on screen: until they start,
+      // the section is not at rest.
+      const waiting = faded.filter((el) => {
+        if (el.style.opacity !== "0") return false;
+        const r = el.getBoundingClientRect();
+        const visible = Math.max(0, Math.min(r.bottom, innerHeight) - Math.max(r.top, 0));
+        return r.height > 0 && visible / Math.min(r.height, innerHeight) >= 0.5;
+      }).length;
+      return `${running.length + waiting}|${opacities.join(",")}|${pending.join(" ")}`;
     });
   // Only the count and the opacities decide whether the section is at rest.
   const key = (s: string) => s.split("|").slice(0, 2).join("|");

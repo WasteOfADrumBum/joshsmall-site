@@ -42,13 +42,14 @@ export default function Home() {
       {/* Slide-in animations start off to the side; clipping here stops them widening the page on phones. */}
       <main id="main" className="overflow-x-clip">
         <Hero />
-        <Stance />
+        {/* Who I am and what I've built come first; the industry-context sections follow the work. */}
         <About />
         <Projects />
         <Skills />
-        <HumanSide />
         <Experience />
         <Process />
+        <Stance />
+        <HumanSide />
         <Beyond />
         <Contact />
       </main>

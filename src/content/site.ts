@@ -55,6 +55,11 @@ export const profile = {
   location: "Trinity, North Carolina",
   github: "https://github.com/WasteOfADrumBum",
   linkedin: "https://www.linkedin.com/in/joshuamsmall",
+  /**
+   * Résumé PDF. Put the file in /public (for example /public/joshua-small-resume.pdf) and set this to
+   * its path ("/joshua-small-resume.pdf"). The hero shows a download link only when this is set.
+   */
+  resumeUrl: undefined as string | undefined,
   photo: "/joshua-portrait.webp",
   photoAlt:
     "Portrait of Joshua Small: glasses, a top knot and a long full beard, wearing a black hoodie in front of glowing code editor screens.",
@@ -254,6 +259,23 @@ export const sideProjects: SideProject[] = [
 
 export const projects: Project[] = [
   {
+    slug: "onesmallui",
+    title: "OneSmallUI",
+    tagline: "An interface for the next generation.",
+    description:
+      "A space-themed React component library that looks like it shipped on a starship, built on React, TypeScript and SCSS design tokens. The docs site has live examples and copyable code, and it's on npm today: npm install @onesmall/ui.",
+    highlights: [
+      "Meets WCAG 2.2 AA with AAA color contrast while looking like this, with light and dark themes driven by SCSS tokens",
+      "Utility classes, smooth motion and drag and drop built in, all driven by classes and data attributes",
+      "Tailwind-style responsive utilities with Bootstrap-friendly names",
+      "Machine-readable docs for AI agents, generated from the same data as the docs pages, plus an agent skill in the npm package so coding assistants use it correctly",
+    ],
+    stack: ["React", "TypeScript", "SCSS", "Vitest", "axe-core", "npm"],
+    liveUrl: "https://ui.onesmall.company",
+    repoUrl: "https://github.com/WasteOfADrumBum/one-small-ui",
+    status: "Live",
+  },
+  {
     slug: "taskforge",
     title: "TaskForge",
     tagline: "A task manager built to run in production.",
@@ -275,21 +297,19 @@ export const projects: Project[] = [
     status: "Live",
   },
   {
-    slug: "onesmallui",
-    title: "OneSmallUI",
-    tagline: "An interface for the next generation.",
+    slug: "one-small-mods-pack",
+    title: "One Small Mods Pack",
+    tagline: "Claude Code mods that hold AI to a project's rules while it works.",
     description:
-      "A space-themed React component library that looks like it shipped on a starship, built on React, TypeScript and SCSS design tokens. The docs site has live examples and copyable code, and it's on npm today: npm install @onesmall/ui.",
+      "Four mods, installable from one plugin marketplace, that check the code Claude writes as it writes it: accessibility, design tokens, quality gates and secret handling. Each failure goes back to Claude with the file, line and rule so it fixes the problem before moving on.",
     highlights: [
-      "Meets WCAG 2.2 AA with AAA color contrast while looking like this, with light and dark themes driven by SCSS tokens",
-      "Utility classes, smooth motion and drag and drop built in, all driven by classes and data attributes",
-      "Tailwind-style responsive utilities with Bootstrap-friendly names",
-      "Machine-readable docs for AI agents, generated from the same data as the docs pages, plus an agent skill in the npm package so coding assistants use it correctly",
+      "Automated WCAG 2.2 AA checks on every UI file Claude changes",
+      "Blocks hardcoded colors and spacing, naming the design token to use instead",
+      "Keeps Claude working until lint, type check and tests pass, and redacts secrets from what it reads",
     ],
-    stack: ["React", "TypeScript", "SCSS", "Vitest", "axe-core", "npm"],
-    liveUrl: "https://ui.onesmall.company",
-    repoUrl: "https://github.com/WasteOfADrumBum/one-small-ui",
-    status: "Live",
+    stack: ["TypeScript", "Claude Code", "ESLint", "axe-core"],
+    repoUrl: "https://github.com/WasteOfADrumBum/one-small-mods-pack",
+    status: "In progress",
   },
   {
     slug: "cortex",
@@ -321,21 +341,6 @@ export const projects: Project[] = [
     ],
     stack: ["JavaScript", "HTML", "CSS", "Google Sheets API", "Vercel Functions", "PWA"],
     status: "Live",
-  },
-  {
-    slug: "one-small-mods-pack",
-    title: "One Small Mods Pack",
-    tagline: "Claude Code mods that hold AI to a project's rules while it works.",
-    description:
-      "Four mods, installable from one plugin marketplace, that check the code Claude writes as it writes it: accessibility, design tokens, quality gates and secret handling. Each failure goes back to Claude with the file, line and rule so it fixes the problem before moving on.",
-    highlights: [
-      "Automated WCAG 2.2 AA checks on every UI file Claude changes",
-      "Blocks hardcoded colors and spacing, naming the design token to use instead",
-      "Keeps Claude working until lint, type check and tests pass, and redacts secrets from what it reads",
-    ],
-    stack: ["TypeScript", "Claude Code", "ESLint", "axe-core"],
-    repoUrl: "https://github.com/WasteOfADrumBum/one-small-mods-pack",
-    status: "In progress",
   },
 ];
 
@@ -399,15 +404,9 @@ export const skillGroups: SkillGroup[] = [
     title: "AI",
     icon: "ai",
     items: [
-      { name: "Claude", href: "https://claude.ai" },
       { name: "Claude Code", href: "https://claude.com/product/claude-code" },
-      { name: "Gemini", href: "https://gemini.google.com" },
-      { name: "ChatGPT", href: "https://chatgpt.com" },
       { name: "Codex", href: "https://openai.com/codex/" },
-      { name: "Muse", href: "https://www.meta.ai" },
-      { name: "Fieldy AI", href: "https://fieldy.ai" },
-      { name: "Grok", href: "https://grok.com" },
-      { name: "Grok bots", href: "https://x.ai/grok" },
+      { name: "ChatGPT", href: "https://chatgpt.com" },
     ],
   },
 ];
@@ -449,13 +448,13 @@ export const contact = {
 
 /** Same order as the sections on the page. */
 export const nav = [
-  { href: "#why-it-matters", label: "Why it matters" },
   { href: "#about", label: "About" },
   { href: "#projects", label: "Projects" },
   { href: "#skills", label: "Skills" },
-  { href: "#human-side", label: "Human side" },
   { href: "#experience", label: "Experience" },
   { href: "#process", label: "Process" },
+  { href: "#why-it-matters", label: "Why it matters" },
+  { href: "#human-side", label: "Human side" },
   { href: "#beyond", label: "Beyond" },
   { href: "#contact", label: "Contact" },
 ];

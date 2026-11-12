@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown, Mail, Pause, Play } from "lucide-react";
+import { ArrowDown, FileText, Mail, Pause, Play } from "lucide-react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { useRef, useState, useSyncExternalStore } from "react";
 import { profile } from "@/content/site";
@@ -165,6 +165,16 @@ export function Hero() {
                 </a>
               </li>
             </ul>
+            {profile.resumeUrl && (
+              <p className="mt-5">
+                <a
+                  href={profile.resumeUrl}
+                  className="inline-flex items-center gap-2 font-semibold text-accent underline underline-offset-4 hover:text-fg"
+                >
+                  <FileText aria-hidden="true" size={18} /> Download my résumé (PDF)
+                </a>
+              </p>
+            )}
           </motion.div>
         </div>
       </div>

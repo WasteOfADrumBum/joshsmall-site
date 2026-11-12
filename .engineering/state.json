@@ -1,23 +1,20 @@
 {
   "stateVersion": 1,
-  "revision": 11,
-  "checkpointId": "repair-schema-2026-11-12",
+  "revision": 12,
+  "checkpointId": "content-pass-pr46-2026-11-12",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
-    "branch": "claude/project-thread-zdhgmq",
-    "commit": "848004f7e93acde9f5f0ce4e8968ad5f91f48213",
-    "recordedAt": "2026-11-12T02:07:55Z"
+    "branch": "main",
+    "commit": "1d5793ba617a7903b4062d1431fdd3301d2e1027",
+    "recordedAt": "2026-11-12T17:43:46Z"
   },
   "development": {
     "milestone": "Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance",
-    "activeTask": {
-      "id": "portfolio-pr-40",
-      "title": "Follow-up PR #40: browser jobs on ubuntu-24.04 (apt stalls), Reveal flicker fix and test races found by the weekly suite, post-merge evidence for PR #34"
-    },
-    "workingBranch": "claude/project-thread-zdhgmq",
-    "activePr": 40,
+    "activeTask": null,
+    "workingBranch": "main",
+    "activePr": null,
     "lastCompleted": [
       "PR #33 (mobile hero fixes) merged on GitHub; the revision 8 record still listed it as open",
       "PR #34: Playwright suite on next start (journeys, contact path through the real handler with a local Resend stand-in, axe and WCAG behaviour checks, performance and SEO budgets); Firefox and WebKit for @cross tests",
@@ -29,10 +26,12 @@
       "PR #34 merged as 31724b15b9c6bbe62bb1f159829823d18983dd8d (2026-11-06 05:27 UTC) after all checks passed on c29f096; production verification passed from the deployment_status event at 05:28 UTC with production serving 31724b1",
       "Notification path checked with a dry run (impossible expected commit): verification failed as intended and the notify job printed the issue it would open; no issue created",
       "PR #40: browser jobs on ubuntu-24.04; Chromium skips optional apt fonts when it already launches",
-      "PR #40: Reveal measures visibility on an unmoving box (fixes endless flicker at viewport edges, found by the weekly Firefox/WebKit axe sweep); rate-limit test waits for each response; contact success waits 12 s"
+      "PR #40: Reveal measures visibility on an unmoving box (fixes endless flicker at viewport edges, found by the weekly Firefox/WebKit axe sweep); rate-limit test waits for each response; contact success waits 12 s",
+      "PR #40 merged on GitHub as da1d23d (2026-11-06); the revision 11 record still listed it as open",
+      "PR #46 (owner-requested content pass, 2026-11-12): sections reordered so About and Projects follow the hero and Why it matters and Human side follow Process; projects reordered with OneSmallUI first; AI skills list cut to three; optional resume link in the hero, hidden until profile.resumeUrl is set. Squash-merged as 1d5793b"
     ],
-    "inProgress": ["PR #40 merge, then CI on main"],
-    "nextAction": "Agent: merge PR #40 once its CI gate is green and confirm CI on main and production verification pass. Next engineering item: ROADMAP Q3 (Firefox/WebKit contact flake in the weekly suite; read the trace artifact). Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate."
+    "inProgress": [],
+    "nextAction": "Joshua Small: add a resume PDF to public/ and set profile.resumeUrl in src/content/site.ts; supply verified impact numbers for the page. Next engineering item: ROADMAP Q3 (Firefox/WebKit contact flake in the weekly suite). Owner settings still open: import .github/rulesets/main.json and enable Vercel Deployment Checks."
   },
   "decisions": {
     "made": [
@@ -225,6 +224,27 @@
         "commit": "8517ef2496e71732cb5f8530c31d14d844df78ed",
         "at": "2026-11-06T06:00:00Z",
         "ciRunUrl": null
+      },
+      {
+        "command": "local on 168ef29: eslint, typecheck, node --test src/lib (67), next build; Playwright not run locally (browser not installed)",
+        "result": "pass",
+        "commit": null,
+        "at": "2026-11-12T17:31:00Z",
+        "ciRunUrl": null
+      },
+      {
+        "command": "GitHub CI on PR #46 head 168ef29: CI gate, Chromium, Firefox and WebKit browser tests, CodeQL, checkpoint contract",
+        "result": "pass",
+        "commit": null,
+        "at": "2026-11-12T17:36:00Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/43270591814"
+      },
+      {
+        "command": "production.yml on deployment_status for 1d5793b; agent also read X-Build-Commit and the section order from https://onesmall.company/",
+        "result": "pass",
+        "commit": "1d5793ba617a7903b4062d1431fdd3301d2e1027",
+        "at": "2026-11-12T17:40:00Z",
+        "ciRunUrl": null
       }
     ],
     "unverifiedChanges": [
@@ -234,17 +254,19 @@
       "Live production headers present and no X-Powered-By (agent-read through the Vercel connector, 2026-11-02)",
       "Mobile hero overlap fix checked by the agent in headless Chromium at 390px only; not checked on a real phone",
       "Firefox and WebKit runs are only verified in GitHub Actions (no WebKit locally)",
-      "Delivery of the production-check issue notification to the owner has not been verified end to end"
+      "Delivery of the production-check issue notification to the owner has not been verified end to end",
+      "PR #46 layout was viewed by the agent on a local dev server at one desktop width only; no owner review of the new section order before merge (owner authorised autonomous merge with a backup branch, 2026-11-12)"
     ]
   },
   "handoff": {
     "lastAgent": {
       "tool": "Claude Code",
-      "model": null
+      "model": "claude-fable-5-2"
     },
-    "checkpointedAt": "2026-11-12T02:07:55Z",
+    "checkpointedAt": "2026-11-12T17:43:46Z",
     "unfinished": [
-      "Merge PR #40 after its CI gate passes; confirm CI on main and production verification",
+      "Resume PDF and profile.resumeUrl (owner supplies the file)",
+      "Verified impact numbers for the page (owner supplies)",
       "ROADMAP Q3: Firefox/WebKit contact flake in the weekly suite",
       "Owner settings: ruleset import for main; Vercel Deployment Checks",
       "Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows"
@@ -252,9 +274,9 @@
     "blockers": [
       "Branch protection and Vercel Deployment Checks need the owner (no write access to rulesets or Vercel settings from this session)"
     ],
-    "continuation": "PR #34 is merged (31724b1) and production was verified on it. PR #40 on claude/project-thread-zdhgmq carries the apt-stall fix (ubuntu-24.04), the Reveal flicker fix, test race fixes, evidence and this checkpoint. Merge it when green, confirm main CI and production verification, then take ROADMAP Q3.",
+    "continuation": "PR #46 is merged (1d5793b) and production serves it; production.yml passed on that deployment. The previous main (27cbeb5) is kept on backup/main-2026-11-12-pre-pr46. Nothing is in progress. Next: owner inputs for the resume link and impact numbers, then ROADMAP Q3.",
     "uncommittedWorkOutsideCheckpoint": "none",
-    "persistedBy": "local-file"
+    "persistedBy": "github-api"
   },
   "provenance": {
     "claims": "agent_reported",

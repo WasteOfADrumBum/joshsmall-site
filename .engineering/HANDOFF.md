@@ -1,20 +1,21 @@
-<!-- generated from .engineering/state.json (revision 11) -->
+<!-- generated from .engineering/state.json (revision 12) -->
 
 # Handoff: personal-portfolio
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 11, `repair-schema-2026-11-12`, 2026-11-12T02:07:55Z by Claude Code
-- Written by: a local edit that the agent then pushed; confirm the branch head matches
+- Checkpoint: revision 12, `content-pass-pr46-2026-11-12`, 2026-11-12T17:43:46Z by Claude Code (claude-fable-5-2)
+- Written by: the hub writer (committed through the GitHub API)
 - Uncommitted work outside this checkpoint: **none**
 
 ## Continue with
 
-PR #34 is merged (31724b1) and production was verified on it. PR #40 on claude/project-thread-zdhgmq carries the apt-stall fix (ubuntu-24.04), the Reveal flicker fix, test race fixes, evidence and this checkpoint. Merge it when green, confirm main CI and production verification, then take ROADMAP Q3.
+PR #46 is merged (1d5793b) and production serves it; production.yml passed on that deployment. The previous main (27cbeb5) is kept on backup/main-2026-11-12-pre-pr46. Nothing is in progress. Next: owner inputs for the resume link and impact numbers, then ROADMAP Q3.
 
 ## Unfinished
 
-- Merge PR #40 after its CI gate passes; confirm CI on main and production verification
+- Resume PDF and profile.resumeUrl (owner supplies the file)
+- Verified impact numbers for the page (owner supplies)
 - ROADMAP Q3: Firefox/WebKit contact flake in the weekly suite
 - Owner settings: ruleset import for main; Vercel Deployment Checks
 - Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows

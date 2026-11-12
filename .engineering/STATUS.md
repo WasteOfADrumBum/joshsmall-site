@@ -1,18 +1,18 @@
-<!-- generated from .engineering/state.json (revision 11); edit state.json through a checkpoint, not this file -->
+<!-- generated from .engineering/state.json (revision 12); edit state.json through a checkpoint, not this file -->
 
 # personal-portfolio: development status
 
 All values are **agent-reported**, not independently verified. Check GitHub before relying on them.
 
 - Milestone: Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance
-- Active task: portfolio-pr-40: Follow-up PR #40: browser jobs on ubuntu-24.04 (apt stalls), Reveal flicker fix and test races found by the weekly suite, post-merge evidence for PR #34
-- Branch: `claude/project-thread-zdhgmq` · PR #40
-- Recorded commit: `848004f` on `claude/project-thread-zdhgmq`
-- Last checkpoint: 2026-11-12T02:07:55Z by Claude Code
+- Active task: none recorded
+- Branch: `main`
+- Recorded commit: `1d5793b` on `main`
+- Last checkpoint: 2026-11-12T17:43:46Z by Claude Code
 
 ## Next action
 
-Agent: merge PR #40 once its CI gate is green and confirm CI on main and production verification pass. Next engineering item: ROADMAP Q3 (Firefox/WebKit contact flake in the weekly suite; read the trace artifact). Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate.
+Joshua Small: add a resume PDF to public/ and set profile.resumeUrl in src/content/site.ts; supply verified impact numbers for the page. Next engineering item: ROADMAP Q3 (Firefox/WebKit contact flake in the weekly suite). Owner settings still open: import .github/rulesets/main.json and enable Vercel Deployment Checks.
 
 ## Completed
 
@@ -27,10 +27,12 @@ Agent: merge PR #40 once its CI gate is green and confirm CI on main and product
 - Notification path checked with a dry run (impossible expected commit): verification failed as intended and the notify job printed the issue it would open; no issue created
 - PR #40: browser jobs on ubuntu-24.04; Chromium skips optional apt fonts when it already launches
 - PR #40: Reveal measures visibility on an unmoving box (fixes endless flicker at viewport edges, found by the weekly Firefox/WebKit axe sweep); rate-limit test waits for each response; contact success waits 12 s
+- PR #40 merged on GitHub as da1d23d (2026-11-06); the revision 11 record still listed it as open
+- PR #46 (owner-requested content pass, 2026-11-12): sections reordered so About and Projects follow the hero and Why it matters and Human side follow Process; projects reordered with OneSmallUI first; AI skills list cut to three; optional resume link in the hero, hidden until profile.resumeUrl is set. Squash-merged as 1d5793b
 
 ## In progress
 
-- PR #40 merge, then CI on main
+_none recorded_
 
 ## Tests (agent-reported)
 
@@ -50,6 +52,9 @@ Agent: merge PR #40 once its CI gate is green and confirm CI on main and product
 - `weekly.yml on PR #40 head 848004f (one flaky contact test each in Firefox and WebKit, passed on retry; failOnFlakyTests…`: fail at `848004f`, 2026-11-06T06:30:00Z
 - `GitHub CI ci.yml on PR #40 head 848004f (ubuntu-24.04 browser jobs)`: pass at `848004f`, 2026-11-06T06:30:00Z
 - `local: npm test (67), eslint, tsc, format:check, CI=1 playwright test --project=chromium (61 passed, 1 skipped)`: pass at `8517ef2`, 2026-11-06T06:00:00Z
+- `local on 168ef29: eslint, typecheck, node --test src/lib (67), next build; Playwright not run locally (browser not inst…`: pass, 2026-11-12T17:31:00Z
+- `GitHub CI on PR #46 head 168ef29: CI gate, Chromium, Firefox and WebKit browser tests, CodeQL, checkpoint contract`: pass, 2026-11-12T17:36:00Z
+- `production.yml on deployment_status for 1d5793b; agent also read X-Build-Commit and the section order from https://ones…`: pass at `1d5793b`, 2026-11-12T17:40:00Z
 
 ## Unverified changes
 
@@ -60,3 +65,4 @@ Agent: merge PR #40 once its CI gate is green and confirm CI on main and product
 - Mobile hero overlap fix checked by the agent in headless Chromium at 390px only; not checked on a real phone
 - Firefox and WebKit runs are only verified in GitHub Actions (no WebKit locally)
 - Delivery of the production-check issue notification to the owner has not been verified end to end
+- PR #46 layout was viewed by the agent on a local dev server at one desktop width only; no owner review of the new section order before merge (owner authorised autonomous merge with a backup branch, 2026-11-12)

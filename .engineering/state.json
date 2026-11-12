@@ -31,9 +31,7 @@
       "PR #40: browser jobs on ubuntu-24.04; Chromium skips optional apt fonts when it already launches",
       "PR #40: Reveal measures visibility on an unmoving box (fixes endless flicker at viewport edges, found by the weekly Firefox/WebKit axe sweep); rate-limit test waits for each response; contact success waits 12 s"
     ],
-    "inProgress": [
-      "PR #40 merge, then CI on main"
-    ],
+    "inProgress": ["PR #40 merge, then CI on main"],
     "nextAction": "Agent: merge PR #40 once its CI gate is green and confirm CI on main and production verification pass. Next engineering item: ROADMAP Q3 (Firefox/WebKit contact flake in the weekly suite; read the trace artifact). Joshua Small: import .github/rulesets/main.json and enable Vercel Deployment Checks for CI gate."
   },
   "decisions": {

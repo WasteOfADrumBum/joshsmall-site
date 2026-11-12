@@ -1,18 +1,21 @@
 {
   "stateVersion": 1,
-  "revision": 10,
-  "checkpointId": "ckpt-0010-ci-cd-merged",
+  "revision": 11,
+  "checkpointId": "repair-schema-2026-11-12",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
     "branch": "claude/project-thread-zdhgmq",
     "commit": "848004f7e93acde9f5f0ce4e8968ad5f91f48213",
-    "recordedAt": "2026-11-06T06:40:00Z"
+    "recordedAt": "2026-11-12T02:07:55Z"
   },
   "development": {
     "milestone": "Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance",
-    "activeTask": "Follow-up PR #40: browser jobs on ubuntu-24.04 (apt stalls), Reveal flicker fix and test races found by the weekly suite, post-merge evidence for PR #34",
+    "activeTask": {
+      "id": "portfolio-pr-40",
+      "title": "Follow-up PR #40: browser jobs on ubuntu-24.04 (apt stalls), Reveal flicker fix and test races found by the weekly suite, post-merge evidence for PR #34"
+    },
     "workingBranch": "claude/project-thread-zdhgmq",
     "activePr": 40,
     "lastCompleted": [
@@ -138,25 +141,29 @@
         "command": "npm run typecheck && eslint src/components/Hero.tsx && npm test && npm run build",
         "result": "pass",
         "commit": "26e0854243a1867869ec07fd1b242d8c35ac212c",
-        "at": "2026-11-03T22:50:00Z"
+        "at": "2026-11-03T22:50:00Z",
+        "ciRunUrl": null
       },
       {
         "command": "Playwright scroll check at 390x844: toggle bottom vs intro top at scroll 0/300/500/700",
         "result": "pass",
         "commit": "26e0854243a1867869ec07fd1b242d8c35ac212c",
-        "at": "2026-11-03T22:50:00Z"
+        "at": "2026-11-03T22:50:00Z",
+        "ciRunUrl": null
       },
       {
         "command": "eslint src/components/Hero.tsx && npm run build; Playwright 390x844 pixel sample across hero bottom edge",
         "result": "pass",
         "commit": "273ad8b2166a5d1965df3aebd9f46b05f8d2ea0d",
-        "at": "2026-11-03T23:00:00Z"
+        "at": "2026-11-03T23:00:00Z",
+        "ciRunUrl": null
       },
       {
         "command": "npm test (67), lint, typecheck, CI=1 playwright test --project=chromium (61 passed, 1 skipped)",
         "result": "pass",
         "commit": "7ecb257f0837d377d3441d84c8a39b0d12948a6b",
-        "at": "2026-11-06T00:47:00Z"
+        "at": "2026-11-06T00:47:00Z",
+        "ciRunUrl": null
       },
       {
         "command": "GitHub CI ci.yml on PR #34 head (Chromium job rerun after an apt stall)",
@@ -196,29 +203,30 @@
       {
         "command": "weekly.yml on PR #40 after the Reveal fix (axe passes in Firefox and WebKit; Firefox fully green on 73ce25c)",
         "result": "pass",
-        "commit": "73ce25c",
+        "commit": "73ce25cf30257bd6b70067e9fac785fe2eb33562",
         "at": "2026-11-06T06:14:20Z",
         "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42172620976"
       },
       {
         "command": "weekly.yml on PR #40 head 848004f (one flaky contact test each in Firefox and WebKit, passed on retry; failOnFlakyTests fails the run)",
         "result": "fail",
-        "commit": "848004f",
+        "commit": "848004f7e93acde9f5f0ce4e8968ad5f91f48213",
         "at": "2026-11-06T06:30:00Z",
         "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42173298654"
       },
       {
         "command": "GitHub CI ci.yml on PR #40 head 848004f (ubuntu-24.04 browser jobs)",
         "result": "pass",
-        "commit": "848004f",
+        "commit": "848004f7e93acde9f5f0ce4e8968ad5f91f48213",
         "at": "2026-11-06T06:30:00Z",
         "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/42173303901"
       },
       {
         "command": "local: npm test (67), eslint, tsc, format:check, CI=1 playwright test --project=chromium (61 passed, 1 skipped)",
         "result": "pass",
-        "commit": "8517ef2",
-        "at": "2026-11-06T06:00:00Z"
+        "commit": "8517ef2496e71732cb5f8530c31d14d844df78ed",
+        "at": "2026-11-06T06:00:00Z",
+        "ciRunUrl": null
       }
     ],
     "unverifiedChanges": [
@@ -236,7 +244,7 @@
       "tool": "Claude Code",
       "model": null
     },
-    "checkpointedAt": "2026-11-06T06:40:00Z",
+    "checkpointedAt": "2026-11-12T02:07:55Z",
     "unfinished": [
       "Merge PR #40 after its CI gate passes; confirm CI on main and production verification",
       "ROADMAP Q3: Firefox/WebKit contact flake in the weekly suite",

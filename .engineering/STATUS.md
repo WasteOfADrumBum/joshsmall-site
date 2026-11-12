@@ -1,14 +1,14 @@
-<!-- generated from .engineering/state.json (revision 10); edit state.json through a checkpoint, not this file -->
+<!-- generated from .engineering/state.json (revision 11); edit state.json through a checkpoint, not this file -->
 
 # personal-portfolio: development status
 
 All values are **agent-reported**, not independently verified. Check GitHub before relying on them.
 
 - Milestone: Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance
-- Active task: Follow-up PR #40: browser jobs on ubuntu-24.04 (apt stalls), Reveal flicker fix and test races found by the weekly suite, post-merge evidence for PR #34
-- Branch: `claude/project-thread-zdhgmq`
+- Active task: portfolio-pr-40: Follow-up PR #40: browser jobs on ubuntu-24.04 (apt stalls), Reveal flicker fix and test races found by the weekly suite, post-merge evidence for PR #34
+- Branch: `claude/project-thread-zdhgmq` · PR #40
 - Recorded commit: `848004f` on `claude/project-thread-zdhgmq`
-- Last checkpoint: 2026-11-06T06:40:00Z by Claude Code
+- Last checkpoint: 2026-11-12T02:07:55Z by Claude Code
 
 ## Next action
 
@@ -47,7 +47,7 @@ Agent: merge PR #40 once its CI gate is green and confirm CI on main and product
 - `production.yml workflow_dispatch expect_sha=0x40 notify_dry_run=true (failure path and notify dry run)`: pass at `31724b1`, 2026-11-06T05:36:10Z
 - `weekly.yml full suite by hand on main (Firefox and WebKit axe sweeps never settled on #human-side; contact flakes)`: fail at `31724b1`, 2026-11-06T05:41:37Z
 - `weekly.yml on PR #40 after the Reveal fix (axe passes in Firefox and WebKit; Firefox fully green on 73ce25c)`: pass at `73ce25c`, 2026-11-06T06:14:20Z
-- `weekly.yml on PR #40 head 848004f (one flaky contact test each in Firefox and WebKit, passed on retry; failOnFlakyTests fails the run)`: fail at `848004f`, 2026-11-06T06:30:00Z
+- `weekly.yml on PR #40 head 848004f (one flaky contact test each in Firefox and WebKit, passed on retry; failOnFlakyTests…`: fail at `848004f`, 2026-11-06T06:30:00Z
 - `GitHub CI ci.yml on PR #40 head 848004f (ubuntu-24.04 browser jobs)`: pass at `848004f`, 2026-11-06T06:30:00Z
 - `local: npm test (67), eslint, tsc, format:check, CI=1 playwright test --project=chromium (61 passed, 1 skipped)`: pass at `8517ef2`, 2026-11-06T06:00:00Z
 

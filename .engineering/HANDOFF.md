@@ -1,10 +1,10 @@
-<!-- generated from .engineering/state.json (revision 10) -->
+<!-- generated from .engineering/state.json (revision 11) -->
 
 # Handoff: personal-portfolio
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 10, `ckpt-0010-ci-cd-merged`, 2026-11-06T06:40:00Z by Claude Code
+- Checkpoint: revision 11, `repair-schema-2026-11-12`, 2026-11-12T02:07:55Z by Claude Code
 - Written by: a local edit that the agent then pushed; confirm the branch head matches
 - Uncommitted work outside this checkpoint: **none**
 

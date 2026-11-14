@@ -1,19 +1,20 @@
-<!-- generated from .engineering/state.json (revision 12) -->
+<!-- generated from .engineering/state.json (revision 13) -->
 
 # Handoff: personal-portfolio
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 12, `content-pass-pr46-2026-11-12`, 2026-11-12T17:43:46Z by Claude Code (claude-fable-5-2)
-- Written by: the hub writer (committed through the GitHub API)
+- Checkpoint: revision 13, `professional-years-2026-11-14`, 2026-11-14T15:48:30Z by Cursor (grok-4.7)
+- Written by: a local edit that the agent then pushed; confirm the branch head matches
 - Uncommitted work outside this checkpoint: **none**
 
 ## Continue with
 
-PR #46 is merged (1d5793b) and production serves it; production.yml passed on that deployment. The previous main (27cbeb5) is kept on backup/main-2026-11-12-pre-pr46. Nothing is in progress. Next: owner inputs for the resume link and impact numbers, then ROADMAP Q3.
+PR #48 is open for Joshua Small to review. Do not merge. Professional experience now uses completeYearsSince for the year-only start, so the stat is completed years (19+ in 2026, 20+ from 1 Jan 2027 UTC) from the render date. The homepage is static with the existing daily revalidate (86400). At task start GitHub main was 2c8cb2c, the revision 12 checkpoint commit, one commit ahead of the SHA that checkpoint records (1d5793b). No other open PRs. This checkpoint describes code commit 3eaef02; the checkpoint commit follows it. Next: owner review of PR #48, then the resume PDF, impact numbers, and ROADMAP Q3.
 
 ## Unfinished
 
+- PR #48 (completed professional years) is open for Joshua Small to review; do not merge from an agent session
 - Resume PDF and profile.resumeUrl (owner supplies the file)
 - Verified impact numbers for the page (owner supplies)
 - ROADMAP Q3: Firefox/WebKit contact flake in the weekly suite
@@ -35,6 +36,7 @@ PR #46 is merged (1d5793b) and production serves it; production.yml passed on th
 - [agent] WebKit tests against the local http server strip HSTS and the CSP upgrade-insecure-requests directive in the test harness only; deployed headers are checked by production verification
 - [agent] Chromium CI job skips install-deps' optional fallback-font packages when a real Chromium launch already works; full install-deps runs otherwise (documented exception in docs/ci/README.md)
 - [agent] Browser-running jobs pinned to ubuntu-24.04 (Playwright-supported); ubuntu-latest 26.04 apt mirror stalled browser package installs
+- [agent] Professional experience counts completed years with completeYearsSince. The homepage stays prerendered; the existing daily revalidate (86400s) regenerates the server-rendered count. The browser does not recompute it.
 
 ## Constraints
 

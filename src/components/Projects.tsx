@@ -1,4 +1,5 @@
-import { Check, ChevronRight, ExternalLink } from "lucide-react";
+import { ArrowRight, Check, ChevronRight, ExternalLink } from "lucide-react";
+import Link from "next/link";
 import { Fragment } from "react";
 import { projects, type Project } from "@/content/site";
 import { GitHubIcon } from "./Icons";
@@ -58,6 +59,15 @@ function ProjectCard({ project }: { project: Project }) {
         </ul>
 
         <div className="mt-8 flex flex-wrap gap-3">
+          {project.caseStudy && (
+            <Link
+              href={`/work/${project.caseStudy}`}
+              className="inline-flex items-center gap-2 rounded-full border border-accent px-6 py-3 font-semibold transition-colors hover:bg-bg"
+            >
+              Read the case study <ArrowRight aria-hidden="true" size={18} />
+              <span className="sr-only">for {project.title}</span>
+            </Link>
+          )}
           {project.liveUrl && (
             <a
               href={project.liveUrl}

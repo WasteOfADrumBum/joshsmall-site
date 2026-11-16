@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
+import { caseStudies } from "../src/content/case-studies";
 import { nav, profile } from "../src/content/site";
 import { contactForm, submission } from "./support/contact";
 import { clientIp, expect, gotoHome, test, runId } from "./support/fixtures";
@@ -143,6 +144,46 @@ test.describe("axe", () => {
       await expect(f.status).toContainText("Your message was sent");
       expect(await axe(page, "#contact form")).toEqual([]);
     });
+  });
+});
+
+test.describe("case study pages", () => {
+  for (const study of caseStudies) {
+    test(`${study.title} passes axe with one h1, landmarks and no skipped heading levels`, async ({ page }) => {
+      await page.goto(`/work/${study.slug}`);
+      expect(await axe(page)).toEqual([]);
+      await expect(page.getByRole("banner")).toHaveCount(1);
+      await expect(page.getByRole("navigation", { name: "Primary" })).toHaveCount(1);
+      await expect(page.getByRole("main")).toHaveCount(1);
+      await expect(page.getByRole("contentinfo")).toHaveCount(1);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(study.title);
+      const levels = await page
+        .locator("h1, h2, h3, h4, h5, h6")
+        .evaluateAll((els) => els.map((e) => Number(e.tagName[1])));
+      for (let i = 1; i < levels.length; i++) expect(levels[i] - levels[i - 1], `heading ${i}`).toBeLessThanOrEqual(1);
+      await expect(page.locator("html")).toHaveAttribute("lang", "en");
+    });
+  }
+
+  test("the case study skip link moves focus to the main content @cross", async ({ page, browserName }) => {
+    test.skip(
+      browserName === "webkit",
+      "Safari skips links on Tab unless the user enables it; checked in Chromium and Firefox",
+    );
+    await page.goto(`/work/${caseStudies[0].slug}`);
+    await page.keyboard.press("Tab");
+    const skip = page.getByRole("link", { name: "Skip to content" });
+    await expect(skip).toBeFocused();
+    await expect(skip).toBeInViewport();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/#main$/);
+  });
+
+  test("a case study reflows at 320 px without horizontal scrolling @cross", async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 800 });
+    await page.goto(`/work/${caseStudies[0].slug}`);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
   });
 });
 

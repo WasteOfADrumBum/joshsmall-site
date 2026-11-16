@@ -1,4 +1,5 @@
 import { nav, profile, projects, sideProjects } from "../src/content/site";
+import { caseStudies } from "../src/content/case-studies";
 import { expect, gotoHome, scrollSettled, test } from "./support/fixtures";
 
 // Content is read from src/content/site.ts, so editing copy never breaks these tests.
@@ -68,7 +69,17 @@ test.describe("projects", () => {
       await expect(card).toBeVisible();
       if (p.liveUrl) await expect(card.getByRole("link", { name: /View live/ })).toHaveAttribute("href", p.liveUrl);
       if (p.repoUrl) await expect(card.getByRole("link", { name: /Source code/ })).toHaveAttribute("href", p.repoUrl);
+      if (p.caseStudy)
+        await expect(card.getByRole("link", { name: `Read the case study for ${p.title}` })).toHaveAttribute(
+          "href",
+          `/work/${p.caseStudy}`,
+        );
     }
+  });
+
+  test("every case study a card links to exists", async () => {
+    const slugs = caseStudies.map((c) => c.slug);
+    for (const p of projects.filter((p) => p.caseStudy)) expect(slugs, p.title).toContain(p.caseStudy);
   });
 
   test("side-project links open safely in a new tab", async ({ page }) => {
@@ -146,6 +157,44 @@ test.describe("mobile menu", () => {
     await expect(menu).toBeVisible();
     await page.getByRole("button", { name: "Close menu" }).click();
     await expect(menu).toBeHidden();
+  });
+});
+
+test.describe("case studies", () => {
+  for (const study of caseStudies) {
+    test(`${study.title} opens from its card and links back @cross`, async ({ page }) => {
+      await gotoHome(page, "/#projects");
+      const card = page
+        .locator("#projects")
+        .getByRole("article")
+        .filter({ has: page.getByRole("heading", { name: study.title, exact: true }) });
+      await card.getByRole("link", { name: `Read the case study for ${study.title}` }).click();
+      await expect(page).toHaveURL(new RegExp(`/work/${study.slug}$`));
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(study.title);
+      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+        "href",
+        `https://onesmall.company/work/${study.slug}`,
+      );
+      await expect(page.getByRole("link", { name: /Source code/ })).toHaveAttribute("href", study.repoUrl);
+      if (study.liveUrl)
+        await expect(page.getByRole("link", { name: study.liveLabel ?? /View live/ })).toHaveAttribute(
+          "href",
+          study.liveUrl,
+        );
+      await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "All projects" }).click();
+      await expect(page).toHaveURL(/\/#projects$/);
+    });
+  }
+
+  test.describe("an unknown case study", () => {
+    test.use({
+      allowedProblems:
+        /^(http 404: GET \S+\/work\/no-such-study|console\.error: Failed to load resource: the server responded with a status of 404)/,
+    });
+
+    test("is a 404", async ({ page }) => {
+      expect((await page.goto("/work/no-such-study"))?.status()).toBe(404);
+    });
   });
 });
 

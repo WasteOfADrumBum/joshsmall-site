@@ -1,5 +1,6 @@
 import type { Response } from "@playwright/test";
 import { profile, projects } from "../src/content/site";
+import { caseStudies } from "../src/content/case-studies";
 import { expect, gotoHome, test } from "./support/fixtures";
 
 // Deterministic budgets for the built home page. Sizes are compressed transfer sizes from the local
@@ -154,7 +155,9 @@ test.describe("SEO and sharing", () => {
   test("sitemap lists the canonical page and robots blocks non-production hosts", async ({ request }) => {
     const sitemap = await request.get("/sitemap.xml");
     expect(sitemap.status()).toBe(200);
-    expect(await sitemap.text()).toContain(`<loc>${CANONICAL}</loc>`);
+    const xml = await sitemap.text();
+    expect(xml).toContain(`<loc>${CANONICAL}</loc>`);
+    for (const c of caseStudies) expect(xml).toContain(`/work/${c.slug}</loc>`);
     // The local server is not onesmall.company, so it must not invite crawling.
     const robots = await (await request.get("/robots.txt")).text();
     expect(robots).toMatch(/Disallow: \//);

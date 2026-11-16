@@ -17,6 +17,8 @@ export type Project = {
   stack: string[];
   liveUrl?: string;
   repoUrl?: string;
+  /** Slug of a page in src/content/case-studies.ts; the card links to /work/<slug>. */
+  caseStudy?: string;
   status: "Live" | "In progress" | "Planned";
 };
 
@@ -283,17 +285,19 @@ export const projects: Project[] = [
       "Create an account, sign in and manage your own private tasks with priorities, due dates, status tracking, search and filters. Every day starts from a Command Center that shows what needs attention.",
     journey: [
       "Started before AI tools existed",
-      "Modernized with ChatGPT and Codex",
+      "Modernized with ChatGPT, Codex and Claude Code",
       "Live in production today",
     ],
     highlights: [
       "JWT auth with hashed passwords; every query is scoped to its owner",
-      "GitHub Actions runs format, lint, test, build and audit on every push",
+      "AI agents draft work and a person approves it, with an audit trail and no paid AI calls",
+      "Reviews, goals, career tools and a Brand Studio, shipped one reviewed ticket at a time",
       "Runs on free tiers: Vercel, Render and MongoDB Atlas",
     ],
     stack: ["React", "TypeScript", "Node.js", "Express", "MongoDB", "Vercel"],
     liveUrl: "https://task.onesmall.company",
     repoUrl: "https://github.com/WasteOfADrumBum/TaskForge",
+    caseStudy: "taskforge",
     status: "Live",
   },
   {
@@ -316,15 +320,32 @@ export const projects: Project[] = [
     title: "Cortex",
     tagline: "A personal second-brain dashboard and planner.",
     description:
-      "Links to my notes in Google Drive, pulls in calendar feeds and weather, and gives an at-a-glance view of the day. A planner view lays out tasks, today hour by hour, the week and the month on one screen.",
+      "Links to my notes in Google Drive, pulls in my tasks, calendar and projects, and gives an at-a-glance view of the day. Each morning an AI routine writes a briefing, and nothing it suggests happens until I approve it.",
     highlights: [
       "Read-only Google Drive access, with a reader for notes and Docs",
-      "Calendar events from iCal feeds and tasks from Todoist, behind a private key",
-      "Plain HTML, CSS and JavaScript with no build step, plus two Vercel functions",
+      "Approve or reject each suggested change, with a stale check, an undo and an audit log",
+      "Plain HTML, CSS and JavaScript with no build step, plus small Vercel functions",
     ],
     stack: ["JavaScript", "HTML", "CSS", "Google Drive API", "Vercel Functions"],
     liveUrl: "https://cortex.onesmall.company",
     repoUrl: "https://github.com/WasteOfADrumBum/cortex-brain-task",
+    caseStudy: "cortex",
+    status: "Live",
+  },
+  {
+    slug: "engineering-hub",
+    title: "One Small Engineering Hub",
+    tagline: "The rules that keep my AI-built projects honest.",
+    description:
+      "One registry for every One Small project, with shared standards and release rules. AI agents read it before they report on a project, and an AI's word never counts as proof: a release gate needs evidence from someone other than the builder.",
+    highlights: [
+      "A schema and a dependency-free validator in CI that enforces fifteen rules",
+      "A scheduled sync proposes registry updates as pull requests; anything touching approval waits for me",
+      "Shared instructions for Claude, Codex, Copilot and Gemini",
+    ],
+    stack: ["JSON Schema", "Node.js", "GitHub Actions", "Markdown"],
+    repoUrl: "https://github.com/WasteOfADrumBum/one-small-engineering",
+    caseStudy: "engineering-hub",
     status: "Live",
   },
   {

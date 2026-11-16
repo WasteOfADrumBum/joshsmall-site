@@ -1,5 +1,5 @@
 import { about, career } from "@/content/site";
-import { approximateYearsSince, completeYearsSince, formatYearsPlus } from "@/lib/dates";
+import { completeYearsSince, formatYearsPlus } from "@/lib/dates";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 import { SpotlightCard } from "./SpotlightCard";
@@ -14,7 +14,7 @@ export function About() {
   const facts = [
     {
       label: about.professionalLabel,
-      value: formatYearsPlus(approximateYearsSince(career.professionalStartYear, now)),
+      value: formatYearsPlus(completeYearsSince({ year: career.professionalStartYear }, now)),
     },
     {
       label: about.softwareLabel,

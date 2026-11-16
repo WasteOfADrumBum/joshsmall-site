@@ -109,11 +109,18 @@ describe("formatYearsPlus", () => {
 });
 
 describe("career config", () => {
-  it("matches the counts on the page today", async () => {
+  it("matches the counts on the page for a fixed date in 2026", async () => {
     const { career } = await import("../content/site.ts");
     const today = on("2026-10-17");
-    assert.equal(approximateYearsSince(career.professionalStartYear, today), 20);
+    assert.equal(completeYearsSince({ year: career.professionalStartYear }, today), 19);
     assert.equal(completeYearsSince(career.softwareEngineeringStart, today), 5);
     assert.equal(completeYearsSince(career.employerStart, today), 4);
+  });
+
+  it("rolls professional experience from 19+ to 20+ on 1 January 2027", async () => {
+    const { career } = await import("../content/site.ts");
+    const start = { year: career.professionalStartYear };
+    assert.equal(formatYearsPlus(completeYearsSince(start, on("2026-12-31"))), "19+ years");
+    assert.equal(formatYearsPlus(completeYearsSince(start, on("2027-01-01"))), "20+ years");
   });
 });

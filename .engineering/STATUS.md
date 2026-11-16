@@ -1,4 +1,4 @@
-<!-- generated from .engineering/state.json (revision 12); edit state.json through a checkpoint, not this file -->
+<!-- generated from .engineering/state.json (revision 13); edit state.json through a checkpoint, not this file -->
 
 # personal-portfolio: development status
 
@@ -6,13 +6,13 @@ All values are **agent-reported**, not independently verified. Check GitHub befo
 
 - Milestone: Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance
 - Active task: none recorded
-- Branch: `main`
-- Recorded commit: `1d5793b` on `main`
-- Last checkpoint: 2026-11-12T17:43:46Z by Claude Code
+- Branch: `cursor/completed-professional-years-b45d` · PR #48
+- Recorded commit: `3eaef02` on `cursor/completed-professional-years-b45d`
+- Last checkpoint: 2026-11-14T15:48:30Z by Cursor
 
 ## Next action
 
-Joshua Small: add a resume PDF to public/ and set profile.resumeUrl in src/content/site.ts; supply verified impact numbers for the page. Next engineering item: ROADMAP Q3 (Firefox/WebKit contact flake in the weekly suite). Owner settings still open: import .github/rulesets/main.json and enable Vercel Deployment Checks.
+Joshua Small reviews PR #48 (completed professional years) and decides whether to merge. Do not merge from an agent session. After that: resume PDF and profile.resumeUrl, verified impact numbers, then ROADMAP Q3.
 
 ## Completed
 
@@ -29,6 +29,7 @@ Joshua Small: add a resume PDF to public/ and set profile.resumeUrl in src/conte
 - PR #40: Reveal measures visibility on an unmoving box (fixes endless flicker at viewport edges, found by the weekly Firefox/WebKit axe sweep); rate-limit test waits for each response; contact success waits 12 s
 - PR #40 merged on GitHub as da1d23d (2026-11-06); the revision 11 record still listed it as open
 - PR #46 (owner-requested content pass, 2026-11-12): sections reordered so About and Projects follow the hero and Why it matters and Human side follow Process; projects reordered with OneSmallUI first; AI skills list cut to three; optional resume link in the hero, hidden until profile.resumeUrl is set. Squash-merged as 1d5793b
+- Professional experience uses completed years via completeYearsSince (19+ through 2026, 20+ from 1 Jan 2027). The homepage stays static with the existing daily revalidate of 86400 seconds.
 
 ## In progress
 
@@ -55,6 +56,7 @@ _none recorded_
 - `local on 168ef29: eslint, typecheck, node --test src/lib (67), next build; Playwright not run locally (browser not inst…`: pass, 2026-11-12T17:31:00Z
 - `GitHub CI on PR #46 head 168ef29: CI gate, Chromium, Firefox and WebKit browser tests, CodeQL, checkpoint contract`: pass, 2026-11-12T17:36:00Z
 - `production.yml on deployment_status for 1d5793b; agent also read X-Build-Commit and the section order from https://ones…`: pass at `1d5793b`, 2026-11-12T17:40:00Z
+- `npm run lint && npm run typecheck && npm test (68) && npm run build; Playwright /#about on local next start`: pass at `3eaef02`, 2026-11-14T15:48:30Z
 
 ## Unverified changes
 
@@ -66,3 +68,4 @@ _none recorded_
 - Firefox and WebKit runs are only verified in GitHub Actions (no WebKit locally)
 - Delivery of the production-check issue notification to the owner has not been verified end to end
 - PR #46 layout was viewed by the agent on a local dev server at one desktop width only; no owner review of the new section order before merge (owner authorised autonomous merge with a backup branch, 2026-11-12)
+- Professional-years figure was checked by the agent on a local production server at 1280px and 390px. GitHub CI on PR #48 and the Vercel preview were not part of that local check.

@@ -1,4 +1,4 @@
-<!-- generated from .engineering/state.json (revision 13); edit state.json through a checkpoint, not this file -->
+<!-- generated from .engineering/state.json (revision 14); edit state.json through a checkpoint, not this file -->
 
 # personal-portfolio: development status
 
@@ -6,13 +6,13 @@ All values are **agent-reported**, not independently verified. Check GitHub befo
 
 - Milestone: Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance
 - Active task: none recorded
-- Branch: `cursor/completed-professional-years-b45d` · PR #48
-- Recorded commit: `3eaef02` on `cursor/completed-professional-years-b45d`
-- Last checkpoint: 2026-11-14T15:48:30Z by Cursor
+- Branch: `cursor/green-production-and-weekly-1656` · PR #55
+- Recorded commit: `1925984` on `cursor/green-production-and-weekly-1656`
+- Last checkpoint: 2026-11-18T23:38:41Z by Cursor
 
 ## Next action
 
-Joshua Small reviews PR #48 (completed professional years) and decides whether to merge. Do not merge from an agent session. After that: resume PDF and profile.resumeUrl, verified impact numbers, then ROADMAP Q3.
+Joshua Small reviews PR #55 (production and weekly workflow fixes) and decides whether to merge. Do not merge from an agent session. Issue #54 stays open until someone closes it; a passing scheduled run does not close it. After that: resume PDF and profile.resumeUrl, verified impact numbers, then the remaining ROADMAP Q3 acceptance of five consecutive weekly runs.
 
 ## Completed
 
@@ -30,6 +30,7 @@ Joshua Small reviews PR #48 (completed professional years) and decides whether t
 - PR #40 merged on GitHub as da1d23d (2026-11-06); the revision 11 record still listed it as open
 - PR #46 (owner-requested content pass, 2026-11-12): sections reordered so About and Projects follow the hero and Why it matters and Human side follow Process; projects reordered with OneSmallUI first; AI skills list cut to three; optional resume link in the hero, hidden until profile.resumeUrl is set. Squash-merged as 1d5793b
 - Professional experience uses completed years via completeYearsSince (19+ through 2026, 20+ from 1 Jan 2027). The homepage stays static with the existing daily revalidate of 86400 seconds.
+- Production verification skips optional apt fonts when Chromium already launches. Firefox and WebKit install libraries without those fonts. Firefox axe no longer reads the native ariaLabelledByElements getter. A second click in one gesture does not submit the contact form. WebKit header rewriting ignores an already-disposed response and still forwards the compressed body.
 
 ## In progress
 
@@ -57,6 +58,9 @@ _none recorded_
 - `GitHub CI on PR #46 head 168ef29: CI gate, Chromium, Firefox and WebKit browser tests, CodeQL, checkpoint contract`: pass, 2026-11-12T17:36:00Z
 - `production.yml on deployment_status for 1d5793b; agent also read X-Build-Commit and the section order from https://ones…`: pass at `1d5793b`, 2026-11-12T17:40:00Z
 - `npm run lint && npm run typecheck && npm test (68) && npm run build; Playwright /#about on local next start`: pass at `3eaef02`, 2026-11-14T15:48:30Z
+- `production.yml pull_request on the branch (install step a few seconds, then live-site browser checks)`: pass at `1925984`, 2026-11-18T23:33:16Z
+- `weekly.yml pull_request on the branch (Firefox suite, WebKit suite, links, Lighthouse)`: pass at `1925984`, 2026-11-18T23:37:05Z
+- `GitHub CI ci.yml on PR #55 head 1925984`: pass at `1925984`, 2026-11-18T23:35:49Z
 
 ## Unverified changes
 

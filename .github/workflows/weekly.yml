@@ -8,9 +8,6 @@ name: Weekly deep checks
 on:
   schedule:
     - cron: "23 8 * * 1"
-  # Proves this branch on the pull request. The Actions token cannot dispatch a workflow.
-  # This trigger is removed before merge; the Monday run is unchanged.
-  pull_request:
   workflow_dispatch:
 
 permissions: {}

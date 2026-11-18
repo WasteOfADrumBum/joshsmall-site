@@ -42,10 +42,12 @@ function dependencyPackages(names) {
   if (start < 0) throw new Error(`Playwright has no dependency list for ubuntu ${version}.04 ${arch}`);
   const slice = bundle.slice(start, start + 120_000);
   const grab = (name) => {
-    const match = new RegExp(`${name}: \\[`).exec(slice);
-    if (!match) throw new Error(`Playwright dependency list has no ${name} packages`);
+    // A plain search: the name is one of tools, chromium, firefox or webkit, and it is not a pattern.
+    const marker = `${name}: [`;
+    const at = slice.indexOf(marker);
+    if (at < 0) throw new Error(`Playwright dependency list has no ${name} packages`);
     let depth = 0;
-    for (let i = match.index + match[0].length - 1; i < slice.length; i++) {
+    for (let i = at + marker.length - 1; i < slice.length; i++) {
       if (slice[i] === "[") depth++;
       else if (slice[i] === "]") {
         depth--;

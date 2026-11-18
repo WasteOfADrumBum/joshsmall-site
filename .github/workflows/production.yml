@@ -13,6 +13,9 @@ on:
   deployment_status:
   schedule:
     - cron: "17 */6 * * *"
+  # Proves this branch on the pull request. The Actions token cannot dispatch a workflow.
+  # This trigger is removed before merge; scheduled runs are unchanged.
+  pull_request:
   workflow_dispatch:
     inputs:
       expect_sha:
@@ -131,7 +134,8 @@ jobs:
   notify:
     name: Open or update the failure issue
     needs: verify
-    if: failure()
+    # A pull-request run is only there to prove the job. It must not comment on the production issue.
+    if: failure() && github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 3
     permissions:

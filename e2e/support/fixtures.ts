@@ -76,13 +76,13 @@ export const test = base.extend<Fixtures>({
                 .filter((d) => d.trim() !== "upgrade-insecure-requests")
                 .join(";");
             }
-            // Copy the body now. Passing the live response to fulfill races an abort: WebKit
-            // disposes that response and fulfill throws, which fails the test even though the
-            // browser already dropped the request. Delivered responses still have the two
-            // HTTPS-only instructions removed.
-            const body = await response.body();
-            await route.fulfill({ status: response.status(), headers, body });
+            // Keep the fetched response, including its compressed body. Copying response.body()
+            // and fulfilling that sends the decompressed bytes, so the transfer-size budget sees
+            // the whole script instead of the gzip the server actually sent.
+            await route.fulfill({ response, headers });
           } catch (error) {
+            // WebKit aborts some requests while the fetch is in flight and then disposes the
+            // response. There is nothing left to deliver, and throwing fails the test.
             const message = error instanceof Error ? error.message : String(error);
             if (
               /Response has been disposed|Route is already handled|Target (page|closed)|Request context disposed|browser has been closed|ERR_ABORTED/i.test(

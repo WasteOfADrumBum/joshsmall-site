@@ -29,7 +29,7 @@ function firefoxAriaLabelledBy() {
   Object.defineProperty(Element.prototype, "ariaLabelledByElements", {
     configurable: true,
     enumerable: desc.enumerable,
-    get() {
+    get(this: Element) {
       const attr = this.getAttribute("aria-labelledby");
       if (attr == null || attr === "") return nativeGet.call(this);
       const root = this.getRootNode();
@@ -38,8 +38,8 @@ function firefoxAriaLabelledBy() {
       return attr
         .trim()
         .split(/\s+/)
-        .map((id) => byId(id))
-        .filter((el): el is Element => el instanceof Element);
+        .map((id: string) => byId(id))
+        .filter((el: Element | null): el is Element => el instanceof Element);
     },
     set: desc.set,
   });

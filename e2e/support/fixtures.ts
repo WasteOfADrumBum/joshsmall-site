@@ -66,16 +66,33 @@ export const test = base.extend<Fixtures>({
     async ({ context, browserName, baseURL }, use) => {
       if (browserName === "webkit" && baseURL?.startsWith("http://")) {
         await context.route(`${new URL(baseURL).origin}/**`, async (route) => {
-          const response = await route.fetch();
-          const headers = { ...response.headers() };
-          delete headers["strict-transport-security"];
-          if (headers["content-security-policy"]) {
-            headers["content-security-policy"] = headers["content-security-policy"]
-              .split(";")
-              .filter((d) => d.trim() !== "upgrade-insecure-requests")
-              .join(";");
+          try {
+            const response = await route.fetch();
+            const headers = { ...response.headers() };
+            delete headers["strict-transport-security"];
+            if (headers["content-security-policy"]) {
+              headers["content-security-policy"] = headers["content-security-policy"]
+                .split(";")
+                .filter((d) => d.trim() !== "upgrade-insecure-requests")
+                .join(";");
+            }
+            // Copy the body now. Passing the live response to fulfill races an abort: WebKit
+            // disposes that response and fulfill throws, which fails the test even though the
+            // browser already dropped the request. Delivered responses still have the two
+            // HTTPS-only instructions removed.
+            const body = await response.body();
+            await route.fulfill({ status: response.status(), headers, body });
+          } catch (error) {
+            const message = error instanceof Error ? error.message : String(error);
+            if (
+              /Response has been disposed|Route is already handled|Target (page|closed)|Request context disposed|browser has been closed|ERR_ABORTED/i.test(
+                message,
+              )
+            ) {
+              return;
+            }
+            throw error;
           }
-          await route.fulfill({ response, headers });
         });
       }
       await use();

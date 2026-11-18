@@ -10,7 +10,7 @@ Read this, then **verify against GitHub** (branch head, open PRs, CI) before con
 
 ## Continue with
 
-PR #55 is open for Joshua Small to review. Do not merge. Production verification and the weekly suite were green on 1925984 (production run 44421641072, weekly run 44421640942, CI run 44421641268). The checkpoint commit removes the temporary pull_request triggers used only because this session could not dispatch workflows. Issue #54 will not close itself on the next passing scheduled run. Next: owner review of PR #55, then the resume PDF, impact numbers, and the remaining ROADMAP Q3 five-run acceptance.
+PR #55 is open for Joshua Small to review. Do not merge. Production verification and the weekly suite were green on 1925984. The run URLs are in verification.testsRun. The checkpoint commit removes the temporary pull_request triggers used only because this session could not dispatch workflows. Issue #54 will not close itself on the next passing scheduled run. Next: owner review of PR #55, then the resume PDF, impact numbers, and the remaining ROADMAP Q3 five-run acceptance.
 
 ## Unfinished
 

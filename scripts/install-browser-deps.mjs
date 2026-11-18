@@ -51,7 +51,7 @@ function dependencyPackages(names) {
       if (slice[i] === "[") depth++;
       else if (slice[i] === "]") {
         depth--;
-        if (depth === 0) return JSON.parse(slice.slice(match.index + match[0].length - 1, i + 1));
+        if (depth === 0) return JSON.parse(slice.slice(at + marker.length - 1, i + 1));
       }
     }
     throw new Error(`Playwright dependency list for ${name} is truncated`);

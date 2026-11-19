@@ -10,10 +10,50 @@ type Fixtures = {
   allowedProblems: RegExp | null;
   problems: string[];
   webkitLoopbackHttp: void;
+  firefoxAriaReflection: void;
 };
+
+/**
+ * Firefox 159 (Playwright 1.65, browser build 1572) kills the content process if
+ * `ariaLabelledByElements` is read from the page and from Playwright's utility world.
+ * axe-core 4.14 reads that property, and `getByRole` / `getByLabel` do too, so a scan after a
+ * named locator crashes the tab (Mozilla bug 2090055). Sections on this site are named with
+ * `aria-labelledby`. When that attribute is set, resolve the ids here and leave the native getter
+ * alone; an empty attribute still uses the browser, which is only the script-set case this page
+ * does not use. Drop this once Playwright ships a Firefox newer than build 1572.
+ */
+function firefoxAriaLabelledBy() {
+  const desc = Object.getOwnPropertyDescriptor(Element.prototype, "ariaLabelledByElements");
+  if (!desc?.get) return;
+  const nativeGet = desc.get;
+  Object.defineProperty(Element.prototype, "ariaLabelledByElements", {
+    configurable: true,
+    enumerable: desc.enumerable,
+    get(this: Element) {
+      const attr = this.getAttribute("aria-labelledby");
+      if (attr == null || attr === "") return nativeGet.call(this);
+      const root = this.getRootNode();
+      const byId = (id: string) =>
+        root instanceof Document || root instanceof ShadowRoot ? root.getElementById(id) : null;
+      return attr
+        .trim()
+        .split(/\s+/)
+        .map((id: string) => byId(id))
+        .filter((el: Element | null): el is Element => el instanceof Element);
+    },
+    set: desc.set,
+  });
+}
 
 export const test = base.extend<Fixtures>({
   allowedProblems: [null, { option: true }],
+  firefoxAriaReflection: [
+    async ({ context, browserName }, use) => {
+      if (browserName === "firefox") await context.addInitScript(firefoxAriaLabelledBy);
+      await use();
+    },
+    { auto: true },
+  ],
   /**
    * WebKit upgrades later requests to https://127.0.0.1 after it sees the production
    * Strict-Transport-Security header or the CSP's upgrade-insecure-requests on plain HTTP, which a
@@ -26,16 +66,33 @@ export const test = base.extend<Fixtures>({
     async ({ context, browserName, baseURL }, use) => {
       if (browserName === "webkit" && baseURL?.startsWith("http://")) {
         await context.route(`${new URL(baseURL).origin}/**`, async (route) => {
-          const response = await route.fetch();
-          const headers = { ...response.headers() };
-          delete headers["strict-transport-security"];
-          if (headers["content-security-policy"]) {
-            headers["content-security-policy"] = headers["content-security-policy"]
-              .split(";")
-              .filter((d) => d.trim() !== "upgrade-insecure-requests")
-              .join(";");
+          try {
+            const response = await route.fetch();
+            const headers = { ...response.headers() };
+            delete headers["strict-transport-security"];
+            if (headers["content-security-policy"]) {
+              headers["content-security-policy"] = headers["content-security-policy"]
+                .split(";")
+                .filter((d) => d.trim() !== "upgrade-insecure-requests")
+                .join(";");
+            }
+            // Keep the fetched response, including its compressed body. Copying response.body()
+            // and fulfilling that sends the decompressed bytes, so the transfer-size budget sees
+            // the whole script instead of the gzip the server actually sent.
+            await route.fulfill({ response, headers });
+          } catch (error) {
+            // WebKit aborts some requests while the fetch is in flight and then disposes the
+            // response. There is nothing left to deliver, and throwing fails the test.
+            const message = error instanceof Error ? error.message : String(error);
+            if (
+              /Response has been disposed|Route is already handled|Target (page|closed)|Request context disposed|browser has been closed|ERR_ABORTED/i.test(
+                message,
+              )
+            ) {
+              return;
+            }
+            throw error;
           }
-          await route.fulfill({ response, headers });
         });
       }
       await use();

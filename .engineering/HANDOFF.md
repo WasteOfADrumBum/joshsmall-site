@@ -1,23 +1,24 @@
-<!-- generated from .engineering/state.json (revision 13) -->
+<!-- generated from .engineering/state.json (revision 14) -->
 
 # Handoff: personal-portfolio
 
 Read this, then **verify against GitHub** (branch head, open PRs, CI) before continuing. Nothing below is independently verified.
 
-- Checkpoint: revision 13, `professional-years-2026-11-14`, 2026-11-14T15:48:30Z by Cursor (grok-4.7)
+- Checkpoint: revision 14, `ci-workflows-green-2026-11-18`, 2026-11-18T23:38:41Z by Cursor (grok-4.7)
 - Written by: a local edit that the agent then pushed; confirm the branch head matches
 - Uncommitted work outside this checkpoint: **none**
 
 ## Continue with
 
-PR #48 is open for Joshua Small to review. Do not merge. Professional experience now uses completeYearsSince for the year-only start, so the stat is completed years (19+ in 2026, 20+ from 1 Jan 2027 UTC) from the render date. The homepage is static with the existing daily revalidate (86400). At task start GitHub main was 2c8cb2c, the revision 12 checkpoint commit, one commit ahead of the SHA that checkpoint records (1d5793b). No other open PRs. This checkpoint describes code commit 3eaef02; the checkpoint commit follows it. Next: owner review of PR #48, then the resume PDF, impact numbers, and ROADMAP Q3.
+PR #55 is open for Joshua Small to review. Do not merge. Production verification and the weekly suite were green on 1925984. The run URLs are in verification.testsRun. The checkpoint commit removes the temporary pull_request triggers used only because this session could not dispatch workflows. Issue #54 will not close itself on the next passing scheduled run. Next: owner review of PR #55, then the resume PDF, impact numbers, and the remaining ROADMAP Q3 five-run acceptance.
 
 ## Unfinished
 
-- PR #48 (completed professional years) is open for Joshua Small to review; do not merge from an agent session
+- PR #55 (production and weekly workflow fixes) is open for Joshua Small to review; do not merge from an agent session
+- Issue #54 stays open; the production workflow does not close it when a run passes
 - Resume PDF and profile.resumeUrl (owner supplies the file)
 - Verified impact numbers for the page (owner supplies)
-- ROADMAP Q3: Firefox/WebKit contact flake in the weekly suite
+- ROADMAP Q3 acceptance is still five consecutive weekly runs. The double-click path that cleared a successful send was fixed on this branch
 - Owner settings: ruleset import for main; Vercel Deployment Checks
 - Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows
 

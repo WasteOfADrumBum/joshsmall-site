@@ -1,20 +1,20 @@
 {
   "stateVersion": 1,
-  "revision": 13,
-  "checkpointId": "professional-years-2026-11-14",
+  "revision": 14,
+  "checkpointId": "ci-workflows-green-2026-11-18",
   "projectId": "personal-portfolio",
   "repository": "https://github.com/WasteOfADrumBum/joshsmall-site",
   "hub": "https://github.com/WasteOfADrumBum/one-small-engineering",
   "recorded": {
-    "branch": "cursor/completed-professional-years-b45d",
-    "commit": "3eaef022a7ca79c27d8dadb1b13b11b10346783b",
-    "recordedAt": "2026-11-14T15:48:30Z"
+    "branch": "cursor/green-production-and-weekly-1656",
+    "commit": "19259840ba884f58ae8751a0a99adb3df95a0bee",
+    "recordedAt": "2026-11-18T23:38:41Z"
   },
   "development": {
     "milestone": "Portfolio release 1.0 (November 2026): complete and owner-approved in this repository; project in maintenance",
     "activeTask": null,
-    "workingBranch": "cursor/completed-professional-years-b45d",
-    "activePr": 48,
+    "workingBranch": "cursor/green-production-and-weekly-1656",
+    "activePr": 55,
     "lastCompleted": [
       "PR #33 (mobile hero fixes) merged on GitHub; the revision 8 record still listed it as open",
       "PR #34: Playwright suite on next start (journeys, contact path through the real handler with a local Resend stand-in, axe and WCAG behaviour checks, performance and SEO budgets); Firefox and WebKit for @cross tests",
@@ -29,10 +29,11 @@
       "PR #40: Reveal measures visibility on an unmoving box (fixes endless flicker at viewport edges, found by the weekly Firefox/WebKit axe sweep); rate-limit test waits for each response; contact success waits 12 s",
       "PR #40 merged on GitHub as da1d23d (2026-11-06); the revision 11 record still listed it as open",
       "PR #46 (owner-requested content pass, 2026-11-12): sections reordered so About and Projects follow the hero and Why it matters and Human side follow Process; projects reordered with OneSmallUI first; AI skills list cut to three; optional resume link in the hero, hidden until profile.resumeUrl is set. Squash-merged as 1d5793b",
-      "Professional experience uses completed years via completeYearsSince (19+ through 2026, 20+ from 1 Jan 2027). The homepage stays static with the existing daily revalidate of 86400 seconds."
+      "Professional experience uses completed years via completeYearsSince (19+ through 2026, 20+ from 1 Jan 2027). The homepage stays static with the existing daily revalidate of 86400 seconds.",
+      "Production verification skips optional apt fonts when Chromium already launches. Firefox and WebKit install libraries without those fonts. Firefox axe no longer reads the native ariaLabelledByElements getter. A second click in one gesture does not submit the contact form. WebKit header rewriting ignores an already-disposed response and still forwards the compressed body."
     ],
     "inProgress": [],
-    "nextAction": "Joshua Small reviews PR #48 (completed professional years) and decides whether to merge. Do not merge from an agent session. After that: resume PDF and profile.resumeUrl, verified impact numbers, then ROADMAP Q3."
+    "nextAction": "Joshua Small reviews PR #55 (production and weekly workflow fixes) and decides whether to merge. Do not merge from an agent session. Issue #54 stays open until someone closes it; a passing scheduled run does not close it. After that: resume PDF and profile.resumeUrl, verified impact numbers, then the remaining ROADMAP Q3 acceptance of five consecutive weekly runs."
   },
   "decisions": {
     "made": [
@@ -105,6 +106,20 @@
         "decidedBy": "agent",
         "humanRef": null,
         "recordedAt": "2026-11-14T15:48:30Z"
+      },
+      {
+        "id": "browser-deps-without-fallback-fonts",
+        "summary": "Chromium, Firefox and WebKit jobs skip the optional apt fallback fonts. A browser that already launches does not run apt. Otherwise libraries are installed from archive.ubuntu.com, and full install-deps remains if launch still fails.",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-18T23:38:41Z"
+      },
+      {
+        "id": "firefox-aria-labelledby-workaround",
+        "summary": "Firefox tests resolve a set aria-labelledby without the native reflected getter. Playwright 1.65 Firefox build 1572 crashes when that property is read from both worlds. Axe rules are unchanged.",
+        "decidedBy": "agent",
+        "humanRef": null,
+        "recordedAt": "2026-11-18T23:38:41Z"
       }
     ],
     "constraints": [
@@ -116,7 +131,7 @@
     "unresolved": [
       "Hub registry approval for personal-portfolio stays pending until Joshua Small records his own verify:record passes for all ten gates (hub validator: approval needs releaseStatus verified, which needs every gate verified)",
       "Protecting main (ruleset import) and Vercel Deployment Checks are owner settings this session cannot change; see docs/ci/README.md",
-      "Firefox/WebKit contact flake in the weekly suite (ROADMAP Q3): API answered 200 but the form showed nothing for 12 s; cause unknown (test load or real UI issue)"
+      "ROADMAP Q3 acceptance is still five consecutive weekly runs with no flaky contact test. The double-click path that cleared a successful send was fixed on this branch; that is not yet five scheduled runs."
     ]
   },
   "verification": {
@@ -260,6 +275,27 @@
         "commit": "3eaef022a7ca79c27d8dadb1b13b11b10346783b",
         "at": "2026-11-14T15:48:30Z",
         "ciRunUrl": null
+      },
+      {
+        "command": "production.yml pull_request on the branch (install step a few seconds, then live-site browser checks)",
+        "result": "pass",
+        "commit": "19259840ba884f58ae8751a0a99adb3df95a0bee",
+        "at": "2026-11-18T23:33:16Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/44421641072"
+      },
+      {
+        "command": "weekly.yml pull_request on the branch (Firefox suite, WebKit suite, links, Lighthouse)",
+        "result": "pass",
+        "commit": "19259840ba884f58ae8751a0a99adb3df95a0bee",
+        "at": "2026-11-18T23:37:05Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/44421640942"
+      },
+      {
+        "command": "GitHub CI ci.yml on PR #55 head 1925984",
+        "result": "pass",
+        "commit": "19259840ba884f58ae8751a0a99adb3df95a0bee",
+        "at": "2026-11-18T23:35:49Z",
+        "ciRunUrl": "https://github.com/WasteOfADrumBum/joshsmall-site/actions/runs/44421641268"
       }
     ],
     "unverifiedChanges": [
@@ -279,19 +315,20 @@
       "tool": "Cursor",
       "model": "grok-4.7"
     },
-    "checkpointedAt": "2026-11-14T15:48:30Z",
+    "checkpointedAt": "2026-11-18T23:38:41Z",
     "unfinished": [
-      "PR #48 (completed professional years) is open for Joshua Small to review; do not merge from an agent session",
+      "PR #55 (production and weekly workflow fixes) is open for Joshua Small to review; do not merge from an agent session",
+      "Issue #54 stays open; the production workflow does not close it when a run passes",
       "Resume PDF and profile.resumeUrl (owner supplies the file)",
       "Verified impact numbers for the page (owner supplies)",
-      "ROADMAP Q3: Firefox/WebKit contact flake in the weekly suite",
+      "ROADMAP Q3 acceptance is still five consecutive weekly runs. The double-click path that cleared a successful send was fixed on this branch",
       "Owner settings: ruleset import for main; Vercel Deployment Checks",
       "Hub registry gates for personal-portfolio need Joshua Small's own verify:record passes; hub approval follows"
     ],
     "blockers": [
       "Branch protection and Vercel Deployment Checks need the owner (no write access to rulesets or Vercel settings from this session)"
     ],
-    "continuation": "PR #48 is open for Joshua Small to review. Do not merge. Professional experience now uses completeYearsSince for the year-only start, so the stat is completed years (19+ in 2026, 20+ from 1 Jan 2027 UTC) from the render date. The homepage is static with the existing daily revalidate (86400). At task start GitHub main was 2c8cb2c, the revision 12 checkpoint commit, one commit ahead of the SHA that checkpoint records (1d5793b). No other open PRs. This checkpoint describes code commit 3eaef02; the checkpoint commit follows it. Next: owner review of PR #48, then the resume PDF, impact numbers, and ROADMAP Q3.",
+    "continuation": "PR #55 is open for Joshua Small to review. Do not merge. Production verification and the weekly suite were green on 1925984. The run URLs are in verification.testsRun. The checkpoint commit removes the temporary pull_request triggers used only because this session could not dispatch workflows. Issue #54 will not close itself on the next passing scheduled run. Next: owner review of PR #55, then the resume PDF, impact numbers, and the remaining ROADMAP Q3 five-run acceptance.",
     "uncommittedWorkOutsideCheckpoint": "none",
     "persistedBy": "local-file"
   },

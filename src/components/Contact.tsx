@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2, Send } from "lucide-react";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { useRef, useState, type FormEvent, type MouseEvent, type ReactNode } from "react";
 import { contact, profile } from "@/content/site";
 import { CONTACT_FIELDS, CONTACT_LIMITS, validateContact, type ContactErrors, type ContactField } from "@/lib/contact";
 import { GitHubIcon, LinkedInIcon } from "./Icons";
@@ -68,6 +68,10 @@ export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<ContactErrors>({});
+  // Set before the first await. The disabled attribute only applies after a render, so a second
+  // click in the same gesture would otherwise start another send or, once the first has reset
+  // the form, wipe the success message with an empty-form validation error.
+  const sending = useRef(false);
 
   // Once a field has been flagged, re-check it as the visitor types so the red clears as soon as it's fixed.
   function onFieldInput(name: ContactField, form: HTMLFormElement) {
@@ -81,8 +85,13 @@ export function Contact() {
     if (first) (form.elements.namedItem(first) as HTMLElement | null)?.focus();
   }
 
+  function ignoreExtraClick(event: MouseEvent<HTMLButtonElement>) {
+    if (event.detail > 1) event.preventDefault();
+  }
+
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (sending.current) return;
     const form = e.currentTarget;
     const payload = Object.fromEntries(new FormData(form));
     const { errors } = validateContact(payload);
@@ -94,42 +103,47 @@ export function Contact() {
       return;
     }
 
+    sending.current = true;
     setStatus("sending");
     setError("");
-    let res: Response;
-    let data: { error?: string; fields?: ContactErrors };
     try {
-      res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
-      });
-      data = (await res.json().catch(() => ({}))) as typeof data;
-    } catch (err) {
-      // The request never completed (offline, dropped connection, timeout). The browser's own text
-      // ("Failed to fetch", abort reasons) means nothing to a visitor, so say what happened instead.
-      const timedOut = err instanceof DOMException && err.name === "TimeoutError";
-      setError(
-        timedOut
-          ? "Sending is taking too long. Check your connection and try again."
-          : "Couldn't reach the server. Check your connection and try again.",
-      );
-      setStatus("error");
-      return;
+      let res: Response;
+      let data: { error?: string; fields?: ContactErrors };
+      try {
+        res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          signal: AbortSignal.timeout(SEND_TIMEOUT_MS),
+        });
+        data = (await res.json().catch(() => ({}))) as typeof data;
+      } catch (err) {
+        // The request never completed (offline, dropped connection, timeout). The browser's own text
+        // ("Failed to fetch", abort reasons) means nothing to a visitor, so say what happened instead.
+        const timedOut = err instanceof DOMException && err.name === "TimeoutError";
+        setError(
+          timedOut
+            ? "Sending is taking too long. Check your connection and try again."
+            : "Couldn't reach the server. Check your connection and try again.",
+        );
+        setStatus("error");
+        return;
+      }
+      if (data.fields) {
+        setFieldErrors(data.fields);
+        focusFirstInvalid(form, data.fields);
+      }
+      if (!res.ok) {
+        // Only the API's own messages are shown as-is.
+        setError(data.error ?? "Something went wrong. Please try again later.");
+        setStatus("error");
+        return;
+      }
+      form.reset();
+      setStatus("success");
+    } finally {
+      sending.current = false;
     }
-    if (data.fields) {
-      setFieldErrors(data.fields);
-      focusFirstInvalid(form, data.fields);
-    }
-    if (!res.ok) {
-      // Only the API's own messages are shown as-is.
-      setError(data.error ?? "Something went wrong. Please try again later.");
-      setStatus("error");
-      return;
-    }
-    form.reset();
-    setStatus("success");
   }
 
   return (
@@ -204,6 +218,7 @@ export function Contact() {
             <button
               type="submit"
               disabled={status === "sending"}
+              onClick={ignoreExtraClick}
               className="btn-grad mt-4 inline-flex items-center gap-2 rounded-full px-6 py-3 font-semibold disabled:opacity-70"
             >
               {status === "sending" ? (

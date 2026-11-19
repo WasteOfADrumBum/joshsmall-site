@@ -41,9 +41,11 @@ jobs:
           node-version: "24"
       - run: npm ci --no-audit --no-fund
       - run: npm run build
+      # Optional fallback fonts from install-deps come from the regional mirror that stalls.
+      # The script skips them, and installs real libraries only if the browser will not launch.
       - name: Install the browser and its system dependencies
         timeout-minutes: 8
-        run: npx playwright install --with-deps "$BROWSER"
+        run: node scripts/install-browser-deps.mjs "$BROWSER"
         env:
           BROWSER: ${{ matrix.browser }}
       - run: npx playwright test --project="$BROWSER"

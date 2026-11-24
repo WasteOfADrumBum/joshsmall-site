@@ -50,9 +50,15 @@ test.describe("home page", () => {
   });
 
   test("direct navigation to a section and a refresh both land on it", async ({ page }) => {
-    await page.goto("/#experience");
+    // Refresh only once the page has hydrated and the smooth scroll to the section has stopped, as
+    // a visitor would, and as the back/forward test does before moving through history. Reloading
+    // while WebKit is still scrolling (smooth scroll-behavior) let it keep a scroll position short
+    // of the section, so the weekly WebKit run failed now and then (Nov 11 and Nov 23, 2026).
+    await gotoHome(page, "/#experience");
     await expect(page.locator("#experience")).toBeInViewport();
     await page.reload();
+    await expect(page.getByRole("group", { name: "Portrait view" })).toBeVisible();
+    await scrollSettled(page);
     await expect(page.locator("#experience")).toBeInViewport();
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
   });
